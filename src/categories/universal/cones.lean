@@ -26,7 +26,7 @@ attribute [simp,search] Cone.commutativity_lemma
 variable {F : J ↝ C}
 
 structure ConeMorphism (X Y : Cone F) : Type (max u v) :=
-  (cone_morphism      : X.cone_point ⟶ Y.cone_point)
+  (cone_morphism : X.cone_point ⟶ Y.cone_point)
   (commutativity : Π j : J, cone_morphism ≫ (Y.cone_maps j) = (X.cone_maps j) . obviously)
 
 make_lemma ConeMorphism.commutativity
@@ -38,31 +38,22 @@ rw ← category.associativity,
 simp,
 end
 
-@[applicable] lemma ConeMorphism_componentwise_equal
-  {X Y : Cone F}
-  {f g : ConeMorphism X Y}
-  (w : f.cone_morphism = g.cone_morphism) : f = g :=
-  begin
-    induction f,
-    induction g,
-    tidy
-  end
+@[applicable] lemma ConeMorphism_componentwise_equal {X Y : Cone F} {f g : ConeMorphism X Y} (w : f.cone_morphism = g.cone_morphism) : f = g :=
+begin
+  induction f,
+  induction g,
+  tidy
+end
 
-instance Cones (F : J ↝ C) : category (Cone F) := {
-  Hom            := λ X Y, ConeMorphism X Y,
+instance Cones (F : J ↝ C) : category (Cone F) :=
+{ Hom            := λ X Y, ConeMorphism X Y,
   compose        := λ X Y Z f g, ⟨ f.cone_morphism ≫ g.cone_morphism ⟩,
-  identity       := λ X, ⟨ 𝟙 X.cone_point ⟩
-}
+  identity       := λ X, ⟨ 𝟙 X.cone_point ⟩ }
 
-definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone (F ⋙ G)) := {
-  onObjects     := λ X, {
-    cone_point    := G X.cone_point,
-    cone_maps     := λ j, G &> (X.cone_maps j)
- },
-  onMorphisms   := λ X Y f, {
-    cone_morphism := G &> f.cone_morphism
- }
-}
+definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone (F ⋙ G)) := 
+{ onObjects     := λ X,     { cone_point    := G X.cone_point,
+                              cone_maps     := λ j, G &> (X.cone_maps j) },
+  onMorphisms   := λ X Y f, { cone_morphism := G &> f.cone_morphism } }
 
 structure Cocone (F : Functor J C) :=
   (cocone_point  : C)
@@ -73,44 +64,35 @@ make_lemma Cocone.commutativity
 attribute [simp,search] Cocone.commutativity_lemma
 
 structure CoconeMorphism (X Y : Cocone F) : Type (max u v) :=
-  (cocone_morphism      : X.cocone_point ⟶ Y.cocone_point)
-  (commutativity : Π j : J, (X.cocone_maps j) ≫ cocone_morphism = (Y.cocone_maps j) . obviously)
+  (cocone_morphism : X.cocone_point ⟶ Y.cocone_point)
+  (commutativity   : Π j : J, (X.cocone_maps j) ≫ cocone_morphism = (Y.cocone_maps j) . obviously)
 
 make_lemma CoconeMorphism.commutativity
 attribute [simp,search] CoconeMorphism.commutativity_lemma
 
 @[simp,search] def CoconeMorphism.commutativity_lemma_assoc {X Y : Cocone F} (c : CoconeMorphism X Y) (j : J) {Z : C} (z : Y.cocone_point ⟶ Z): (X.cocone_maps j) ≫ c.cocone_morphism ≫ z = (Y.cocone_maps j) ≫ z :=
 begin
-rw ← category.associativity,
-simp,
+  rw ← category.associativity,
+  simp,
 end
 
 
-@[applicable] lemma CoconeMorphism_componentwise_equal
-  {X Y : Cocone F}
-  {f g : CoconeMorphism X Y}
-  (w : f.cocone_morphism = g.cocone_morphism) : f = g :=
-  begin
-    induction f,
-    induction g,
-    tidy
-  end
+@[applicable] lemma CoconeMorphism_componentwise_equal {X Y : Cocone F} {f g : CoconeMorphism X Y} (w : f.cocone_morphism = g.cocone_morphism) : f = g :=
+begin
+  induction f,
+  induction g,
+  tidy
+end
 
-instance Cocones (F : J ↝ C) : category (Cocone F) := {
-  Hom            := λ X Y, CoconeMorphism X Y,
+instance Cocones (F : J ↝ C) : category (Cocone F) := 
+{ Hom            := λ X Y, CoconeMorphism X Y,
   compose        := λ X Y Z f g, ⟨ f.cocone_morphism ≫ g.cocone_morphism ⟩,
-  identity       := λ X, ⟨ 𝟙 X.cocone_point ⟩
-}
+  identity       := λ X, ⟨ 𝟙 X.cocone_point ⟩ }
 
-definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F) (Cocone (F ⋙ G)) := {
-  onObjects     := λ X, {
-    cocone_point    := G X.cocone_point,
-    cocone_maps     := λ j, G &> (X.cocone_maps j)
- },
-  onMorphisms   := λ X Y f, {
-    cocone_morphism := G &> f.cocone_morphism
- }
-}
+definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F) (Cocone (F ⋙ G)) := 
+{ onObjects     := λ X,     { cocone_point    := G X.cocone_point,
+                              cocone_maps     := λ j, G &> (X.cocone_maps j) },
+  onMorphisms   := λ X Y f, { cocone_morphism := G &> f.cocone_morphism } }
 
 definition LimitCone     (F : J ↝ C) := TerminalObject (Cone F)
 definition ColimitCocone (F : J ↝ C) := InitialObject (Cocone F)
@@ -126,9 +108,7 @@ variable {F : J ↝ C}
 
 open categories.universal
 
-definition Functor.onCones (G : C ↝ D) (c : Cone F) : Cone (F ⋙ G) := 
-(Cones_functoriality F G) c
-definition Functor.onCocones (G : C ↝ D) (c : Cocone F) : Cocone (F ⋙ G) := 
-(Cocones_functoriality F G) c
+definition Functor.onCones   (G : C ↝ D) (c : Cone F)   : Cone (F ⋙ G)   := (Cones_functoriality F G) c
+definition Functor.onCocones (G : C ↝ D) (c : Cocone F) : Cocone (F ⋙ G) := (Cocones_functoriality F G) c
 
 end categories.functor

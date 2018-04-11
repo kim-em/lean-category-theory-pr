@@ -38,11 +38,8 @@ instance InitialObject_coercion_to_object : has_coe (InitialObject C) C :=
   {coe := InitialObject.initial_object}
 
 structure is_initial (X : C) :=
-  (morphism_from_initial_object_to           : ∀ Y : C, X ⟶ Y)
+  (morphism_from_initial_object_to             : ∀ Y : C, X ⟶ Y)
   (uniqueness_of_morphisms_from_initial_object : ∀ Y : C, ∀ f g : X ⟶ Y, f = g)
-
--- We can't mark this as applicable, because that might generate goals that an object is initial!
--- attribute [search] is_initial.uniqueness_of_morphisms_from_initial_object
 
 lemma InitialObjects_are_unique (X Y : InitialObject C) : @Isomorphism C _ X Y := by obviously
 
@@ -50,7 +47,7 @@ instance TerminalObject_coercion_to_object : has_coe (TerminalObject C) C :=
   {coe := TerminalObject.terminal_object}
 
 structure is_terminal (X : C) :=
-  (morphism_to_terminal_object_from : ∀ Y : C, Y ⟶ X)
+  (morphism_to_terminal_object_from           : ∀ Y : C, Y ⟶ X)
   (uniqueness_of_morphisms_to_terminal_object : ∀ Y : C, ∀ f g : Y ⟶ X, f = g)
 
 lemma TerminalObjects_are_unique (X Y : TerminalObject C) : @Isomorphism C _ X Y := by obviously
