@@ -7,7 +7,6 @@ import tidy.its
 import tidy.auto_cast
 import tidy.make_lemma
 
-
 universes u v
 
 -- TODO this is evil; have solve_by_elim fake it. It is needed in types/default.lean and functor_categories/default.lean

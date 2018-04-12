@@ -46,15 +46,11 @@ definition ProductFunctor (F : A ↝ B) (G : C ↝ D) : (A × C) ↝ (B × D) :=
 { onObjects     := λ X, (F X.1, G X.2),
   onMorphisms   := λ _ _ f, (F &> f.1, G &> f.2) }
 
-namespace ProductFunctor
-  notation F `×` G := ProductFunctor F G
-end ProductFunctor
+notation F `×` G := ProductFunctor F G
 
 definition ProductNaturalTransformation {F G : A ↝ B} {H I : C ↝ D} (α : F ⟹ G) (β : H ⟹ I) : (F × H) ⟹ (G × I) :=
 { components := λ X, (α.components X.1, β.components X.2) }
 
-namespace ProductNaturalTransformation
-  notation α `×` β := ProductNaturalTransformation α β
-end ProductNaturalTransformation
+notation α `×` β := ProductNaturalTransformation α β
 
 end categories.products

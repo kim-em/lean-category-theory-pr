@@ -55,7 +55,7 @@ begin
   tidy,
 end
 
--- TODO the @s are unpleasant here
+-- TODO the @s are unpleasant here (ask for help during PR)
 @[simp] definition is_Isomorphism_in_Types.witness_1 {α β : Type u} (f : α → β) (h : @is_Isomorphism _ _ α β f) (x : α) : h.inverse (f x) = x :=
 begin
   have p := h.witness_1, unfold_projs at p,
