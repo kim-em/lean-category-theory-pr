@@ -19,8 +19,7 @@ variable [category E]
 
 structure NaturalTransformation (F G : Functor C D) : Type /-((max u v)+1)-/ (max (u+1) v) :=
   (components: Π X : C, (F X) ⟶ (G X))
-  (naturality: ∀ {X Y : C} (f : X ⟶ Y),
-     (F &> f) ≫ (components Y) = (components X) ≫ (G &> f) . obviously)
+  (naturality: ∀ {X Y : C} (f : X ⟶ Y), (F &> f) ≫ (components Y) = (components X) ≫ (G &> f) . obviously')
 
 make_lemma NaturalTransformation.naturality
 attribute [search] NaturalTransformation.naturality_lemma
@@ -46,24 +45,21 @@ variables {F G H: Functor C D}
     subst hc
   end
 
-definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F := {
-    components := λ X, 𝟙 (F X)
-}
+definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F := 
+{ components := λ X, 𝟙 (F X) }
 
-instance (F : C ↝ D) : has_one (F ⟹ F) := {
-  one := IdentityNaturalTransformation F
-}
+instance (F : C ↝ D) : has_one (F ⟹ F) := 
+{ one := IdentityNaturalTransformation F }
 
-definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := {
-    components := λ X, (α.components X) ≫ (β.components X)
-}
+definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := 
+{ components := λ X, (α.components X) ≫ (β.components X)}
 
 notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β
 
 open categories.functor
 
-@[simp] lemma FunctorComposition.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) X = G (F X) := by obviously
-@[simp] lemma FunctorComposition.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := by obviously
+@[simp] lemma FunctorComposition.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) X = G (F X) := by obviously'
+@[simp] lemma FunctorComposition.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := by obviously'
 
 definition horizontal_composition_of_NaturalTransformations
   {F G : C ↝ D}

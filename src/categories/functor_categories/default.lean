@@ -15,11 +15,10 @@ universes u₁ u₂ u₃
 section
 variables (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category D] (E : Type (u₃+1)) [category E]
 
-instance FunctorCategory : category.{(max (u₁+1) u₂) /-((max u₁ u₂) + 1)-/} (C ↝ D) := {
-  Hom := λ F G, F ⟹ G,
+instance FunctorCategory : category.{(max (u₁+1) u₂) /-((max u₁ u₂) + 1)-/} (C ↝ D) := 
+{ Hom := λ F G, F ⟹ G,
   identity := λ F, 1,
-  compose  := λ _ _ _ α β, α ⊟ β
-}
+  compose  := λ _ _ _ α β, α ⊟ β }
 end
 
 section

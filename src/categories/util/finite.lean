@@ -19,16 +19,16 @@ universes u v
 -- local attribute [applicable] quot.mk
 -- local attribute [reducible] function.left_inverse function.right_inverse
 
--- @[simp] lemma lt_zero_eq_false (n : ℕ) : n < 0 = false := by obviously
+-- @[simp] lemma lt_zero_eq_false (n : ℕ) : n < 0 = false := by obviously'
 
 -- instance : Finite empty := {
 --   cardinality := 0,
---   bijection := by obviously,
+--   bijection := by obviously',
 -- } 
 
 -- instance pempty_Finite : Finite pempty := {
 --   cardinality := 0,
---   bijection := by obviously
+--   bijection := by obviously'
 -- }
 
 -- def to_as_true {c : Prop} [h₁ : decidable c] (h₂ : c) : as_true c :=
@@ -43,15 +43,15 @@ universes u v
 --     apply quot.mk, 
 --     refine { 
 --       to_fun := λ n, match n with
---                         | _0 := ⟨ 0, by obviously ⟩
---                         | _1 := ⟨ 1, by obviously ⟩
+--                         | _0 := ⟨ 0, by obviously' ⟩
+--                         | _1 := ⟨ 1, by obviously' ⟩
 --                       end,
 --       inv_fun  := λ n, match n.1, to_as_true n.2 with
 --                         | 0, _ := _0
 --                         | 1, _ := _1 
 --                       end,
 --       ..
---     } ; obviously end
+--     } ; obviously' end
 --  }
 
 -- instance  {α : Type u} [fin : Finite α] : decidable_eq α := 
