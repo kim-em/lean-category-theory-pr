@@ -28,8 +28,21 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 
 -- These lemmas are quite common, to help us avoid having to muck around with associativity.
 -- If anyone has a suggestion for automating them away, I would be very appreciative.
-@[simp,search] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := by obviously'
-@[simp,search] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := by obviously'
+@[simp,search] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
+begin
+  -- `obviously'` says:
+  perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
+  perform_nth_rewrite_lhs [Isomorphism.witness_1_lemma] 0,
+  perform_nth_rewrite_lhs [category.left_identity_lemma] 0
+end
+
+@[simp,search] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
+begin
+  -- `obviously'` says:
+  perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
+  perform_nth_rewrite_lhs [Isomorphism.witness_2_lemma] 0,
+  perform_nth_rewrite_lhs [category.left_identity_lemma] 0
+end
 
 instance Isomorphism_coercion_to_morphism : has_coe (X ≅ Y) (X ⟶ Y) :=
 { coe := Isomorphism.morphism }
@@ -58,7 +71,9 @@ infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
         rewrite ← category.left_identity_lemma C k,
         rewrite_search_using `search,
       end,
-    obviously'
+    -- `obviously'` says:
+    automatic_induction,
+    refl
   end
 
 definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X := 
