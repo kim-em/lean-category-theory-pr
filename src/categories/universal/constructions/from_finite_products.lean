@@ -12,7 +12,7 @@ open categories.initial
 open categories.types
 open categories.util.finite
 
-universe u
+universes u v
 
 namespace categories.universal
 
