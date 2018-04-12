@@ -82,6 +82,7 @@ instance FiniteProducts_give_a_TerminalObject [has_FiniteProducts C] : has_Termi
   { terminal_object                            := pempty_product.product,
     morphism_to_terminal_object_from           := λ X, pempty_product.map pempty_dependent_function,
     uniqueness_of_morphisms_to_terminal_object := λ X f g, pempty_product.uniqueness f g pempty_dependent_function } }
+    
 instance FiniteCoproducts_give_an_InitialObject [has_FiniteCoproducts C] : has_InitialObject C := 
 { initial_object :=
   let pempty_coproduct := @has_FiniteCoproducts.coproduct C _ _ pempty _ pempty_function in 
@@ -107,9 +108,7 @@ instance BinaryProducts_from_FiniteProducts [has_FiniteProducts C] : has_BinaryP
       map                 := λ _ f g, p.map (Two.dependent_choice f g),
       left_factorisation  := λ _ f g, p.factorisation (Two.dependent_choice f g) Two._0,
       right_factorisation := λ _ f g, p.factorisation (Two.dependent_choice f g) Two._1,
-      uniqueness          := λ _ f g u v, p.uniqueness f g (λ X, begin cases X, exact u, exact v, end) }
-}
-
+      uniqueness          := λ _ f g u v, p.uniqueness f g (λ X, begin cases X, exact u, exact v, end) } }
 end
 
 -- PROJECT this has become nontrivial, because we're asserting that finite products can be indexed from the same universe level.

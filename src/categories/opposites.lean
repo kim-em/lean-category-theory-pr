@@ -24,24 +24,20 @@ def op (C : Type u₁) : Type u₁ := C
 
 notation C `ᵒᵖ` := op C
 
-instance Opposite : category (Cᵒᵖ) := { 
-  Hom := λ X Y : C, Y ⟶ X,
+instance Opposite : category (Cᵒᵖ) := 
+{ Hom      := λ X Y : C, Y ⟶ X,
   compose  := λ _ _ _ f g, g ≫ f,
-  identity := λ X, 𝟙 X 
-}
+  identity := λ X, 𝟙 X }
 
-definition OppositeFunctor (F : Functor C D) : Functor (Cᵒᵖ) (Dᵒᵖ) :=  {
-  onObjects     := λ X, F X,
-  onMorphisms   := λ X Y f, F &> f
-}
+definition OppositeFunctor (F : Functor C D) : Functor (Cᵒᵖ) (Dᵒᵖ) := 
+{ onObjects     := λ X, F X,
+  onMorphisms   := λ X Y f, F &> f }
 
-definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (Cᵒᵖ × C) (Type u₁) := { 
-  onObjects     := λ p, @category.Hom C _ p.1 p.2,
-  onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2
-}
+definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (Cᵒᵖ × C) (Type u₁) := 
+{ onObjects     := λ p, @category.Hom C _ p.1 p.2,
+  onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2 }
 
 -- PROJECT prove C^op^op is C
--- Test
 -- definition OppositeOpposite (C : Category) : Equivalence (Opposite (Opposite C)) C := sorry
 -- PROJECT opposites preserve products, functors, slices.
 

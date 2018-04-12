@@ -35,7 +35,7 @@ attribute [applicable,search] TerminalObject.uniqueness_of_morphisms_to_terminal
 variables {C : Type (u+1)} [category C]
 
 instance InitialObject_coercion_to_object : has_coe (InitialObject C) C :=
-  {coe := InitialObject.initial_object}
+{ coe := InitialObject.initial_object }
 
 structure is_initial (X : C) :=
   (morphism_from_initial_object_to             : ∀ Y : C, X ⟶ Y)
@@ -44,7 +44,7 @@ structure is_initial (X : C) :=
 lemma InitialObjects_are_unique (X Y : InitialObject C) : @Isomorphism C _ X Y := by obviously
 
 instance TerminalObject_coercion_to_object : has_coe (TerminalObject C) C :=
-  {coe := TerminalObject.terminal_object}
+{ coe := TerminalObject.terminal_object }
 
 structure is_terminal (X : C) :=
   (morphism_to_terminal_object_from           : ∀ Y : C, Y ⟶ X)

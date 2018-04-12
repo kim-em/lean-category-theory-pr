@@ -15,10 +15,10 @@ variable [category C]
 variables {X Y Z : C}
 
 structure Isomorphism (X Y : C) :=
-(morphism : X ⟶ Y)
-(inverse : Y ⟶ X)
-(witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
-(witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
+  (morphism : X ⟶ Y)
+  (inverse : Y ⟶ X)
+  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
+  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
 
 make_lemma Isomorphism.witness_1
 make_lemma Isomorphism.witness_2
@@ -32,17 +32,15 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 @[simp,search] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := by obviously
 
 instance Isomorphism_coercion_to_morphism : has_coe (X ≅ Y) (X ⟶ Y) :=
-  {coe := Isomorphism.morphism}
+{ coe := Isomorphism.morphism }
 
-definition Isomorphism.id (X : C) : X ≅ X := {
-  morphism := 1,
-  inverse := 1
-}
+definition Isomorphism.id (X : C) : X ≅ X := 
+{ morphism := 1,
+  inverse  := 1 }
 
-definition Isomorphism.comp (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := {
-  morphism := α.morphism ≫ β.morphism,
-  inverse := β.inverse ≫ α.inverse
-}
+definition Isomorphism.comp (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := 
+{ morphism := α.morphism ≫ β.morphism,
+  inverse  := β.inverse ≫ α.inverse }
 
 infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
 
@@ -63,10 +61,9 @@ infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
     obviously
   end
 
-definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X := {
-  morphism  := I.inverse,
-  inverse   := I.morphism
-}
+definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X := 
+{ morphism  := I.inverse,
+  inverse   := I.morphism }
 
 @[simp] lemma Isomorphism.cancel_morphism_left (I : X ≅ Y) (f g : Y ⟶ Z) : I.morphism ≫ f = I.morphism ≫ g ↔ f = g :=
 begin
@@ -94,16 +91,16 @@ begin
 end
 
 structure is_Isomorphism (morphism : X ⟶ Y) :=
-(inverse : Y ⟶ X)
-(witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
-(witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
+  (inverse : Y ⟶ X)
+  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
+  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
 
 make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2
 attribute [simp,search] is_Isomorphism.witness_1_lemma is_Isomorphism.witness_2_lemma
 
 instance is_Isomorphism_coercion_to_morphism (f : X ⟶ Y): has_coe (is_Isomorphism f) (X ⟶ Y) :=
-  {coe := λ _, f}
+{ coe := λ _, f }
 
 definition Epimorphism (f : X ⟶ Y) := Π (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h
 definition Monomorphism (f : X ⟶ Y) := Π (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h

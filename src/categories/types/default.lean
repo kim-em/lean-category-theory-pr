@@ -16,11 +16,9 @@ open categories.functor
 universes u v w
 
 instance CategoryOfTypes : category (Type u) :=
-{
-    Hom := λ a b, (a → b),
-    identity := λ a, id,
-    compose  := λ _ _ _ f g, g ∘ f
-}
+{ Hom := λ a b, (a → b),
+  identity := λ a, id,
+  compose  := λ _ _ _ f g, g ∘ f }
 
 variables {C : Type (v+1)} [category C] (F G H: Functor C (Type u)) {X Y Z : C} 
 variables (σ : F ⟹ G) (τ : G ⟹ H) 
@@ -40,10 +38,9 @@ end.
 -- @[simp] lemma Functor_to_Types.horizontal_composition (x : (I ⋙ F) W) : (ρ ◫ σ).components W x = sorry := by obviously 
 
 
-definition UniverseLift : Functor (Type u) (Type (u+1)) := {
-    onObjects := λ X, ulift.{u+1} X,
-    onMorphisms := λ X Y f, λ x : ulift.{u+1} X, ulift.up (f x.down)
-}
+definition UniverseLift : Functor (Type u) (Type (u+1)) := 
+{ onObjects := λ X, ulift.{u+1} X,
+  onMorphisms := λ X Y f, λ x : ulift.{u+1} X, ulift.up (f x.down) }
 
 definition Bijection (α β : Type u) := Isomorphism α β 
 
