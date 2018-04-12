@@ -58,8 +58,17 @@ notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β
 
 open categories.functor
 
-@[simp] lemma FunctorComposition.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) X = G (F X) := by obviously'
-@[simp] lemma FunctorComposition.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := by obviously'
+@[simp] lemma FunctorComposition.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) X = G (F X) := 
+begin
+  -- `obviously'` says:
+  refl
+end
+
+@[simp] lemma FunctorComposition.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := 
+begin
+  -- `obviously'` says:
+  refl
+end
 
 definition horizontal_composition_of_NaturalTransformations
   {F G : C ↝ D}
@@ -87,8 +96,18 @@ definition whisker_on_right
   α ◫ 1
 
 @[search] lemma NaturalTransformation.exchange
- {F G H : C ↝ D}
- {I J K : D ↝ E}
- (α : F ⟹ G) (β : G ⟹ H) (γ : I ⟹ J) (δ : J ⟹ K) : ((α ⊟ β) ◫ (γ ⊟ δ)) = ((α ◫ γ) ⊟ (β ◫ δ)) := by obviously' 
+  {F G H : C ↝ D}
+  {I J K : D ↝ E}
+  (α : F ⟹ G) (β : G ⟹ H) (γ : I ⟹ J) (δ : J ⟹ K) : ((α ⊟ β) ◫ (γ ⊟ δ)) = ((α ◫ γ) ⊟ (β ◫ δ)) := 
+  begin
+    -- `obviously'` says:
+    fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+    intros,
+    dsimp_all',
+    simp!,
+    perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
+    perform_nth_rewrite_lhs [←NaturalTransformation.naturality_lemma] 0,
+    perform_nth_rewrite_lhs [category.associativity_lemma] 0
+  end
 
 end categories.natural_transformation

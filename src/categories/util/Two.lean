@@ -23,8 +23,31 @@ open Two
 do l ← local_context,
    at_least_one (l.reverse.map (λ h, do t ← infer_type h, match t with | `(Two) := cases h >> skip | _ := failed end))
 
-instance Two_decidable : decidable_eq Two := by obviously'
+instance Two_decidable : decidable_eq Two := 
+begin
+  -- `obviously'` says:
+  dsimp_all',
+  intros,
+  induction_Two,
+  simp!,
+  fapply decidable_true,
+  simp!,
+  fapply decidable_false,
+  induction_Two,
+  simp!,
+  fapply decidable_false,
+  simp!,
+  fapply decidable_true
+end
 
 instance Two_fintype : fintype Two := 
 { elems       := [_0, _1].to_finset,
-  complete    := by obviously' }
+  complete    := begin
+                   -- `obviously'` says:
+                   intros,
+                   dsimp,
+                   simp!,
+                   induction_Two,
+                   simp!,
+                   simp! 
+                 end }
