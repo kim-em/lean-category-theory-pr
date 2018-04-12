@@ -41,7 +41,15 @@ structure is_initial (X : C) :=
   (morphism_from_initial_object_to             : ∀ Y : C, X ⟶ Y)
   (uniqueness_of_morphisms_from_initial_object : ∀ Y : C, ∀ f g : X ⟶ Y, f = g)
 
-lemma InitialObjects_are_unique (X Y : InitialObject C) : @Isomorphism C _ X Y := by obviously'
+lemma InitialObjects_are_unique (X Y : InitialObject C) : @Isomorphism C _ X Y :=
+begin
+  -- `obviously'` says:
+  fsplit,
+  fapply categories.initial.InitialObject.morphism_from_initial_object_to,
+  fapply categories.initial.InitialObject.morphism_from_initial_object_to,
+  fapply categories.initial.InitialObject.uniqueness_of_morphisms_from_initial_object_lemma,
+  fapply categories.initial.InitialObject.uniqueness_of_morphisms_from_initial_object_lemma
+end
 
 instance TerminalObject_coercion_to_object : has_coe (TerminalObject C) C :=
 { coe := TerminalObject.terminal_object }
@@ -50,7 +58,15 @@ structure is_terminal (X : C) :=
   (morphism_to_terminal_object_from           : ∀ Y : C, Y ⟶ X)
   (uniqueness_of_morphisms_to_terminal_object : ∀ Y : C, ∀ f g : Y ⟶ X, f = g)
 
-lemma TerminalObjects_are_unique (X Y : TerminalObject C) : @Isomorphism C _ X Y := by obviously'
+lemma TerminalObjects_are_unique (X Y : TerminalObject C) : @Isomorphism C _ X Y :=
+begin
+  -- `obviously'` says:
+  fsplit,
+  fapply categories.initial.TerminalObject.morphism_to_terminal_object_from,
+  fapply categories.initial.TerminalObject.morphism_to_terminal_object_from,
+  fapply categories.initial.TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma,
+  fapply categories.initial.TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma
+end
 
 class ZeroObject (C : Type (u+1)) [category C] :=
   (zero_object : C)
