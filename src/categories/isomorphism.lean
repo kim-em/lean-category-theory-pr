@@ -17,8 +17,8 @@ variables {X Y Z : C}
 structure Isomorphism (X Y : C) :=
   (morphism : X ⟶ Y)
   (inverse : Y ⟶ X)
-  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
-  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
+  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously')
+  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously')
 
 make_lemma Isomorphism.witness_1
 make_lemma Isomorphism.witness_2
@@ -28,8 +28,8 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 
 -- These lemmas are quite common, to help us avoid having to muck around with associativity.
 -- If anyone has a suggestion for automating them away, I would be very appreciative.
-@[simp,search] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := by obviously
-@[simp,search] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := by obviously
+@[simp,search] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := by obviously'
+@[simp,search] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := by obviously'
 
 instance Isomorphism_coercion_to_morphism : has_coe (X ≅ Y) (X ⟶ Y) :=
 { coe := Isomorphism.morphism }
@@ -58,7 +58,7 @@ infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
         rewrite ← category.left_identity_lemma C k,
         rewrite_search_using `search,
       end,
-    obviously
+    obviously'
   end
 
 definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X := 
@@ -92,8 +92,8 @@ end
 
 structure is_Isomorphism (morphism : X ⟶ Y) :=
   (inverse : Y ⟶ X)
-  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
-  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
+  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously')
+  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously')
 
 make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2

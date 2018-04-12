@@ -30,12 +30,12 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) :=
                                left_inclusion     := sum.inl,
                                right_inclusion    := sum.inr,
                                map                := λ _ f g z, sum.cases_on z f g,
-                               uniqueness         := λ Z f g lw rw, begin tidy, cases x; obviously end } }
+                               uniqueness         := λ Z f g lw rw, begin tidy, cases x; obviously' end } }
 
 instance Types_has_Equalizers : has_Equalizers (Type u) := 
 { equalizer := λ α β f g, { equalizer     := {x : α // f x = g x},
                             inclusion     := λ x, x.val,
-                            map           := λ γ k h g, ⟨ k g, by obviously ⟩ } }
+                            map           := λ γ k h g, ⟨ k g, by obviously' ⟩ } }
 
 open tactic
 @[tidy] meta def quotient_induction : tactic unit :=
@@ -44,7 +44,7 @@ do l ← local_context,
 
 instance Types_has_Coequalizers : has_Coequalizers (Type u) := 
 { coequalizer := λ α β f g, { coequalizer   := quotient (eqv_gen.setoid (λ x y, ∃ a : α, f a = x ∧ g a = y)),
-                              projection    := by obviously,
-                              map           := by obviously, } }
+                              projection    := by obviously',
+                              map           := by obviously', } }
 
 end categories.types

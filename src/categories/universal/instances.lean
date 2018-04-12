@@ -140,7 +140,7 @@ end
 -- | (succ n) := sorry
 
 -- instance FiniteProducts_from_BinaryProducts (C : Category) [has_TerminalObject C] [has_BinaryProducts C] : has_FiniteProducts C := {
---   product := λ {I : Type} [fin : Finite I] (f : I → C.Obj), construct_finite_product C fin.cardinality I fin by obviously f
+--   product := λ {I : Type} [fin : Finite I] (f : I → C.Obj), construct_finite_product C fin.cardinality I fin by obviously' f
 --}
 
 end categories.universal
