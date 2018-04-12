@@ -89,6 +89,6 @@ definition whisker_on_right
 @[search] lemma NaturalTransformation.exchange
  {F G H : C ↝ D}
  {I J K : D ↝ E}
- (α : F ⟹ G) (β : G ⟹ H) (γ : I ⟹ J) (δ : J ⟹ K) : ((α ⊟ β) ◫ (γ ⊟ δ)) = ((α ◫ γ) ⊟ (β ◫ δ)) := by obviously'' 
+ (α : F ⟹ G) (β : G ⟹ H) (γ : I ⟹ J) (δ : J ⟹ K) : ((α ⊟ β) ◫ (γ ⊟ δ)) = ((α ◫ γ) ⊟ (β ◫ δ)) := by obviously' 
 
 end categories.natural_transformation
