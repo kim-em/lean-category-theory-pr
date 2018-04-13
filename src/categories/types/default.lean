@@ -41,16 +41,20 @@ end
 begin 
   have p := σ.naturality_lemma f,
   tidy,
-end.
+end
+
 @[simp] lemma Functor_to_Types.vertical_composition (x : F X) : (σ ⊟ τ).components X x = τ.components X (σ.components X x) :=
 begin 
   -- `obviously'` says:
   refl
 end  
  
--- TODO
--- variables {D : Type (w+1)} [category D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
--- @[simp] lemma Functor_to_Types.horizontal_composition (x : (I ⋙ F) W) : (ρ ◫ σ).components W x = sorry := by obviously' 
+variables {D : Type (w+1)} [category D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
+@[simp] lemma Functor_to_Types.horizontal_composition (x : (I ⋙ F) W) : (ρ ◫ σ).components W x = (G &> ρ.components W) (σ.components (I W) x) := 
+begin
+  -- `obviously'` says:
+  refl
+end
 
 definition UniverseLift : Functor (Type u) (Type (u+1)) := 
 { onObjects := λ X, ulift.{u+1} X,
