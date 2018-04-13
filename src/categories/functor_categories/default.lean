@@ -37,7 +37,7 @@ end
   : ((F &> f).components Z) ≫ ((T.components Y).components Z) =
     ((T.components X).components Z) ≫ ((G &> f).components Z) :=
 begin
-  have p := T.naturality _,
+  have p := (T.naturality f),
   tidy,
 end
 end
