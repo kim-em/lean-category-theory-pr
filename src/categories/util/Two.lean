@@ -21,7 +21,8 @@ open Two
 
 @[tidy] meta def induction_Two : tactic unit :=
 do l ← local_context,
-   at_least_one (l.reverse.map (λ h, do t ← infer_type h, match t with | `(Two) := cases h >> skip | _ := failed end))
+   at_least_one (l.reverse.map (λ h, do t ← infer_type h, match t with | `(Two) := cases h >> skip | _ := failed end)),
+   skip
 
 instance Two_decidable : decidable_eq Two := 
 begin

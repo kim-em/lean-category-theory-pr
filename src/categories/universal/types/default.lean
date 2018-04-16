@@ -39,7 +39,8 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
 open tactic
 @[tidy] meta def quotient_induction : tactic unit :=
 do l ← local_context,
-   at_least_one (l.reverse.map (λ h, do t ← infer_type h, match t with | `(quotient _) := induction h >> skip | `(eqv_gen _ _ _) := induction h >> skip | _ := failed end))
+   at_least_one (l.reverse.map (λ h, do t ← infer_type h, match t with | `(quotient _) := induction h >> skip | `(eqv_gen _ _ _) := induction h >> skip | _ := failed end)),
+   skip
 
 instance Types_has_Coequalizers : has_Coequalizers (Type u) := 
 { coequalizer := λ α β f g, { coequalizer   := quotient (eqv_gen.setoid (λ x y, ∃ a : α, f a = x ∧ g a = y)),

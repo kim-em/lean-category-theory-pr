@@ -66,13 +66,13 @@ infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
     simp at w,    
     have p : g = k,
       begin
-        tidy,
+        tidy {trace_result:=tt},
         -- PROJECT rewrite_search can't do this rewrite!
         rewrite ← category.left_identity_lemma C k,
-        rewrite_search_using `ematch,
+        rewrite_search_using `ematch  {trace_result:=tt},
       end,
     -- `obviously'` says:
-    automatic_induction,
+    automatic_induction >>= trace,
     refl
   end
 
