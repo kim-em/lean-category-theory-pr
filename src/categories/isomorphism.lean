@@ -31,13 +31,13 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 @[simp,ematch] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
 begin
   -- `obviously'` says:
-  rw[←category.associativity_lemma, Isomorphism.witness_1_lemma, category.left_identity_lemma]
+  rw [←category.associativity_lemma, Isomorphism.witness_1_lemma, category.left_identity_lemma]
 end
 
 @[simp,ematch] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
 begin
   -- `obviously'` says:
-  rw[←category.associativity_lemma, Isomorphism.witness_2_lemma, category.left_identity_lemma]
+  rw [←category.associativity_lemma, Isomorphism.witness_2_lemma, category.left_identity_lemma]
 end
 
 instance Isomorphism_coercion_to_morphism : has_coe (X ≅ Y) (X ⟶ Y) :=

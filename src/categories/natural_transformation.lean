@@ -94,10 +94,10 @@ definition horizontal_composition_of_NaturalTransformations
                   intros,
                   simp!,
                   dsimp_all',
-                  rw[←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma],
-                  perform_nth_rewrite_rhs [←Functor.functoriality_lemma] 0, -- this breaks if replaced with rw
-                  perform_nth_rewrite_rhs [←NaturalTransformation.naturality_lemma] 0, -- this breaks if replaced with rw
-                  rw[Functor.functoriality_lemma]
+                  rw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma],
+                  perform_nth_rewrite_rhs [←Functor.functoriality_lemma] 0, -- TODO this breaks if replaced with rw
+                  perform_nth_rewrite_rhs [←NaturalTransformation.naturality_lemma] 0, -- TODO this breaks if replaced with rw
+                  rw [Functor.functoriality_lemma]
                 end }
 
 notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α β
@@ -126,8 +126,8 @@ definition whisker_on_right
     intros,
     dsimp_all',
     simp!,
-    perform_nth_rewrite_lhs [←category.associativity_lemma] 0, -- this breaks if replaced with rw
-    rw[←NaturalTransformation.naturality_lemma, category.associativity_lemma]
+    perform_nth_rewrite_lhs [←category.associativity_lemma] 0, -- TODO this breaks if replaced with rw
+    rw [←NaturalTransformation.naturality_lemma, category.associativity_lemma]
   end
 
 end categories.natural_transformation
