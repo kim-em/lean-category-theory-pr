@@ -31,17 +31,13 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 @[simp,search] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
 begin
   -- `obviously'` says:
-  perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
-  perform_nth_rewrite_lhs [Isomorphism.witness_1_lemma] 0,
-  perform_nth_rewrite_lhs [category.left_identity_lemma] 0
+  rw[←category.associativity_lemma, Isomorphism.witness_1_lemma, category.left_identity_lemma]
 end
 
 @[simp,search] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
 begin
   -- `obviously'` says:
-  perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
-  perform_nth_rewrite_lhs [Isomorphism.witness_2_lemma] 0,
-  perform_nth_rewrite_lhs [category.left_identity_lemma] 0
+  rw[←category.associativity_lemma, Isomorphism.witness_2_lemma, category.left_identity_lemma]
 end
 
 instance Isomorphism_coercion_to_morphism : has_coe (X ≅ Y) (X ⟶ Y) :=

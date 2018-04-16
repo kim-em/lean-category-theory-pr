@@ -49,7 +49,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
     begin
     -- `obviously'` says:
     dsimp_all',
-    perform_nth_rewrite_lhs [Functor.functoriality_lemma] 0
+    perform_nth_rewrite_lhs [Functor.functoriality_lemma] 0 -- this breaks if replaced with rw
     end
 
 @[simp,search] lemma ContravariantFunctor.identities
@@ -57,7 +57,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
   begin
     -- `obviously'` says:
   dsimp_all',
-  perform_nth_rewrite_lhs [Functor.identities_lemma] 0
+  perform_nth_rewrite_lhs [Functor.identities_lemma] 0 -- this breaks if replaced with rw
   end
 
 end categories.opposites

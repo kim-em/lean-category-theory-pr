@@ -105,9 +105,8 @@ definition whisker_on_right
     intros,
     dsimp_all',
     simp!,
-    perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
-    perform_nth_rewrite_lhs [←NaturalTransformation.naturality_lemma] 0,
-    perform_nth_rewrite_lhs [category.associativity_lemma] 0
+    perform_nth_rewrite_lhs [←category.associativity_lemma] 0, -- this breaks if replaced with rw
+    rw[←NaturalTransformation.naturality_lemma, category.associativity_lemma]
   end
 
 end categories.natural_transformation
