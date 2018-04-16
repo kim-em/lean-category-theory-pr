@@ -27,21 +27,28 @@ notation C `ᵒᵖ` := op C
 instance Opposite : category (Cᵒᵖ) := 
 { Hom      := λ X Y : C, Y ⟶ X,
   compose  := λ _ _ _ f g, g ≫ f,
-  identity := λ X, 𝟙 X }
+  identity := λ X, 𝟙 X,
+  left_identity  := by obviously',
+  right_identity := by obviously',
+  associativity  := by obviously' }
 
 definition OppositeFunctor (F : Functor C D) : Functor (Cᵒᵖ) (Dᵒᵖ) := 
 { onObjects     := λ X, F X,
-  onMorphisms   := λ X Y f, F &> f }
+  onMorphisms   := λ X Y f, F &> f,
+  identities    := by obviously',
+  functoriality := by obviously' }
 
 definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (Cᵒᵖ × C) (Type u₁) := 
 { onObjects     := λ p, @category.Hom C _ p.1 p.2,
-  onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2 }
+  onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2,
+  identities    := by obviously',
+  functoriality := by obviously' }
 
 -- PROJECT prove C^op^op is C
 -- definition OppositeOpposite (C : Category) : Equivalence (Opposite (Opposite C)) C := sorry
 -- PROJECT opposites preserve products, functors, slices.
 
-@[simp,search] lemma ContravariantFunctor.functoriality
+@[simp,ematch] lemma ContravariantFunctor.functoriality
   (F : (Cᵒᵖ) ↝ D)
   (X Y Z : (Cᵒᵖ))
   (f : X ⟶ Y) (g : Y ⟶ Z) :
@@ -52,7 +59,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
     perform_nth_rewrite_lhs [Functor.functoriality_lemma] 0
     end
 
-@[simp,search] lemma ContravariantFunctor.identities
+@[simp,ematch] lemma ContravariantFunctor.identities
   (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.category.identity.{u₁} C _ X)) = 𝟙 (F X) :=
   begin
     -- `obviously'` says:

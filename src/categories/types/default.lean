@@ -18,26 +18,29 @@ universes u v w
 instance CategoryOfTypes : category (Type u) :=
 { Hom := λ a b, (a → b),
   identity := λ a, id,
-  compose  := λ _ _ _ f g, g ∘ f }
-
+  compose  := λ _ _ _ f g, g ∘ f,
+  left_identity    := by obviously',
+  right_identity   := by obviously',
+  associativity    := by obviously' }
+  
 variables {C : Type (v+1)} [category C] (F G H: Functor C (Type u)) {X Y Z : C} 
 variables (σ : F ⟹ G) (τ : G ⟹ H) 
 
-@[simp,search] lemma Functor_to_Types.functoriality (f : X ⟶ Y) (g : Y ⟶ Z) (a : F X) : (F &> (f ≫ g)) a = (F &> g) ((F &> f) a) :=
+@[simp,ematch] lemma Functor_to_Types.functoriality (f : X ⟶ Y) (g : Y ⟶ Z) (a : F X) : (F &> (f ≫ g)) a = (F &> g) ((F &> f) a) :=
 begin 
   -- `obviously'` says:
   simp!,
   refl
 end
 
-@[simp,search] lemma Functor_to_Types.identities (a : F X) : (F &> (𝟙 X)) a = a := 
+@[simp,ematch] lemma Functor_to_Types.identities (a : F X) : (F &> (𝟙 X)) a = a := 
 begin
   -- `obviously'` says:
   simp!,
   refl
 end
 
-@[search] lemma Functor_to_Types.naturality (f : X ⟶ Y) (x : F X) : σ.components Y ((F &> f) x) = (G &> f) (σ.components X x) := 
+@[ematch] lemma Functor_to_Types.naturality (f : X ⟶ Y) (x : F X) : σ.components Y ((F &> f) x) = (G &> f) (σ.components X x) := 
 begin 
   have p := σ.naturality_lemma f,
   exact congr_fun p x,
@@ -58,6 +61,8 @@ end
 
 definition UniverseLift : Functor (Type u) (Type (u+1)) := 
 { onObjects := λ X, ulift.{u+1} X,
-  onMorphisms := λ X Y f, λ x : ulift.{u+1} X, ulift.up (f x.down) }
+  onMorphisms := λ X Y f, λ x : ulift.{u+1} X, ulift.up (f x.down),
+  identities    := by obviously',
+  functoriality := by obviously' }
 
 end categories.types

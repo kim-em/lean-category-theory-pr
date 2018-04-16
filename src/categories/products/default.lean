@@ -24,27 +24,40 @@ variable [category D]
 instance ProductCategory : category (C × D) := 
 { Hom      := λ X Y, ((X.1) ⟶ (Y.1)) × ((X.2) ⟶ (Y.2)),
   identity := λ X, ⟨ 𝟙 (X.1), 𝟙 (X.2) ⟩,
-  compose  := λ _ _ _ f g, (f.1 ≫ g.1, f.2 ≫ g.2) }
+  compose  := λ _ _ _ f g, (f.1 ≫ g.1, f.2 ≫ g.2),
+  left_identity    := by obviously',
+  right_identity   := by obviously',
+  associativity    := by obviously' }
 
 definition RightInjectionAt (Z : D) : C ↝ (C × D) := 
 { onObjects     := λ X, (X, Z),
-  onMorphisms   := λ X Y f, (f, 𝟙 Z) }
+  onMorphisms   := λ X Y f, (f, 𝟙 Z),
+  identities    := by obviously',
+  functoriality := by obviously' }
 
 definition LeftInjectionAt (Z : C) : D ↝ (C × D) := 
 { onObjects     := λ X, (Z, X),
-  onMorphisms   := λ X Y f, (𝟙 Z, f) }
+  onMorphisms   := λ X Y f, (𝟙 Z, f),
+  identities    := by obviously',
+  functoriality := by obviously' }
 
 definition LeftProjection : (C × D) ↝ C := 
 { onObjects     := λ X, X.1,
-  onMorphisms   := λ X Y f, f.1 }
+  onMorphisms   := λ X Y f, f.1,
+  identities    := by obviously',
+  functoriality := by obviously' }
 
 definition RightProjection : (C × D) ↝ D := 
 { onObjects     := λ X, X.2,
-  onMorphisms   := λ X Y f, f.2 }
+  onMorphisms   := λ X Y f, f.2,
+  identities    := by obviously',
+  functoriality := by obviously' }
 
 definition ProductFunctor (F : A ↝ B) (G : C ↝ D) : (A × C) ↝ (B × D) :=
 { onObjects     := λ X, (F X.1, G X.2),
-  onMorphisms   := λ _ _ f, (F &> f.1, G &> f.2) }
+  onMorphisms   := λ _ _ f, (F &> f.1, G &> f.2),
+  identities    := by obviously',
+  functoriality := by obviously' }
 
 notation F `×` G := ProductFunctor F G
 

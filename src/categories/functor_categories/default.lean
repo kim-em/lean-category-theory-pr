@@ -15,16 +15,19 @@ universes u₁ u₂ u₃
 section
 variables (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category D] (E : Type (u₃+1)) [category E]
 
-instance FunctorCategory : category.{(max (u₁+1) u₂) /-((max u₁ u₂) + 1)-/} (C ↝ D) := 
-{ Hom := λ F G, F ⟹ G,
+instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) := 
+{ Hom      := λ F G, F ⟹ G,
   identity := λ F, 1,
-  compose  := λ _ _ _ α β, α ⊟ β }
+  compose  := λ _ _ _ α β, α ⊟ β,
+  left_identity  := by obviously',
+  right_identity := by obviously',
+  associativity  := by obviously' }
 end
 
 section
 variables {C : Type (u₁+1)} [category C] {D : Type (u₂+1)} [category D] {E : Type (u₃+1)} [category E]
 
-@[search] lemma NaturalTransformation_to_FunctorCategory.components_naturality
+@[ematch] lemma NaturalTransformation_to_FunctorCategory.components_naturality
   {F G : C ↝ (D ↝ E)} (T : F ⟹ G) (X : C) {Y Z : D} (f : Y ⟶ Z)
     : ((F X) &> f) ≫ ((T.components X).components Z) =
     ((T.components X).components Y) ≫ ((G X) &> f) :=
@@ -32,7 +35,7 @@ begin
   exact (T.components _).naturality _
 end
 
-@[search] lemma NaturalTransformation_to_FunctorCategory.naturality_components
+@[ematch] lemma NaturalTransformation_to_FunctorCategory.naturality_components
   {F G : C ↝ (D ↝ E)} (T : F ⟹ G) (Z : D) {X Y : C} (f : X ⟶ Y)
   : ((F &> f).components Z) ≫ ((T.components Y).components Z) =
     ((T.components X).components Z) ≫ ((G &> f).components Z) :=
