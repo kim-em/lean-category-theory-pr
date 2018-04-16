@@ -5,7 +5,6 @@
 import ..isomorphism
 import ..functor_categories
 import ..opposites
-import tidy.its
 
 open categories
 open categories.isomorphism
@@ -21,7 +20,7 @@ structure InitialObject (C : Type (u+1)) [category C] :=
 
 attribute [applicable] InitialObject.morphism_from_initial_object_to
 make_lemma InitialObject.uniqueness_of_morphisms_from_initial_object
-attribute [applicable,search] InitialObject.uniqueness_of_morphisms_from_initial_object_lemma
+attribute [applicable,ematch] InitialObject.uniqueness_of_morphisms_from_initial_object_lemma
 
 structure TerminalObject (C : Type (u+1)) [category C]  :=
   (terminal_object                            : C)
@@ -30,7 +29,7 @@ structure TerminalObject (C : Type (u+1)) [category C]  :=
 
 attribute [applicable] TerminalObject.morphism_to_terminal_object_from
 make_lemma TerminalObject.uniqueness_of_morphisms_to_terminal_object
-attribute [applicable,search] TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma
+attribute [applicable,ematch] TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma
 
 variables {C : Type (u+1)} [category C]
 
