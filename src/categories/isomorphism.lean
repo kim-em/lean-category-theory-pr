@@ -17,8 +17,8 @@ variables {X Y Z : C}
 structure Isomorphism (X Y : C) :=
   (morphism : X ⟶ Y)
   (inverse : Y ⟶ X)
-  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously_stub)
-  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously_stub)
+  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously')
+  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously')
 
 make_lemma Isomorphism.witness_1
 make_lemma Isomorphism.witness_2
@@ -129,8 +129,8 @@ end
 
 structure is_Isomorphism (morphism : X ⟶ Y) :=
   (inverse : Y ⟶ X)
-  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously_stub)
-  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously_stub)
+  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously')
+  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously')
 
 make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2
