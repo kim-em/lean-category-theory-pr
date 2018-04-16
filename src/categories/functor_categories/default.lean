@@ -16,6 +16,7 @@ section
 variables (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category D] (E : Type (u₃+1)) [category E]
 
 instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) := 
+<<<<<<< HEAD
 { Hom            := λ F G, F ⟹ G,
   identity       := λ F, 1,
   compose        := λ _ _ _ α β, α ⊟ β,
@@ -43,6 +44,14 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       dsimp_all',
                       simp!
                     end }
+=======
+{ Hom      := λ F G, F ⟹ G,
+  identity := λ F, 1,
+  compose  := λ _ _ _ α β, α ⊟ β,
+  left_identity  := by obviously',
+  right_identity := by obviously',
+  associativity  := by obviously' }
+>>>>>>> origin/master
 end
 
 section
