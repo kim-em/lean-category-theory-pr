@@ -9,25 +9,8 @@ import tidy.make_lemma
 
 universes u v
 
--- TODO this is evil; have solve_by_elim fake it. It is needed in functor_categories/default.lean and universal/types/default.lean
--- 20180413: I guess maybe it's not so bad / unavoidable for now. Move to tidy?
-@[simp] private lemma funext_simp {α : Type u} {Z : α → Type v} {f g : Π a : α, Z a} : (f = g) = ∀ a : α, f a = g a :=
-begin
-  apply propext,
-  split,
-  { intro w, intro, rw w },
-  { intro w, apply funext, assumption }
-end 
-
 open tactic
-
-meta def trace_goal_type : tactic unit :=
-do g ← target,
-   tactic.trace g,
-   infer_type g >>= tactic.trace,
-   tactic.skip
 
 set_option formatter.hide_full_terms false
 
 set_option pp.proofs false
-

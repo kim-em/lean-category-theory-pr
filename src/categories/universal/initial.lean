@@ -5,7 +5,6 @@
 import ..isomorphism
 import ..functor_categories
 import ..opposites
-import tidy.its
 
 open categories
 open categories.isomorphism

@@ -3,14 +3,12 @@
 -- Authors: Scott Morrison
 
 import categories.universal
-import categories.util.finite
 
 open categories
 open categories.functor
 open categories.isomorphism
 open categories.initial
 open categories.types
-open categories.util.finite
 
 namespace categories.universal
 

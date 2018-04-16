@@ -1,6 +1,5 @@
 import ...types
 import ..instances
-import ...transport
 
 open categories.universal
 open categories.isomorphism
