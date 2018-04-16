@@ -15,8 +15,8 @@ universes u₁ u₂ u₃
 structure Functor (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category D] : Type ((max (u₁+1) u₂)+1) :=
   (onObjects     : C → D)
   (onMorphisms   : Π {X Y : C}, (X ⟶ Y) → ((onObjects X) ⟶ (onObjects Y)))
-  (identities    : ∀ (X : C), onMorphisms (𝟙 X) = 𝟙 (onObjects X) . obviously_stub)
-  (functoriality : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), onMorphisms (f ≫ g) = (onMorphisms f) ≫ (onMorphisms g) . obviously_stub)
+  (identities    : ∀ (X : C), onMorphisms (𝟙 X) = 𝟙 (onObjects X) . obviously')
+  (functoriality : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), onMorphisms (f ≫ g) = (onMorphisms f) ≫ (onMorphisms g) . obviously')
 
 make_lemma Functor.identities
 make_lemma Functor.functoriality
@@ -29,8 +29,16 @@ infixr ` ↝ `:70 := Functor -- type as \lea
 definition IdentityFunctor (C) [category C] : C ↝ C := 
 { onObjects     := id,
   onMorphisms   := λ _ _ f, f,
-  identities    := by obviously',
-  functoriality := by obviously' }
+  identities    := begin 
+                     -- `obviously'` says:
+                     intros,
+                     refl 
+                   end,
+  functoriality := begin
+                     -- `obviously'` says:
+                     intros,
+                     refl
+                   end }
 
 instance (C) [category C] : has_one (C ↝ C) := 
 { one := IdentityFunctor C }
@@ -51,8 +59,18 @@ instance Functor_to_onObjects : has_coe_to_fun (C ↝ D) :=
 definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
 { onObjects     := λ X, G (F X),
   onMorphisms   := λ _ _ f, G &> (F &> f),
-  identities    := by obviously',
-  functoriality := by obviously' }
+  identities    := begin
+                     -- `obviously'` says:
+                     intros,
+                     simp!,
+                     dsimp_all',
+                     simp!
+                   end,
+  functoriality := begin
+                     -- `obviously'` says:
+                     intros,
+                     simp!
+                   end }
 
 infixr ` ⋙ `:80 := FunctorComposition
 
