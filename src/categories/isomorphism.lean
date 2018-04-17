@@ -101,31 +101,6 @@ definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X :=
                  simp!
                end }
 
-@[simp] lemma Isomorphism.cancel_morphism_left (I : X ≅ Y) (f g : Y ⟶ Z) : I.morphism ≫ f = I.morphism ≫ g ↔ f = g :=
-begin
-  tidy,
-  have h := congr_arg (λ h, I.inverse ≫ h) a,
-  tidy,
-end
-@[simp] lemma Isomorphism.cancel_morphism_right (I : X ≅ Y) (f g : Z ⟶ X) : f ≫ I.morphism = g ≫ I.morphism ↔ f = g :=
-begin
-  tidy,
-  have h := congr_arg (λ h, h ≫ I.inverse) a,
-  tidy,
-end
-@[simp] lemma Isomorphism.cancel_inverse_left (I : X ≅ Y) (f g : X ⟶ Z) : I.inverse ≫ f = I.inverse ≫ g ↔ f = g :=
-begin
-  tidy,
-  have h := congr_arg (λ h, I.morphism ≫ h) a,
-  tidy,
-end
-@[simp] lemma Isomorphism.cancel_inverse_right (I : X ≅ Y) (f g : Z ⟶ Y) : f ≫ I.inverse = g ≫ I.inverse ↔ f = g :=
-begin
-  tidy,
-  have h := congr_arg (λ h, h ≫ I.morphism) a,
-  tidy,
-end
-
 structure is_Isomorphism (morphism : X ⟶ Y) :=
   (inverse : Y ⟶ X)
   (witness_1 : morphism ≫ inverse = 𝟙 X . obviously')

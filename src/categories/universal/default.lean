@@ -108,8 +108,7 @@ structure Coproduct {I : Type u₂} (X : I → C) :=
   (factorisation : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z) (i : I), (inclusion i) ≫ (map f) = f i . obviously')
   (uniqueness    : ∀ {Z : C} (f g : coproduct ⟶ Z) (witness : ∀ i : I, (inclusion i) ≫ f = (inclusion i) ≫ g), f = g . obviously')
 
--- PROJECT prove all these things are unique up to unique isomorphism
--- @[reducible] definition {u} unique_up_to_isomorphism (α : Type u) {C : Category} (f : α → C.Obj) := Π X Y : α, Isomorphism C (f X) (f Y)
+-- Coming in later PRs: all these things are unique up to unique isomorphism, and are special cases of (co)limits.
 
 end categories.universal
 

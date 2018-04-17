@@ -15,9 +15,9 @@ inductive Two : Type u
 
 open Two
 
-@[simp] lemma Two_0_eq_1_eq_false : ¬(_0 = _1) := by contradiction
+-- @[simp] lemma Two_0_eq_1_eq_false : ¬(_0 = _1) := by contradiction
 
-@[simp] lemma Two_1_eq_0_eq_false : ¬(_1 = _0) := by contradiction
+-- @[simp] lemma Two_1_eq_0_eq_false : ¬(_1 = _0) := by contradiction
 
 @[tidy] meta def induction_Two : tactic unit :=
 do l ← local_context,

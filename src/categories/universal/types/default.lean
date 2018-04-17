@@ -92,9 +92,10 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) :=
                                                         refl
                                                       end,
                                uniqueness          := λ Z f g lw rw, begin 
-                                                                       tidy,
-                                                                       cases x; 
-                                                                       -- `obviously'` says:
+                                                                       fapply funext,
+                                                                       intros,
+                                                                       simp! at *,
+                                                                       cases x;
                                                                        cc_solve_by_elim
                                                                      end } }
 
@@ -191,5 +192,5 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                  categories.types.quotient_induction,
                                                  cc_solve_by_elim,
                                                  refl
-                                               end } } -- TODO breaks when removed
+                                               end } }
 end categories.types

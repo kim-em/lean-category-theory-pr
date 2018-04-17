@@ -42,7 +42,9 @@ end
 begin
   induction f,
   induction g,
-  tidy
+  dsimp at w,
+  induction w,
+  refl,
 end
 
 instance Cones (F : J ↝ C) : category (Cone F) :=
@@ -142,7 +144,9 @@ end
 begin
   induction f,
   induction g,
-  tidy
+  dsimp at w,
+  induction w,
+  refl,
 end
 
 instance Cocones (F : J ↝ C) : category (Cocone F) := 
