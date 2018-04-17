@@ -46,13 +46,26 @@ variables {F G H: Functor C D}
   end
 
 definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F := 
-{ components := λ X, 𝟙 (F X) }
+{ components := λ X, 𝟙 (F X),
+  naturality := begin
+                  -- `obviously'` says:
+                  intros,
+                  dsimp_all',
+                  simp!
+                end }
 
 instance (F : C ↝ D) : has_one (F ⟹ F) := 
 { one := IdentityNaturalTransformation F }
 
 definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := 
-{ components := λ X, (α.components X) ≫ (β.components X)}
+{ components := λ X, (α.components X) ≫ (β.components X),
+  naturality := begin
+                  -- `obviously'` says:
+                  intros,
+                  simp!,
+                  dsimp_all',
+                  rw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma]
+                end }
 
 notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β
 
@@ -75,9 +88,20 @@ definition horizontal_composition_of_NaturalTransformations
   {H I : D ↝ E}
   (α : F ⟹ G)
   (β : H ⟹ I) : (F ⋙ H) ⟹ (G ⋙ I) :=
-{
-    components := λ X : C, (β.components (F X)) ≫ (I &> (α.components X)),
-}
+{ components := λ X : C, (β.components (F X)) ≫ (I &> (α.components X)), 
+  naturality := begin
+                  -- `obviously'` says:
+                  intros,
+                  simp!,
+                  dsimp_all',
+                  -- note here that we can't use a sequence of undirected rewrites; it really matters where you do the rewrites here
+                  perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
+                  perform_nth_rewrite_lhs [NaturalTransformation.naturality_lemma] 0,
+                  perform_nth_rewrite_lhs [category.associativity_lemma] 0,
+                  perform_nth_rewrite_rhs [←Functor.functoriality_lemma] 0,
+                  perform_nth_rewrite_rhs [←NaturalTransformation.naturality_lemma] 0,
+                  perform_nth_rewrite_rhs [Functor.functoriality_lemma] 0
+                end }
 
 notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α β
 

@@ -25,24 +25,68 @@ def op (C : Type u₁) : Type u₁ := C
 notation C `ᵒᵖ` := op C
 
 instance Opposite : category (Cᵒᵖ) := 
-{ Hom      := λ X Y : C, Y ⟶ X,
-  compose  := λ _ _ _ f g, g ≫ f,
-  identity := λ X, 𝟙 X,
-  left_identity  := by obviously',
-  right_identity := by obviously',
-  associativity  := by obviously' }
+{ Hom            := λ X Y : C, Y ⟶ X,
+  compose        := λ _ _ _ f g, g ≫ f,
+  identity       := λ X, 𝟙 X,
+  left_identity  := begin
+                      -- `obviously'` says:
+                      intros,
+                      simp!
+                    end,
+  right_identity := begin
+                      -- `obviously'` says:
+                      intros,
+                      simp!
+                    end,
+  associativity  := begin
+                      -- `obviously'` says:
+                      intros,
+                      simp!
+                    end }
 
 definition OppositeFunctor (F : Functor C D) : Functor (Cᵒᵖ) (Dᵒᵖ) := 
 { onObjects     := λ X, F X,
   onMorphisms   := λ X Y f, F &> f,
-  identities    := by obviously',
-  functoriality := by obviously' }
+  identities    := begin
+                     -- `obviously'` says:
+                     intros,
+                     dsimp_all',
+                     simp!
+                   end,
+  functoriality := begin
+                     -- `obviously'` says:
+                     intros,
+                     dsimp_all',
+                     simp!
+                   end }
 
 definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (Cᵒᵖ × C) (Type u₁) := 
 { onObjects     := λ p, @category.Hom C _ p.1 p.2,
   onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2,
-  identities    := by obviously',
-  functoriality := by obviously' }
+  identities    := begin
+                     -- `obviously'` says:
+                     intros,
+                     fapply funext,
+                     intros,
+                     automatic_induction,
+                     dsimp,
+                     dsimp at *,
+                     dsimp_all',
+                     simp!
+                   end,
+  functoriality := begin
+                     -- `obviously'` says:
+                     intros,
+                     fapply funext,
+                     intros,
+                     automatic_induction,
+                     dsimp,
+                     dsimp at *,
+                     dsimp_all',
+                     automatic_induction,
+                     dsimp,
+                     simp! 
+                   end }
 
 -- PROJECT prove C^op^op is C
 -- definition OppositeOpposite (C : Category) : Equivalence (Opposite (Opposite C)) C := sorry

@@ -31,29 +31,43 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 @[simp,ematch] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
 begin
   -- `obviously'` says:
-  perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
-  perform_nth_rewrite_lhs [Isomorphism.witness_1_lemma] 0,
-  perform_nth_rewrite_lhs [category.left_identity_lemma] 0
+  rw [←category.associativity_lemma, Isomorphism.witness_1_lemma, category.left_identity_lemma]
 end
 
 @[simp,ematch] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
 begin
   -- `obviously'` says:
-  perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
-  perform_nth_rewrite_lhs [Isomorphism.witness_2_lemma] 0,
-  perform_nth_rewrite_lhs [category.left_identity_lemma] 0
+  rw [←category.associativity_lemma, Isomorphism.witness_2_lemma, category.left_identity_lemma]
 end
 
 instance Isomorphism_coercion_to_morphism : has_coe (X ≅ Y) (X ⟶ Y) :=
 { coe := Isomorphism.morphism }
 
 definition Isomorphism.id (X : C) : X ≅ X := 
-{ morphism := 1,
-  inverse  := 1 }
+{ morphism  := 1,
+  inverse   := 1, 
+  witness_1 := begin
+                 -- `obviously'` says:
+                 simp!,
+                 refl
+               end,
+  witness_2 := begin
+                 -- `obviously'` says:
+                 simp!,
+                 refl
+               end }
 
 definition Isomorphism.comp (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := 
-{ morphism := α.morphism ≫ β.morphism,
-  inverse  := β.inverse ≫ α.inverse }
+{ morphism  := α.morphism ≫ β.morphism,
+  inverse   := β.inverse ≫ α.inverse,
+  witness_1 := begin
+                 -- `obviously'` says:
+                 simp!
+               end,
+  witness_2 := begin
+                 -- `obviously'` says:
+                 simp!
+               end }
 
 infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
 
@@ -66,19 +80,26 @@ infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
     simp at w,    
     have p : g = k,
       begin
-        tidy {trace_result:=tt},
-        -- PROJECT rewrite_search can't do this rewrite!
-        rewrite ← category.left_identity_lemma C k,
-        rewrite_search_using `ematch  {trace_result:=tt},
+        induction w,
+        dsimp at *,
+        rw [← category.left_identity_lemma C k, ←wα2, category.associativity_lemma, wβ1, category.right_identity_lemma]
       end,
     -- `obviously'` says:
-    automatic_induction >>= trace,
+    induction p, induction w,
     refl
   end
 
 definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X := 
 { morphism  := I.inverse,
-  inverse   := I.morphism }
+  inverse   := I.morphism,
+  witness_1 := begin
+                 -- `obviously'` says:
+                 simp!
+               end,
+  witness_2 := begin
+                 -- `obviously'` says:
+                 simp!
+               end }
 
 @[simp] lemma Isomorphism.cancel_morphism_left (I : X ≅ Y) (f g : Y ⟶ Z) : I.morphism ≫ f = I.morphism ≫ g ↔ f = g :=
 begin
