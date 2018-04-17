@@ -200,7 +200,7 @@ definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F
                                                    rw [←Functor.functoriality_lemma, CoconeMorphism.commutativity_lemma]
                                                  end },
   identities    := begin
-                     -- `obviously'`
+                     -- `obviously'` says
                      intros,
                      fapply categories.universal.CoconeMorphism_componentwise_equal,
                      dsimp,
@@ -208,7 +208,7 @@ definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F
                      simp!
                    end,
   functoriality := begin
-                     -- `obviously'`
+                     -- `obviously'` says
                      intros,
                      fapply categories.universal.CoconeMorphism_componentwise_equal,
                      dsimp,

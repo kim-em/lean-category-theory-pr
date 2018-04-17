@@ -24,7 +24,7 @@ instance Types_has_Products : has_Products (Type u) :=
                                          fapply funext,
                                          intros,
                                          simp! at *,
-                                         solve_by_elim
+                                         cc_solve_by_elim
                                        end } }
 
 instance Types_has_Coproducts : has_Coproducts (Type u) := 
@@ -45,7 +45,7 @@ instance Types_has_Coproducts : has_Coproducts (Type u) :=
                                            dsimp,
                                            dsimp at *,
                                            simp! at *,
-                                           solve_by_elim
+                                           cc_solve_by_elim
                                          end } }
 
 -- Even though this can be automatically generated from `Types_has_Products`, this is a cleaner version.
@@ -71,9 +71,9 @@ instance Types_has_BinaryProducts : has_BinaryProducts (Type u) :=
                                                       intros,
                                                       fapply pairs_equal,
                                                       simp! at *,
-                                                      solve_by_elim,
+                                                      cc_solve_by_elim,
                                                       simp! at *,
-                                                      solve_by_elim
+                                                      cc_solve_by_elim
                                                     end } }
 
 instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) := 
@@ -95,7 +95,7 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) :=
                                                                        tidy,
                                                                        cases x; 
                                                                        -- `obviously'` says:
-                                                                       solve_by_elim
+                                                                       cc_solve_by_elim
                                                                      end } }
 
 instance Types_has_Equalizers : has_Equalizers (Type u) := 
@@ -104,7 +104,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                             map           := λ γ k h g, ⟨ k g, begin
                                                                  -- `obviously'` says:
                                                                  simp! at *,
-                                                                 solve_by_elim
+                                                                 cc_solve_by_elim
                                                                end ⟩,
                             factorisation := begin
                                                -- `obviously'` says:
@@ -117,7 +117,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                                                intros,
                                                automatic_induction,
                                                dsimp,
-                                               solve_by_elim
+                                               cc_solve_by_elim
                                              end,
                             uniqueness    := begin
                                                -- `obviously'` says:
@@ -127,14 +127,16 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                                                fapply subtype.eq,
                                                dsimp at *,
                                                simp! at *,
-                                               solve_by_elim
+                                               cc_solve_by_elim
                                              end } }
 
+section
 open tactic
 @[tidy] meta def quotient_induction : tactic unit :=
-do l ← local_context,
+do l ← tactic.local_context,
    at_least_one (l.reverse.map (λ h, do t ← infer_type h, match t with | `(quotient _) := induction h >> skip | `(eqv_gen _ _ _) := induction h >> skip | _ := failed end)),
    skip
+end
 
 instance Types_has_Coequalizers : has_Coequalizers (Type u) := 
 { coequalizer := λ α β f g, { coequalizer   := quotient (eqv_gen.setoid (λ x y, ∃ a : α, f a = x ∧ g a = y)),
@@ -142,12 +144,51 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                  -- `obviously'` says:
                                                  fapply quotient.mk
                                                end,
-                              map           := by obviously', -- TODO breaks when removed                           
+                              map           := begin
+                                                 -- `obviously'` says:
+                                                 intros,
+                                                 simp! at *,
+                                                 dsimp_all',
+                                                 intros,
+                                                 categories.types.quotient_induction,
+                                                 cc_solve_by_elim,
+                                                 dsimp,
+                                                 simp!,
+                                                 dsimp_all',
+                                                 categories.types.quotient_induction,
+                                                 automatic_induction,
+                                                 automatic_induction,
+                                                 automatic_induction,
+                                                 cc_solve_by_elim,
+                                                 refl,
+                                                 cc_solve_by_elim,
+                                                 cc_solve_by_elim
+                                               end,                     
                               factorisation := begin
                                                  -- `obviously'` says:
                                                  intros,
                                                  refl
                                                end,
-                              witness       := by obviously', -- TODO breaks when removed
-                              uniqueness    := by obviously' } } -- TODO breaks when removed
+                              witness       := begin
+                                                 -- `obviously'` says:
+                                                 fapply funext,
+                                                 intros,
+                                                 fapply quotient.sound,
+                                                 fapply eqv_gen.rel,
+                                                 fsplit,
+                                                 cc_solve_by_elim,
+                                                 fsplit,
+                                                 refl,
+                                                 refl
+                                               end,
+                              uniqueness    := begin
+                                                 intros,
+                                                 fapply funext,
+                                                 intros,
+                                                 simp! at *,
+                                                 dsimp_all',
+                                                 categories.types.quotient_induction,
+                                                 cc_solve_by_elim,
+                                                 refl
+                                               end } } -- TODO breaks when removed
 end categories.types
