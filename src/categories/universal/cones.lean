@@ -47,18 +47,74 @@ end
 
 instance Cones (F : J ↝ C) : category (Cone F) :=
 { Hom            := λ X Y, ConeMorphism X Y,
-  compose        := λ X Y Z f g, ⟨ f.cone_morphism ≫ g.cone_morphism ⟩,
-  identity       := λ X, ⟨ 𝟙 X.cone_point ⟩,
-  left_identity    := by obviously',
-  right_identity   := by obviously',
-  associativity    := by obviously' }
+  compose        := λ X Y Z f g, { cone_morphism := f.cone_morphism ≫ g.cone_morphism,
+                                   commutativity := begin
+                                                      -- `obviously'` says:
+                                                      intros,
+                                                      simp!
+                                                    end },
+  identity       := λ X,         { cone_morphism := 𝟙 X.cone_point, 
+                                   commutativity := begin
+                                                      -- `obviously'` says:
+                                                      intros,
+                                                      simp!
+                                                    end },
+  left_identity  := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.universal.ConeMorphism_componentwise_equal,
+                      dsimp,
+                      simp!
+                    end,
+  right_identity := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.universal.ConeMorphism_componentwise_equal,
+                      dsimp,
+                      simp!
+                    end,
+  associativity  := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.universal.ConeMorphism_componentwise_equal,
+                      dsimp,
+                      simp!
+                    end }
 
 definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone (F ⋙ G)) := 
 { onObjects     := λ X,     { cone_point    := G X.cone_point,
-                              cone_maps     := λ j, G &> (X.cone_maps j) },
-  onMorphisms   := λ X Y f, { cone_morphism := G &> f.cone_morphism },
-  identities    := by obviously',
-  functoriality := by obviously' }
+                              cone_maps     := λ j, G &> (X.cone_maps j), 
+                              commutativity := begin
+                                                 -- `obviously'` says:
+                                                 intros,
+                                                 simp!,
+                                                 dsimp_all',
+                                                 rw [←Functor.functoriality_lemma, Cone.commutativity_lemma]
+                                               end },
+  onMorphisms   := λ X Y f, { cone_morphism := G &> f.cone_morphism,
+                              commutativity := begin
+                                                 -- `obviously'` says:
+                                                 intros,
+                                                 dsimp,
+                                                 dsimp_all',
+                                                 rw [←Functor.functoriality_lemma, ConeMorphism.commutativity_lemma]
+                                               end },
+  identities    := begin
+                     -- `obviously'` says:
+                     intros,
+                     fapply categories.universal.ConeMorphism_componentwise_equal,
+                     dsimp,
+                     dsimp_all',
+                     simp!
+                   end,
+  functoriality := begin
+                     -- `obviously'` says:
+                     intros,
+                     fapply categories.universal.ConeMorphism_componentwise_equal,
+                     dsimp,
+                     dsimp_all',
+                     simp!
+                   end }
 
 structure Cocone (F : Functor J C) :=
   (cocone_point  : C)
@@ -91,18 +147,74 @@ end
 
 instance Cocones (F : J ↝ C) : category (Cocone F) := 
 { Hom            := λ X Y, CoconeMorphism X Y,
-  compose        := λ X Y Z f g, ⟨ f.cocone_morphism ≫ g.cocone_morphism ⟩,
-  identity       := λ X, ⟨ 𝟙 X.cocone_point ⟩,
-  left_identity    := by obviously',
-  right_identity   := by obviously',
-  associativity    := by obviously' }
+  compose        := λ X Y Z f g, { cocone_morphism := f.cocone_morphism ≫ g.cocone_morphism,
+                                   commutativity   := begin
+                                                        -- `obviously'` says:
+                                                        intros,
+                                                        simp!
+                                                      end },
+  identity       := λ X,         { cocone_morphism := 𝟙 X.cocone_point,
+                                   commutativity   := begin
+                                                        -- `obviously'` says:
+                                                        intros,
+                                                        simp!
+                                                      end },
+  left_identity  := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.universal.CoconeMorphism_componentwise_equal,
+                      dsimp,
+                      simp!
+                    end,
+  right_identity := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.universal.CoconeMorphism_componentwise_equal,
+                      dsimp,
+                      simp!
+                    end,
+  associativity  := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.universal.CoconeMorphism_componentwise_equal,
+                      dsimp,
+                      simp!
+                    end }
 
 definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F) (Cocone (F ⋙ G)) := 
 { onObjects     := λ X,     { cocone_point    := G X.cocone_point,
-                              cocone_maps     := λ j, G &> (X.cocone_maps j) },
-  onMorphisms   := λ X Y f, { cocone_morphism := G &> f.cocone_morphism },
-  identities    := by obviously',
-  functoriality := by obviously' }
+                              cocone_maps     := λ j, G &> (X.cocone_maps j),
+                              commutativity   := begin
+                                                   -- `obviously'` says:
+                                                   intros,
+                                                   simp!,
+                                                   dsimp_all',
+                                                   rw [←Functor.functoriality_lemma, Cocone.commutativity_lemma]
+                                                 end },
+  onMorphisms   := λ X Y f, { cocone_morphism := G &> f.cocone_morphism,
+                              commutativity   := begin
+                                                   -- `obviously'` says:
+                                                   intros,
+                                                   dsimp,
+                                                   dsimp_all',
+                                                   rw [←Functor.functoriality_lemma, CoconeMorphism.commutativity_lemma]
+                                                 end },
+  identities    := begin
+                     -- `obviously'`
+                     intros,
+                     fapply categories.universal.CoconeMorphism_componentwise_equal,
+                     dsimp,
+                     dsimp_all',
+                     simp!
+                   end,
+  functoriality := begin
+                     -- `obviously'`
+                     intros,
+                     fapply categories.universal.CoconeMorphism_componentwise_equal,
+                     dsimp,
+                     dsimp_all',
+                     simp!
+                   end }
 
 definition LimitCone     (F : J ↝ C) := TerminalObject (Cone F)
 definition ColimitCocone (F : J ↝ C) := InitialObject (Cocone F)

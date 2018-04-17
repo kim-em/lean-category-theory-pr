@@ -16,12 +16,24 @@ open categories.functor
 universes u v w
 
 instance CategoryOfTypes : category (Type u) :=
-{ Hom := λ a b, (a → b),
-  identity := λ a, id,
-  compose  := λ _ _ _ f g, g ∘ f,
-  left_identity    := by obviously',
-  right_identity   := by obviously',
-  associativity    := by obviously' }
+{ Hom            := λ a b, (a → b),
+  identity       := λ a, id,
+  compose        := λ _ _ _ f g, g ∘ f,
+  left_identity  := begin
+                     -- `obviously'` says:
+                     intros,
+                     refl
+                   end,
+  right_identity := begin
+                     -- `obviously'` says:
+                     intros,
+                     refl
+                   end,
+  associativity  := begin
+                     -- `obviously'` says:
+                     intros,
+                     refl
+                   end }
   
 variables {C : Type (v+1)} [category C] (F G H: Functor C (Type u)) {X Y Z : C} 
 variables (σ : F ⟹ G) (τ : G ⟹ H) 
@@ -60,9 +72,20 @@ begin
 end
 
 definition UniverseLift : Functor (Type u) (Type (u+1)) := 
-{ onObjects := λ X, ulift.{u+1} X,
-  onMorphisms := λ X Y f, λ x : ulift.{u+1} X, ulift.up (f x.down),
-  identities    := by obviously',
-  functoriality := by obviously' }
+{ onObjects     := λ X, ulift.{u+1} X,
+  onMorphisms   := λ X Y f, λ x : ulift.{u+1} X, ulift.up (f x.down),
+  identities    := begin
+                     -- `obviously'` says:
+                     intros,
+                     fapply funext,
+                     intros,
+                     fapply ulifts_equal,
+                     refl
+                   end,
+  functoriality := begin
+                     -- `obviously'` says:
+                     intros,
+                     refl
+                   end }
 
 end categories.types

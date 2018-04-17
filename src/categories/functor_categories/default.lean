@@ -16,12 +16,33 @@ section
 variables (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category D] (E : Type (u₃+1)) [category E]
 
 instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) := 
-{ Hom      := λ F G, F ⟹ G,
-  identity := λ F, 1,
-  compose  := λ _ _ _ α β, α ⊟ β,
-  left_identity  := by obviously',
-  right_identity := by obviously',
-  associativity  := by obviously' }
+{ Hom            := λ F G, F ⟹ G,
+  identity       := λ F, 1,
+  compose        := λ _ _ _ α β, α ⊟ β,
+  left_identity  := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      intros,
+                      dsimp_all',
+                      simp!
+                    end,
+  right_identity := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      intros,
+                      dsimp_all',
+                      simp!
+                    end,
+  associativity  := begin
+                      -- `obviously'` says:
+                      intros,
+                      fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      intros,
+                      dsimp_all',
+                      simp!
+                    end }
 end
 
 section

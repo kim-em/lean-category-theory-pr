@@ -29,8 +29,16 @@ infixr ` ↝ `:70 := Functor -- type as \lea
 definition IdentityFunctor (C) [category C] : C ↝ C := 
 { onObjects     := id,
   onMorphisms   := λ _ _ f, f,
-  identities    := by obviously',
-  functoriality := by obviously' }
+  identities    := begin 
+                     -- `obviously'` says:
+                     intros,
+                     refl 
+                   end,
+  functoriality := begin
+                     -- `obviously'` says:
+                     intros,
+                     refl
+                   end }
 
 instance (C) [category C] : has_one (C ↝ C) := 
 { one := IdentityFunctor C }
@@ -51,8 +59,18 @@ instance Functor_to_onObjects : has_coe_to_fun (C ↝ D) :=
 definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
 { onObjects     := λ X, G (F X),
   onMorphisms   := λ _ _ f, G &> (F &> f),
-  identities    := by obviously',
-  functoriality := by obviously' }
+  identities    := begin
+                     -- `obviously'` says:
+                     intros,
+                     simp!,
+                     dsimp_all',
+                     simp!
+                   end,
+  functoriality := begin
+                     -- `obviously'` says:
+                     intros,
+                     simp!
+                   end }
 
 infixr ` ⋙ `:80 := FunctorComposition
 
