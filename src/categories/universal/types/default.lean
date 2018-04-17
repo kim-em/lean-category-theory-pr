@@ -182,6 +182,7 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                  refl
                                                end,
                               uniqueness    := begin
+                                                 -- `obviously'` says:
                                                  intros,
                                                  fapply funext,
                                                  intros,
