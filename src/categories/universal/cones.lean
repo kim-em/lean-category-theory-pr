@@ -34,8 +34,8 @@ attribute [simp,ematch] ConeMorphism.commutativity_lemma
 
 @[simp,ematch] def ConeMorphism.commutativity_lemma_assoc {X Y : Cone F} (c : ConeMorphism X Y) (j : J) {Z : C} (z : (F j) ⟶ Z): c.cone_morphism ≫ Y.cone_maps j ≫ z = X.cone_maps j ≫ z :=
 begin
-rw ← category.associativity,
-simp,
+  rw ← category.associativity,
+  simp,
 end
 
 @[applicable] lemma ConeMorphism_componentwise_equal {X Y : Cone F} {f g : ConeMorphism X Y} (w : f.cone_morphism = g.cone_morphism) : f = g :=
