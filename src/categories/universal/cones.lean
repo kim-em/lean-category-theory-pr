@@ -91,7 +91,7 @@ definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone 
                                                  intros,
                                                  simp!,
                                                  dsimp_all',
-                                                 rw [←Functor.functoriality_lemma, Cone.commutativity_lemma]
+                                                 erw [←Functor.functoriality_lemma, Cone.commutativity_lemma]
                                                end },
   onMorphisms   := λ X Y f, { cone_morphism := G &> f.cone_morphism,
                               commutativity := begin
@@ -99,7 +99,7 @@ definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone 
                                                  intros,
                                                  dsimp,
                                                  dsimp_all',
-                                                 rw [←Functor.functoriality_lemma, ConeMorphism.commutativity_lemma]
+                                                 erw [←Functor.functoriality_lemma, ConeMorphism.commutativity_lemma]
                                                end },
   identities    := begin
                      -- `obviously'` says:
@@ -193,7 +193,7 @@ definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F
                                                    intros,
                                                    simp!,
                                                    dsimp_all',
-                                                   rw [←Functor.functoriality_lemma, Cocone.commutativity_lemma]
+                                                   erw [←Functor.functoriality_lemma, Cocone.commutativity_lemma]
                                                  end },
   onMorphisms   := λ X Y f, { cocone_morphism := G &> f.cocone_morphism,
                               commutativity   := begin
@@ -201,7 +201,7 @@ definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F
                                                    intros,
                                                    dsimp,
                                                    dsimp_all',
-                                                   rw [←Functor.functoriality_lemma, CoconeMorphism.commutativity_lemma]
+                                                   erw [←Functor.functoriality_lemma, CoconeMorphism.commutativity_lemma]
                                                  end },
   identities    := begin
                      -- `obviously'` says

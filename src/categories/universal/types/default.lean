@@ -133,7 +133,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
 
 section
 open tactic
-@[tidy] meta def quotient_induction : tactic unit :=
+meta def quotient_induction : tactic unit :=
 do l ← tactic.local_context,
    at_least_one (l.reverse.map (λ h, do t ← infer_type h, match t with | `(quotient _) := induction h >> skip | `(eqv_gen _ _ _) := induction h >> skip | _ := failed end)),
    skip

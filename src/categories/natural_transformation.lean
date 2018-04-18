@@ -94,13 +94,13 @@ definition horizontal_composition_of_NaturalTransformations
                   intros,
                   simp!,
                   dsimp_all',
-                  -- note here that we can't use a sequence of undirected rewrites; it really matters where you do the rewrites here
-                  perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
-                  perform_nth_rewrite_lhs [NaturalTransformation.naturality_lemma] 0,
-                  perform_nth_rewrite_lhs [category.associativity_lemma] 0,
-                  perform_nth_rewrite_rhs [←Functor.functoriality_lemma] 0,
-                  perform_nth_rewrite_rhs [←NaturalTransformation.naturality_lemma] 0,
-                  perform_nth_rewrite_rhs [Functor.functoriality_lemma] 0
+                  -- Actually, obviously doesn't use exactly this sequence of rewrites, but achieves the same result
+                  rw [← category.associativity_lemma],
+                  rw [NaturalTransformation.naturality_lemma],
+                  rw [category.associativity_lemma],
+                  conv { to_rhs, rw [← Functor.functoriality_lemma] },
+                  rw [← α.naturality_lemma],
+                  rw [Functor.functoriality_lemma],
                 end }
 
 notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α β
@@ -129,9 +129,10 @@ definition whisker_on_right
     intros,
     dsimp_all',
     simp!,
-    perform_nth_rewrite_lhs [←category.associativity_lemma] 0,
-    perform_nth_rewrite_lhs [←NaturalTransformation.naturality_lemma] 0,
-    perform_nth_rewrite_lhs [category.associativity_lemma] 0
+    -- again, this isn't actually what obviously says, but it achieves the same effect.
+    conv {to_lhs, congr, skip, rw [←category.associativity_lemma] },
+    rw [←NaturalTransformation.naturality_lemma],
+    rw [category.associativity_lemma],
   end
 
 end categories.natural_transformation

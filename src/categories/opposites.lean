@@ -100,15 +100,15 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
     begin
     -- `obviously'` says:
     dsimp_all',
-    perform_nth_rewrite_lhs [Functor.functoriality_lemma] 0
+    erw [Functor.functoriality_lemma],
     end
 
 @[simp,ematch] lemma ContravariantFunctor.identities
   (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.category.identity.{u₁} C _ X)) = 𝟙 (F X) :=
   begin
     -- `obviously'` says:
-  dsimp_all',
-  perform_nth_rewrite_lhs [Functor.identities_lemma] 0
+    dsimp_all',
+    erw [Functor.identities_lemma],
   end
 
 end categories.opposites
