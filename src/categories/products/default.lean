@@ -146,8 +146,8 @@ definition ProductNaturalTransformation {F G : A ↝ B} {H I : C ↝ D} (α : F 
                   dsimp,
                   simp!,
                   fsplit,
-                  rw [NaturalTransformation.naturality_lemma],
-                  rw [NaturalTransformation.naturality_lemma]
+                  erw [NaturalTransformation.naturality_lemma],
+                  erw [NaturalTransformation.naturality_lemma]
                 end }
 
 notation α `×` β := ProductNaturalTransformation α β
