@@ -18,7 +18,7 @@ variable {E : Type (w+1)}
 variable [category E]
 
 structure NaturalTransformation (F G : Functor C D) : Type /-((max u v)+1)-/ (max (u+1) v) :=
-  (components: Π X : C, (F X) ⟶ (G X))
+  (components: Π X : C, (F +> X) ⟶ (G +> X))
   (naturality: ∀ {X Y : C} (f : X ⟶ Y), (F &> f) ≫ (components Y) = (components X) ≫ (G &> f) . obviously')
 
 make_lemma NaturalTransformation.naturality
@@ -46,24 +46,24 @@ variables {F G H: Functor C D}
   end
 
 definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F := 
-{ components := λ X, 𝟙 (F X),
+{ components := λ X, 𝟙 (F +> X),
   naturality := begin
                   -- `obviously'` says:
                   intros,
-                  dsimp_all',
                   simp!
                 end }
 
 instance (F : C ↝ D) : has_one (F ⟹ F) := 
 { one := IdentityNaturalTransformation F }
 
-definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := 
+@[simp] lemma Functor.one.components (F : C ↝ D) (X : C) : (1 : F ⟹ F).components X = 𝟙 (F +> X) := by refl
+
+@[reducible] definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := 
 { components := λ X, (α.components X) ≫ (β.components X),
   naturality := begin
                   -- `obviously'` says:
                   intros,
                   simp!,
-                  dsimp_all',
                   rw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma]
                 end }
 
@@ -71,29 +71,16 @@ notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β
 
 open categories.functor
 
-@[simp] lemma FunctorComposition.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) X = G (F X) := 
-begin
-  -- `obviously'` says:
-  refl
-end
-
-@[simp] lemma FunctorComposition.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := 
-begin
-  -- `obviously'` says:
-  refl
-end
-
-definition horizontal_composition_of_NaturalTransformations
+@[reducible] definition horizontal_composition_of_NaturalTransformations
   {F G : C ↝ D}
   {H I : D ↝ E}
   (α : F ⟹ G)
   (β : H ⟹ I) : (F ⋙ H) ⟹ (G ⋙ I) :=
-{ components := λ X : C, (β.components (F X)) ≫ (I &> (α.components X)), 
+{ components := λ X : C, (β.components (F +> X)) ≫ (I &> (α.components X)), 
   naturality := begin
                   -- `obviously'` says:
                   intros,
                   simp!,
-                  dsimp_all',
                   -- Actually, obviously doesn't use exactly this sequence of rewrites, but achieves the same result
                   rw [← category.associativity_lemma],
                   rw [NaturalTransformation.naturality_lemma],
@@ -105,20 +92,6 @@ definition horizontal_composition_of_NaturalTransformations
 
 notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α β
 
-definition whisker_on_left
-  (F : C ↝ D)
-  {G H : D ↝ E}
-  (α : G ⟹ H) :
-  (F ⋙ G) ⟹ (F ⋙ H) :=
-  1 ◫ α
-
-definition whisker_on_right
-  {F G : C ↝ D}
-  (α : F ⟹ G)
-  (H : Functor D E) :
-  (F ⋙ H) ⟹ (G ⋙ H) :=
-  α ◫ 1
-
 @[ematch] lemma NaturalTransformation.exchange
   {F G H : C ↝ D}
   {I J K : D ↝ E}
@@ -127,12 +100,15 @@ definition whisker_on_right
     -- `obviously'` says:
     fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
     intros,
-    dsimp_all',
     simp!,
     -- again, this isn't actually what obviously says, but it achieves the same effect.
     conv {to_lhs, congr, skip, rw [←category.associativity_lemma] },
     rw [←NaturalTransformation.naturality_lemma],
     rw [category.associativity_lemma],
   end
+
+definition whisker_on_left (F : C ↝ D) {G H : D ↝ E} (α : G ⟹ H) : (F ⋙ G) ⟹ (F ⋙ H) := 1 ◫ α
+
+definition whisker_on_right {F G : C ↝ D} (α : F ⟹ G) (H : D ↝ E) : (F ⋙ H) ⟹ (G ⋙ H) := α ◫ 1
 
 end categories.natural_transformation

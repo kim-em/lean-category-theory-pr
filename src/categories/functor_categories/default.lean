@@ -24,15 +24,13 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       intros,
                       fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
-                      dsimp_all',
-                      simp!
+                      simp!,
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
                       fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
-                      dsimp_all',
                       simp!
                     end,
   associativity  := begin
@@ -40,7 +38,6 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       intros,
                       fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
-                      dsimp_all',
                       simp!
                     end }
 end
@@ -50,8 +47,8 @@ variables {C : Type (u₁+1)} [category C] {D : Type (u₂+1)} [category D] {E :
 
 @[ematch] lemma NaturalTransformation_to_FunctorCategory.components_naturality
   {F G : C ↝ (D ↝ E)} (T : F ⟹ G) (X : C) {Y Z : D} (f : Y ⟶ Z)
-    : ((F X) &> f) ≫ ((T.components X).components Z) =
-    ((T.components X).components Y) ≫ ((G X) &> f) :=
+    : ((F +> X) &> f) ≫ ((T.components X).components Z) =
+    ((T.components X).components Y) ≫ ((G +> X) &> f) :=
 begin
   exact (T.components _).naturality _
 end
@@ -64,7 +61,7 @@ begin
   have p := (T.naturality f),
   injections_and_clear,
   simp! at *,
-  cc_solve_by_elim,
+  solve_by_elim' `[cc],
 end
 end
 

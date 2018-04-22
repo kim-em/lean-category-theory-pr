@@ -20,10 +20,10 @@ structure Functor (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category
 
 make_lemma Functor.identities
 make_lemma Functor.functoriality
-attribute [simp,ematch] Functor.identities_lemma
-attribute [simp,ematch] Functor.functoriality_lemma
+attribute [simp,ematch] Functor.functoriality_lemma Functor.identities_lemma
 
-infixr ` &> `:80 := Functor.onMorphisms -- switch to ▹?
+infixr ` +> `:70 := Functor.onObjects
+infixr ` &> `:70 := Functor.onMorphisms -- switch to ▹?
 infixr ` ↝ `:70 := Functor -- type as \lea 
 
 definition IdentityFunctor (C) [category C] : C ↝ C := 
@@ -52,19 +52,17 @@ variable [category E]
 
 -- We define a coercion so that we can write `F X` for the functor `F` applied to the object `X`.
 -- One can still write out `onObjects F X` when needed.
-instance Functor_to_onObjects : has_coe_to_fun (C ↝ D) :=
-{ F   := λ f, C → D,
-  coe := Functor.onObjects }
+-- instance Functor_to_onObjects : has_coe_to_fun (C ↝ D) :=
+-- { F   := λ f, C → D,
+--   coe := Functor.onObjects }
 
 definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
-{ onObjects     := λ X, G (F X),
+{ onObjects     := λ X, G +> (F +> X),
   onMorphisms   := λ _ _ f, G &> (F &> f),
-  identities    := begin
+  identities    := begin 
                      -- `obviously'` says:
                      intros,
                      simp!,
-                     dsimp_all',
-                     simp!
                    end,
   functoriality := begin
                      -- `obviously'` says:
@@ -73,5 +71,17 @@ definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E :=
                    end }
 
 infixr ` ⋙ `:80 := FunctorComposition
+
+@[simp] lemma FunctorComposition.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) +> X = G +> (F +> X) := 
+begin
+  -- `obviously'` says:
+  refl
+end
+
+@[simp] lemma FunctorComposition.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := 
+begin
+  -- `obviously'` says:
+  refl
+end
 
 end categories.functor

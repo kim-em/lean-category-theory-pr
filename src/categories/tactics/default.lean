@@ -8,8 +8,8 @@ import tidy.make_lemma
 import tidy.rewrite_all
 import tidy.injections
 import tidy.tidy
+import tidy.transport
 
--- meta def dsimp_all' := `[dsimp at * {unfold_reducible := tt, md := semireducible}]
 -- meta def obviously' := `[skip]
 
 universes u v

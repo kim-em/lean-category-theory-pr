@@ -50,6 +50,9 @@ instance ProductCategory : category (C × D) :=
                       simp!
                     end }
 
+@[simp] lemma ProductCategory.identity {X : C} {Y : D} : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
+@[simp] lemma ProductCategory.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
+
 definition RightInjectionAt (Z : D) : C ↝ (C × D) := 
 { onObjects     := λ X, (X, Z),
   onMorphisms   := λ X Y f, (f, 𝟙 Z),
@@ -62,7 +65,6 @@ definition RightInjectionAt (Z : D) : C ↝ (C × D) :=
                      -- `obviously'` says:
                      intros,
                      dsimp,
-                     dsimp_all',
                      simp!
                    end }
 
@@ -78,7 +80,6 @@ definition LeftInjectionAt (Z : C) : D ↝ (C × D) :=
                      -- `obviously'` says:
                      intros,
                      dsimp,
-                     dsimp_all',
                      simp!
                    end }
 
@@ -111,23 +112,19 @@ definition RightProjection : (C × D) ↝ D :=
                    end }
 
 definition ProductFunctor (F : A ↝ B) (G : C ↝ D) : (A × C) ↝ (B × D) :=
-{ onObjects     := λ X, (F X.1, G X.2),
+{ onObjects     := λ X, (F +> X.1, G +> X.2),
   onMorphisms   := λ _ _ f, (F &> f.1, G &> f.2),
   identities    := begin
                      -- `obviously'` says:
                      intros,
-                     automatic_induction,
+                     cases X,
                      dsimp,
-                     dsimp_all',
                      simp!
                    end,
   functoriality := begin
                      -- `obviously'` says:
                      intros,
-                     automatic_induction,
-                     dsimp,
-                     dsimp_all',
-                     automatic_induction,
+                     cases Z, cases Y, cases X,
                      dsimp,
                      simp!
                    end }
@@ -137,17 +134,15 @@ notation F `×` G := ProductFunctor F G
 definition ProductNaturalTransformation {F G : A ↝ B} {H I : C ↝ D} (α : F ⟹ G) (β : H ⟹ I) : (F × H) ⟹ (G × I) :=
 { components := λ X, (α.components X.1, β.components X.2),
   naturality := begin
-                  -- `obviously'` says:
+                  -- `obviously'` says: (FIXME: actually obviously succeeds here, but gives an incorrect tactic script)
                   intros,
-                  automatic_induction,
-                  dsimp,
-                  dsimp_all',
-                  automatic_induction,
+                  cases Y, cases X,
                   dsimp,
                   simp!,
                   fsplit,
-                  erw [NaturalTransformation.naturality_lemma],
-                  erw [NaturalTransformation.naturality_lemma]
+                  dsimp,
+                  perform_nth_rewrite_lhs [NaturalTransformation.naturality_lemma] 0,
+                  perform_nth_rewrite_lhs [NaturalTransformation.naturality_lemma] 0,
                 end }
 
 notation α `×` β := ProductNaturalTransformation α β

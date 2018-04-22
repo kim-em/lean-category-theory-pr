@@ -45,47 +45,54 @@ instance Opposite : category (Cᵒᵖ) :=
                     end }
 
 definition OppositeFunctor (F : Functor C D) : Functor (Cᵒᵖ) (Dᵒᵖ) := 
-{ onObjects     := λ X, F X,
+{ onObjects     := λ X, F.onObjects X, -- TODO why is notation not allowed here?
   onMorphisms   := λ X Y f, F &> f,
   identities    := begin
-                     -- `obviously'` says:
+                     -- `obviously'` says: FIXME again, the produced tactic script is incorrect
                      intros,
-                     dsimp_all',
-                     simp!
+                     erw [Functor.identities_lemma],
+                     trivial,
                    end,
   functoriality := begin
-                     -- `obviously'` says:
+                     -- `obviously'` says: FIXME incorrect tactic script
                      intros,
-                     dsimp_all',
-                     simp!
+                     erw [Functor.functoriality_lemma],
+                     trivial,
                    end }
 
 definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (Cᵒᵖ × C) (Type u₁) := 
 { onObjects     := λ p, @category.Hom C _ p.1 p.2,
   onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2,
   identities    := begin
-                     -- `obviously'` says:
+                     -- `obviously'` says: -- FIXME tactic script broken, omits refl
                      intros,
                      fapply funext,
                      intros,
-                     automatic_induction,
+                     cases X,
                      dsimp,
                      dsimp at *,
-                     dsimp_all',
-                     simp!
+                     simp!,
+                     erw [category.left_identity_lemma],
+                     refl,
                    end,
   functoriality := begin
                      -- `obviously'` says:
                      intros,
                      fapply funext,
                      intros,
-                     automatic_induction,
+                     cases Z, cases Y, cases X,
                      dsimp,
                      dsimp at *,
-                     dsimp_all',
-                     automatic_induction,
+                     simp!,
                      dsimp,
-                     simp! 
+                     -- TODO do this with conv
+                     perform_nth_rewrite_lhs [←category.associativity_lemma] 1,
+                     perform_nth_rewrite_lhs [category.associativity_lemma] 0,
+                     perform_nth_rewrite_lhs [←category.associativity_lemma] 1,
+                     perform_nth_rewrite_lhs [category.associativity_lemma] 0,
+                     perform_nth_rewrite_rhs [category.associativity_lemma] 0,
+                     perform_nth_rewrite_rhs [←category.associativity_lemma] 2,
+                     perform_nth_rewrite_rhs [←category.associativity_lemma] 0,
                    end }
 
 -- PROJECT prove C^op^op is C
@@ -98,16 +105,14 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
   (f : X ⟶ Y) (g : Y ⟶ Z) :
     F &> ((@categories.category.compose C _ _ _ _ g f) : X ⟶ Z) = (F &> f) ≫ (F &> g) := 
     begin
-    -- `obviously'` says:
-    dsimp_all',
-    erw [Functor.functoriality_lemma],
+      -- `obviously'` says:
+      erw [Functor.functoriality_lemma]
     end
 
 @[simp,ematch] lemma ContravariantFunctor.identities
-  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.category.identity.{u₁} C _ X)) = 𝟙 (F X) :=
+  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.category.identity.{u₁} C _ X)) = 𝟙 (F +> X) :=
   begin
     -- `obviously'` says:
-    dsimp_all',
     erw [Functor.identities_lemma],
   end
 
