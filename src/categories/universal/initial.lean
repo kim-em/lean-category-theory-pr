@@ -16,7 +16,7 @@ universe u
 structure InitialObject (C : Type (u+1)) [category C] :=
   (initial_object                              : C)
   (morphism_from_initial_object_to             : ∀ Y : C, initial_object ⟶ Y)
-  (uniqueness_of_morphisms_from_initial_object : ∀ Y : C, ∀ f g : initial_object ⟶ Y, f = g . obviously')
+  (uniqueness_of_morphisms_from_initial_object : ∀ Y : C, ∀ f g : initial_object ⟶ Y, f = g . obviously)
 
 attribute [applicable] InitialObject.morphism_from_initial_object_to
 make_lemma InitialObject.uniqueness_of_morphisms_from_initial_object
@@ -25,7 +25,7 @@ attribute [applicable,ematch] InitialObject.uniqueness_of_morphisms_from_initial
 structure TerminalObject (C : Type (u+1)) [category C]  :=
   (terminal_object                            : C)
   (morphism_to_terminal_object_from           : ∀ Y : C, Y ⟶ terminal_object)
-  (uniqueness_of_morphisms_to_terminal_object : ∀ Y : C, ∀ f g : Y ⟶ terminal_object, f = g . obviously')
+  (uniqueness_of_morphisms_to_terminal_object : ∀ Y : C, ∀ f g : Y ⟶ terminal_object, f = g . obviously)
 
 attribute [applicable] TerminalObject.morphism_to_terminal_object_from
 make_lemma TerminalObject.uniqueness_of_morphisms_to_terminal_object

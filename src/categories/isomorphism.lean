@@ -17,8 +17,8 @@ variables {X Y Z : C}
 structure Isomorphism (X Y : C) :=
   (morphism : X ⟶ Y)
   (inverse : Y ⟶ X)
-  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously')
-  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously')
+  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
+  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
 
 make_lemma Isomorphism.witness_1
 make_lemma Isomorphism.witness_2
@@ -57,7 +57,7 @@ definition Isomorphism.id (X : C) : X ≅ X :=
                  refl
                end }
 
-definition Isomorphism.comp (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := 
+@[reducible] definition Isomorphism.comp (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := 
 { morphism  := α.morphism ≫ β.morphism,
   inverse   := β.inverse ≫ α.inverse,
   witness_1 := begin
@@ -103,8 +103,8 @@ definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X :=
 
 structure is_Isomorphism (morphism : X ⟶ Y) :=
   (inverse : Y ⟶ X)
-  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously')
-  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously')
+  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
+  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
 
 make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2

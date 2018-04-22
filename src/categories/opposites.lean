@@ -64,7 +64,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
 { onObjects     := λ p, @category.Hom C _ p.1 p.2,
   onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2,
   identities    := begin
-                     -- `obviously'` says: -- FIXME tactic script broken, omits refl
+                     -- `obviously'` says: 
                      intros,
                      fapply funext,
                      intros,
@@ -73,26 +73,20 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
                      dsimp at *,
                      simp!,
                      erw [category.left_identity_lemma],
-                     refl,
                    end,
   functoriality := begin
                      -- `obviously'` says:
-                     intros,
-                     fapply funext,
-                     intros,
-                     cases Z, cases Y, cases X,
-                     dsimp,
-                     dsimp at *,
-                     simp!,
-                     dsimp,
-                     -- TODO do this with conv
-                     perform_nth_rewrite_lhs [←category.associativity_lemma] 1,
-                     perform_nth_rewrite_lhs [category.associativity_lemma] 0,
-                     perform_nth_rewrite_lhs [←category.associativity_lemma] 1,
-                     perform_nth_rewrite_lhs [category.associativity_lemma] 0,
-                     perform_nth_rewrite_rhs [category.associativity_lemma] 0,
-                     perform_nth_rewrite_rhs [←category.associativity_lemma] 2,
-                     perform_nth_rewrite_rhs [←category.associativity_lemma] 0,
+                      ---
+                      intros,
+                      fapply funext,
+                      intros,
+                      cases g, cases f, cases Z, cases Y, cases X,
+                      dsimp,
+                      dsimp at *,
+                      simp!,
+                      dsimp,
+                      erw [category.associativity_lemma]
+                      ---
                    end }
 
 -- PROJECT prove C^op^op is C

@@ -19,7 +19,7 @@ variable [category E]
 
 structure NaturalTransformation (F G : Functor C D) : Type /-((max u v)+1)-/ (max (u+1) v) :=
   (components: Π X : C, (F +> X) ⟶ (G +> X))
-  (naturality: ∀ {X Y : C} (f : X ⟶ Y), (F &> f) ≫ (components Y) = (components X) ≫ (G &> f) . obviously')
+  (naturality: ∀ {X Y : C} (f : X ⟶ Y), (F &> f) ≫ (components Y) = (components X) ≫ (G &> f) . obviously)
 
 make_lemma NaturalTransformation.naturality
 attribute [ematch] NaturalTransformation.naturality_lemma
