@@ -107,8 +107,4 @@ notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α �
     rw [category.associativity_lemma],
   end
 
-definition whisker_on_left (F : C ↝ D) {G H : D ↝ E} (α : G ⟹ H) : (F ⋙ G) ⟹ (F ⋙ H) := 1 ◫ α
-
-definition whisker_on_right {F G : C ↝ D} (α : F ⟹ G) (H : D ↝ E) : (F ⋙ H) ⟹ (G ⋙ H) := α ◫ 1
-
 end categories.natural_transformation

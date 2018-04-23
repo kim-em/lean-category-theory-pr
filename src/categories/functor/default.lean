@@ -50,6 +50,9 @@ variable [category D]
 variable {E : Type (u₃+1)}
 variable [category E]
 
+@[simp] lemma IdentityFunctor.onObjects (X : C) : 1 +> X = X := by refl
+@[simp] lemma IdentityFunctor.onMorphisms {X Y : C} (f : X ⟶ Y) : 1 &> f = f := by refl
+
 -- We define a coercion so that we can write `F X` for the functor `F` applied to the object `X`.
 -- One can still write out `onObjects F X` when needed.
 -- instance Functor_to_onObjects : has_coe_to_fun (C ↝ D) :=
