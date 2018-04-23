@@ -101,19 +101,30 @@ definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X :=
                  simp!
                end }
 
-structure is_Isomorphism (morphism : X ⟶ Y) :=
+class is_Isomorphism (f : X ⟶ Y) :=
   (inverse : Y ⟶ X)
-  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
-  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
+  (witness_1 : f ≫ inverse = 𝟙 X . obviously)
+  (witness_2 : inverse ≫ f = 𝟙 Y . obviously)
 
 make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2
 attribute [simp,ematch] is_Isomorphism.witness_1_lemma is_Isomorphism.witness_2_lemma
 
-instance is_Isomorphism_coercion_to_morphism (f : X ⟶ Y): has_coe (is_Isomorphism f) (X ⟶ Y) :=
+instance (f : X ≅ Y) : is_Isomorphism f.morphism := by sorry
+
+instance (f : X ⟶ Y): has_coe (is_Isomorphism f) (X ⟶ Y) :=
 { coe := λ _, f }
 
-definition Epimorphism (f : X ⟶ Y) := Π (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h
-definition Monomorphism (f : X ⟶ Y) := Π (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h
+definition Epimorphism  (f : X ⟶ Y) := Π {Z : C} (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h
+definition Monomorphism (f : X ⟶ Y) := Π {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h
+
+attribute [class] Epimorphism
+attribute [class] Monomorphism
+
+instance (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f := λ _ g h w, by sorry
+instance (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := λ _ g h w, by sorry
+
+@[simp] lemma cancel_Epimorphism  (f : X ⟶ Y) [Epimorphism f]  (g h : Y ⟶ Z) : (f ≫ g = f ≫ h) ↔ g = h := by sorry
+@[simp] lemma cancel_Monomorphism (f : X ⟶ Y) [Monomorphism f] (g h : Z ⟶ X) : (g ≫ f = h ≫ f) ↔ g = h := by sorry
 
 end categories.isomorphism
