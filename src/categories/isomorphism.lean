@@ -115,14 +115,13 @@ instance (f : X ≅ Y) : is_Isomorphism f.morphism := by sorry
 instance (f : X ⟶ Y): has_coe (is_Isomorphism f) (X ⟶ Y) :=
 { coe := λ _, f }
 
-definition Epimorphism  (f : X ⟶ Y) := Π {Z : C} (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h
-definition Monomorphism (f : X ⟶ Y) := Π {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h
+class Epimorphism  (f : X ⟶ Y) := 
+(left_cancellation : Π {Z : C} (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h)
+class Monomorphism (f : X ⟶ Y) :=
+(right_cancellation : Π {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h)
 
-attribute [class] Epimorphism
-attribute [class] Monomorphism
-
-instance (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f := λ _ g h w, by sorry
-instance (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := λ _ g h w, by sorry
+instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f  := by sorry
+instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := by sorry
 
 @[simp] lemma cancel_Epimorphism  (f : X ⟶ Y) [Epimorphism f]  (g h : Y ⟶ Z) : (f ≫ g = f ≫ h) ↔ g = h := by sorry
 @[simp] lemma cancel_Monomorphism (f : X ⟶ Y) [Monomorphism f] (g h : Z ⟶ X) : (g ≫ f = h ≫ f) ↔ g = h := by sorry
