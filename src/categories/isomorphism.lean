@@ -130,6 +130,7 @@ class Epimorphism  (f : X ⟶ Y) :=
 class Monomorphism (f : X ⟶ Y) :=
 (right_cancellation : Π {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h)
 
+-- PROJECT automate
 instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f  := 
 { left_cancellation := begin
                          intros,
