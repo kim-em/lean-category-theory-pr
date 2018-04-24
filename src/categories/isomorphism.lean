@@ -110,7 +110,7 @@ make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2
 attribute [simp,ematch] is_Isomorphism.witness_1_lemma is_Isomorphism.witness_2_lemma
 
-instance (f : X ≅ Y) : is_Isomorphism f.morphism :=
+instance is_Isomorphism_of_Isomorphism         (f : X ≅ Y) : is_Isomorphism f.morphism :=
 { inverse   := f.inverse,
   witness_1 := begin
                  -- `obviously'` says:
@@ -120,6 +120,7 @@ instance (f : X ≅ Y) : is_Isomorphism f.morphism :=
                  -- `obviously'` says:
                  simp!
                end }
+instance is_Isomorphism_of_Isomorphism_inverse (f : X ≅ Y) : is_Isomorphism f.inverse  := by sorry
 
 instance (f : X ⟶ Y): has_coe (is_Isomorphism f) (X ⟶ Y) :=
 { coe := λ _, f }
