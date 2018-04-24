@@ -110,7 +110,16 @@ make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2
 attribute [simp,ematch] is_Isomorphism.witness_1_lemma is_Isomorphism.witness_2_lemma
 
-instance is_Isomorphism_of_Isomorphism         (f : X ≅ Y) : is_Isomorphism f.morphism := by sorry
+instance is_Isomorphism_of_Isomorphism         (f : X ≅ Y) : is_Isomorphism f.morphism :=
+{ inverse   := f.inverse,
+  witness_1 := begin
+                 -- `obviously'` says:
+                 simp!
+               end,
+  witness_2 := begin
+                 -- `obviously'` says:
+                 simp!
+               end }
 instance is_Isomorphism_of_Isomorphism_inverse (f : X ≅ Y) : is_Isomorphism f.inverse  := by sorry
 
 instance (f : X ⟶ Y): has_coe (is_Isomorphism f) (X ⟶ Y) :=
@@ -121,10 +130,36 @@ class Epimorphism  (f : X ⟶ Y) :=
 class Monomorphism (f : X ⟶ Y) :=
 (right_cancellation : Π {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h)
 
-instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f  := by sorry
-instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := by sorry
+instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f  := 
+{ left_cancellation := begin
+                         intros,
+                         rw [←category.left_identity_lemma C g, ←category.left_identity_lemma C h],
+                         rw [←is_Isomorphism.witness_2_lemma f],
+                         rw [category.associativity_lemma, category.associativity_lemma],
+                         simp *
+                       end }
+instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := 
+{ right_cancellation := begin
+                         intros,
+                         rw [←category.right_identity_lemma C g, ←category.right_identity_lemma C h],
+                         rw [←is_Isomorphism.witness_1_lemma f],
+                         rw [←category.associativity_lemma, ←category.associativity_lemma],
+                         simp *
+                       end }
 
-@[simp] lemma cancel_Epimorphism  (f : X ⟶ Y) [Epimorphism f]  (g h : Y ⟶ Z) : (f ≫ g = f ≫ h) ↔ g = h := by sorry
-@[simp] lemma cancel_Monomorphism (f : X ⟶ Y) [Monomorphism f] (g h : Z ⟶ X) : (g ≫ f = h ≫ f) ↔ g = h := by sorry
+@[simp] lemma cancel_Epimorphism  (f : X ⟶ Y) [Epimorphism f]  (g h : Y ⟶ Z) : (f ≫ g = f ≫ h) ↔ g = h := 
+⟨ λ p, Epimorphism.left_cancellation g h p, begin
+                                              -- `obviously'` says:
+                                              intros,
+                                              induction a,
+                                              refl
+                                            end ⟩
+@[simp] lemma cancel_Monomorphism (f : X ⟶ Y) [Monomorphism f] (g h : Z ⟶ X) : (g ≫ f = h ≫ f) ↔ g = h := 
+⟨ λ p, Monomorphism.right_cancellation g h p, begin
+                                                -- `obviously'` says:
+                                                intros,
+                                                induction a,
+                                                refl
+                                              end ⟩
 
 end categories.isomorphism
