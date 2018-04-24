@@ -45,19 +45,17 @@ instance Opposite : category (Cᵒᵖ) :=
                     end }
 
 definition OppositeFunctor (F : Functor C D) : Functor (Cᵒᵖ) (Dᵒᵖ) := 
-{ onObjects     := λ X, F.onObjects X, -- TODO why is notation not allowed here?
+{ onObjects     := λ X, F.onObjects X, -- notation (F +> X) fails here, because C ≠ Cᵒᵖ
   onMorphisms   := λ X Y f, F &> f,
   identities    := begin
-                     -- `obviously'` says: FIXME again, the produced tactic script is incorrect
+                     -- `obviously'` says:
                      intros,
-                     erw [Functor.identities_lemma],
-                     trivial,
+                     erw [Functor.identities_lemma], refl,
                    end,
   functoriality := begin
-                     -- `obviously'` says: FIXME incorrect tactic script
+                     -- `obviously'` says: 
                      intros,
-                     erw [Functor.functoriality_lemma],
-                     trivial,
+                     erw [Functor.functoriality_lemma], refl,
                    end }
 
 definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (Cᵒᵖ × C) (Type u₁) := 

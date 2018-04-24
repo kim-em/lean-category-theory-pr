@@ -21,10 +21,12 @@ do l ← local_context,
    skip
 end
 
+local attribute [tidy] dsimp_all'
+
 instance Two_decidable : decidable_eq Two := 
 begin
-  dsimp [decidable_eq, decidable_rel], -- TODO should obviously manage this too?
   -- `obviously'` says:
+  dsimp_all',
   intros,
   induction_Two,
   simp!,
