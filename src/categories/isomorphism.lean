@@ -120,7 +120,16 @@ instance is_Isomorphism_of_Isomorphism         (f : X ≅ Y) : is_Isomorphism f.
                  -- `obviously'` says:
                  simp!
                end }
-instance is_Isomorphism_of_Isomorphism_inverse (f : X ≅ Y) : is_Isomorphism f.inverse  := by sorry
+instance is_Isomorphism_of_Isomorphism_inverse (f : X ≅ Y) : is_Isomorphism f.inverse  := 
+{ inverse   := f.morphism,
+  witness_1 := begin
+                 -- `obviously'` says:
+                 simp!
+               end,
+  witness_2 := begin
+                 -- `obviously'` says:
+                 simp!
+               end }
 
 instance (f : X ⟶ Y): has_coe (is_Isomorphism f) (X ⟶ Y) :=
 { coe := λ _, f }
