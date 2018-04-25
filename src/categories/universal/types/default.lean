@@ -24,7 +24,7 @@ instance Types_has_Products : has_Products (Type u) :=
                                          fapply funext,
                                          intros,
                                          simp! at *,
-                                         solve_by_elim' `[cc],
+                                         solve_by_elim `[cc],
                                        end } }
 
 instance Types_has_Coproducts : has_Coproducts (Type u) := 
@@ -45,7 +45,7 @@ instance Types_has_Coproducts : has_Coproducts (Type u) :=
                                            dsimp,
                                            dsimp at *,
                                            simp! at *,
-                                           solve_by_elim' `[cc],
+                                           solve_by_elim `[cc],
                                          end } }
 
 -- Even though this can be automatically generated from `Types_has_Products`, this is a cleaner version.
@@ -71,9 +71,9 @@ instance Types_has_BinaryProducts : has_BinaryProducts (Type u) :=
                                                       intros,
                                                       fapply pairs_equal,
                                                       simp! at *,
-                                                      solve_by_elim' `[cc],
+                                                      solve_by_elim `[cc],
                                                       simp! at *,
-                                                      solve_by_elim' `[cc],
+                                                      solve_by_elim `[cc],
                                                     end } }
 
 instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) := 
@@ -96,7 +96,7 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) :=
                                                                        intros,
                                                                        simp! at *,
                                                                        cases x;
-                                                                       solve_by_elim' `[cc],
+                                                                       solve_by_elim `[cc],
                                                                      end } }
 
 instance Types_has_Equalizers : has_Equalizers (Type u) := 
@@ -105,7 +105,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                             map           := λ γ k h g, ⟨ k g, begin
                                                                  -- `obviously'` says:
                                                                  simp! at *,
-                                                                 solve_by_elim' `[cc],
+                                                                 solve_by_elim `[cc],
                                                                end ⟩,
                             factorisation := begin
                                                -- `obviously'` says:
@@ -118,7 +118,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                                                intros,
                                                automatic_induction,
                                                dsimp,
-                                               solve_by_elim' `[cc],
+                                               solve_by_elim `[cc],
                                              end,
                             uniqueness    := begin
                                                -- `obviously'` says:
@@ -128,7 +128,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                                                fapply subtype.eq,
                                                dsimp at *,
                                                simp! at *,
-                                               solve_by_elim' `[cc],
+                                               solve_by_elim `[cc],
                                              end } }
 
 section
@@ -152,17 +152,17 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                   intros,
                                                   simp! at *,
                                                   categories.types.quotient_induction,
-                                                  solve_by_elim' `[cc],
+                                                  solve_by_elim `[cc],
                                                   dsimp,
                                                   simp!,
                                                   categories.types.quotient_induction,
                                                   cases a_p_a,
                                                   cases a_p_a_h,
                                                   induction a_p_a_h_right, induction a_p_a_h_left,
-                                                  solve_by_elim' `[cc],
+                                                  solve_by_elim `[cc],
                                                   refl,
-                                                  solve_by_elim' `[cc],
-                                                  solve_by_elim' `[cc],
+                                                  solve_by_elim `[cc],
+                                                  solve_by_elim `[cc],
                                                end,                     
                               factorisation := begin
                                                  -- `obviously'` says:
@@ -176,7 +176,7 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                  fapply quotient.sound,
                                                  fapply eqv_gen.rel,
                                                  fsplit,
-                                                 solve_by_elim' `[cc],
+                                                 solve_by_elim `[cc],
                                                  fsplit,
                                                  refl,
                                                  refl
@@ -188,7 +188,7 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                  intros,
                                                  simp! at *,
                                                  categories.types.quotient_induction,
-                                                 solve_by_elim' `[cc],
+                                                 solve_by_elim `[cc],
                                                  refl
                                                end } }
 end categories.types

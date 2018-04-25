@@ -145,7 +145,7 @@ instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorph
                          intros,
                         --  rewrite_search_using `ematch {trace:=tt},
                          rw [←category.left_identity_lemma C g, ←category.left_identity_lemma C h],
-                        --  rewrite_search_using `ematch {trace:=tt},
+                         rewrite_search_using `ematch {trace:=tt},
                          rw [←is_Isomorphism.witness_2_lemma f],
                          rw [category.associativity_lemma, category.associativity_lemma],
                          simp *

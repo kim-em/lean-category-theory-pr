@@ -64,7 +64,7 @@ begin
   have p := (T.naturality f),
   injections_and_clear,
   simp! at *,
-  solve_by_elim' `[cc],
+  solve_by_elim `[cc],
 end
 end
 
