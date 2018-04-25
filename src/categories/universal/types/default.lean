@@ -131,12 +131,18 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                                                solve_by_elim `[cc],
                                              end } }
 
-section
-open tactic
-@[tidy] meta def quotient_induction : tactic unit :=
-do l ← tactic.local_context,
-   at_least_one (l.reverse.map (λ h, do t ← infer_type h, match t with | `(quotient _) := induction h >> skip | `(setoid.r _ _) := induction h >> skip | _ := failed end)),
-   skip
+
+@[applicable] lemma constant_on_quotient {α β : Type u} (f g : α → β) {Z : Type u} (k : β → Z) (x y : β) (h : eqv_gen (λ (x y : β), ∃ (a : α), f a = x ∧ g a = y) x y) (w : ∀ (a : α), k (f a) = k (g a)) : k x = k y :=
+begin
+  induction h,
+  -- obviously' says:
+  { cases h_a,
+    cases h_a_h,
+    induction h_a_h_right, induction h_a_h_left,
+    solve_by_elim `[cc] },
+  { refl },
+  { solve_by_elim `[cc] },
+  { solve_by_elim `[cc] },
 end
 
 instance Types_has_Coequalizers : has_Coequalizers (Type u) := 
@@ -145,24 +151,21 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                  -- `obviously'` says:
                                                  fapply quotient.mk
                                                end,
-                              map           := begin
+                              map           := begin 
                                                  -- `obviously'` says:
+                                                  ---
                                                   intros,
                                                   simp!,
                                                   intros,
+                                                  induction a,
                                                   simp! at *,
-                                                  categories.types.quotient_induction,
                                                   solve_by_elim `[cc],
                                                   dsimp,
                                                   simp!,
-                                                  categories.types.quotient_induction,
-                                                  cases a_p_a,
-                                                  cases a_p_a_h,
-                                                  induction a_p_a_h_right, induction a_p_a_h_left,
-                                                  solve_by_elim `[cc],
-                                                  refl,
-                                                  solve_by_elim `[cc],
-                                                  solve_by_elim `[cc],
+                                                  simp! at *,
+                                                  dsimp_all',
+                                                  apply constant_on_quotient ; apply_assumption, -- FIXME                                                
+                                                  ---
                                                end,                     
                               factorisation := begin
                                                  -- `obviously'` says:
@@ -183,12 +186,14 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                end,
                               uniqueness    := begin
                                                  -- `obviously'` says:
-                                                 intros,
-                                                 fapply funext,
-                                                 intros,
-                                                 simp! at *,
-                                                 categories.types.quotient_induction,
-                                                 solve_by_elim `[cc],
-                                                 refl
+                                                  ---
+                                                  intros,
+                                                  fapply funext,
+                                                  intros,
+                                                  induction x,
+                                                  simp! at *,
+                                                  solve_by_elim `[cc],
+                                                  refl
+                                                  ---
                                                end } }
 end categories.types

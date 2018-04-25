@@ -138,25 +138,18 @@ class Epimorphism  (f : X ⟶ Y) :=
 (left_cancellation : Π {Z : C} (g h : Y ⟶ Z) (w : f ≫ g = f ≫ h), g = h)
 class Monomorphism (f : X ⟶ Y) :=
 (right_cancellation : Π {Z : C} (g h : Z ⟶ X) (w : g ≫ f = h ≫ f), g = h)
-#check tactic.mk_app
--- PROJECT automate
+
 instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f  := 
 { left_cancellation := begin
                          intros,
-                        --  rewrite_search_using `ematch {trace:=tt},
                          rw [←category.left_identity_lemma C g, ←category.left_identity_lemma C h],
-                         rewrite_search_using `ematch {trace:=tt},
-                         rw [←is_Isomorphism.witness_2_lemma f],
-                         rw [category.associativity_lemma, category.associativity_lemma],
-                         simp *
+                         rewrite_search_using `ematch, -- PROJECT Scott is thinking about completing the automation here.
                        end }
 instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := 
 { right_cancellation := begin
                          intros,
                          rw [←category.right_identity_lemma C g, ←category.right_identity_lemma C h],
-                         rw [←is_Isomorphism.witness_1_lemma f],
-                         rw [←category.associativity_lemma, ←category.associativity_lemma],
-                         simp *
+                         rewrite_search_using `ematch,
                        end }
 
 @[simp] lemma cancel_Epimorphism  (f : X ⟶ Y) [Epimorphism f]  (g h : Y ⟶ Z) : (f ≫ g = f ≫ h) ↔ g = h := 

@@ -46,7 +46,7 @@ instance Two_fintype : fintype Two :=
                    -- `obviously'` says:
                    intros,
                    dsimp,
-                   simp!,
+                   simp, -- FIXME actually, obviously says simp! here which causes a deep recursion error and Lean falls over
                    induction_Two,
                    simp!,
                    simp! 
