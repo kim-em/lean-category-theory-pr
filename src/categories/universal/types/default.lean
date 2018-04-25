@@ -159,11 +159,10 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                   intros,
                                                   induction a,
                                                   simp! at *,
-                                                  solve_by_elim `[cc],
+                                                  solve_by_elim `[cc], -- FIXME surely this isn't a terminal goal
                                                   dsimp,
                                                   simp!,
                                                   simp! at *,
-                                                  dsimp_all',
                                                   apply constant_on_quotient ; apply_assumption, -- FIXME                                                
                                                   ---
                                                end,                     
