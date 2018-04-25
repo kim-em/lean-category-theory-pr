@@ -7,6 +7,7 @@ import data.fintype
 
 universes u v
 
+@[derive decidable_eq]
 inductive Two : Type u
 | _0 : Two
 | _1 : Two
@@ -21,32 +22,13 @@ do l ← local_context,
    skip
 end
 
-local attribute [tidy] dsimp_all'
-
-instance Two_decidable : decidable_eq Two := 
-begin
-  -- `obviously'` says:
-  dsimp_all',
-  intros,
-  induction_Two,
-  simp,
-  fapply decidable_true,
-  simp,
-  fapply decidable_false,
-  induction_Two,
-  simp,
-  fapply decidable_false,
-  simp,
-  fapply decidable_true
-end
-
 instance Two_fintype : fintype Two := 
 { elems       := [_0, _1].to_finset,
   complete    := begin
                    -- `obviously'` says:
                    intros,
                    dsimp,
-                   simp, -- FIXME actually, obviously says simp here which causes a deep recursion error and Lean falls over
+                   simp,
                    induction_Two,
                    simp,
                    simp 
