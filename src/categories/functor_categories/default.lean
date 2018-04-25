@@ -24,21 +24,21 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       intros,
                       fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
-                      simp!,
+                      simp,
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
                       fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
-                      simp!
+                      simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
                       intros,
                       fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
-                      simp!
+                      simp
                     end }
 end
 
@@ -63,7 +63,7 @@ end
 begin
   have p := (T.naturality f),
   injections_and_clear,
-  simp! at *,
+  simp at *,
   solve_by_elim `[cc],
 end
 end

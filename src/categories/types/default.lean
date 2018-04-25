@@ -45,13 +45,13 @@ variables (σ : F ⟹ G) (τ : G ⟹ H)
 @[simp,ematch] lemma Functor_to_Types.functoriality (f : X ⟶ Y) (g : Y ⟶ Z) (a : F +> X) : (F &> (f ≫ g)) a = (F &> g) ((F &> f) a) :=
 begin 
   -- `obviously'` says:
-  simp!,
+  simp,
 end
 
 @[simp,ematch] lemma Functor_to_Types.identities (a : F +> X) : (F &> (𝟙 X)) a = a := 
 begin
   -- `obviously'` says:
-  simp!,
+  simp,
 end
 
 @[ematch] lemma Functor_to_Types.naturality (f : X ⟶ Y) (x : F +> X) : σ.components Y ((F &> f) x) = (G &> f) (σ.components X x) := 

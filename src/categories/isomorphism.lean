@@ -48,12 +48,12 @@ definition Isomorphism.id (X : C) : X ≅ X :=
   inverse   := 1, 
   witness_1 := begin
                  -- `obviously'` says:
-                 simp!,
+                 simp,
                  refl
                end,
   witness_2 := begin
                  -- `obviously'` says:
-                 simp!,
+                 simp,
                  refl
                end }
 
@@ -62,11 +62,11 @@ definition Isomorphism.id (X : C) : X ≅ X :=
   inverse   := β.inverse ≫ α.inverse,
   witness_1 := begin
                  -- `obviously'` says:
-                 simp!
+                 simp
                end,
   witness_2 := begin
                  -- `obviously'` says:
-                 simp!
+                 simp
                end }
 
 infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
@@ -94,11 +94,11 @@ definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X :=
   inverse   := I.morphism,
   witness_1 := begin
                  -- `obviously'` says:
-                 simp!
+                 simp
                end,
   witness_2 := begin
                  -- `obviously'` says:
-                 simp!
+                 simp
                end }
 
 class is_Isomorphism (f : X ⟶ Y) :=
@@ -114,21 +114,21 @@ instance is_Isomorphism_of_Isomorphism         (f : X ≅ Y) : is_Isomorphism f.
 { inverse   := f.inverse,
   witness_1 := begin
                  -- `obviously'` says:
-                 simp!
+                 simp
                end,
   witness_2 := begin
                  -- `obviously'` says:
-                 simp!
+                 simp
                end }
 instance is_Isomorphism_of_Isomorphism_inverse (f : X ≅ Y) : is_Isomorphism f.inverse  := 
 { inverse   := f.morphism,
   witness_1 := begin
                  -- `obviously'` says:
-                 simp!
+                 simp
                end,
   witness_2 := begin
                  -- `obviously'` says:
-                 simp!
+                 simp
                end }
 
 instance (f : X ⟶ Y): has_coe (is_Isomorphism f) (X ⟶ Y) :=

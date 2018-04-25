@@ -29,14 +29,14 @@ begin
   dsimp_all',
   intros,
   induction_Two,
-  simp!,
+  simp,
   fapply decidable_true,
-  simp!,
+  simp,
   fapply decidable_false,
   induction_Two,
-  simp!,
+  simp,
   fapply decidable_false,
-  simp!,
+  simp,
   fapply decidable_true
 end
 
@@ -46,8 +46,8 @@ instance Two_fintype : fintype Two :=
                    -- `obviously'` says:
                    intros,
                    dsimp,
-                   simp, -- FIXME actually, obviously says simp! here which causes a deep recursion error and Lean falls over
+                   simp, -- FIXME actually, obviously says simp here which causes a deep recursion error and Lean falls over
                    induction_Two,
-                   simp!,
-                   simp! 
+                   simp,
+                   simp 
                  end }

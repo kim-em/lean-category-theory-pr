@@ -31,17 +31,17 @@ instance Opposite : category (Cᵒᵖ) :=
   left_identity  := begin
                       -- `obviously'` says:
                       intros,
-                      simp!
+                      simp
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
-                      simp!
+                      simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
                       intros,
-                      simp!
+                      simp
                     end }
 
 definition OppositeFunctor (F : Functor C D) : Functor (Cᵒᵖ) (Dᵒᵖ) := 
@@ -69,7 +69,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
                      cases X,
                      dsimp,
                      dsimp at *,
-                     simp!,
+                     simp,
                      erw [category.left_identity_lemma],
                    end,
   functoriality := begin
@@ -81,7 +81,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
                       cases g, cases f, cases Z, cases Y, cases X,
                       dsimp,
                       dsimp at *,
-                      simp!,
+                      simp,
                       dsimp,
                       erw [category.associativity_lemma]
                       ---

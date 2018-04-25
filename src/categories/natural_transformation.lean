@@ -50,7 +50,7 @@ definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F :=
   naturality := begin
                   -- `obviously'` says:
                   intros,
-                  simp!
+                  simp
                 end }
 
 instance (F : C ↝ D) : has_one (F ⟹ F) := 
@@ -63,7 +63,7 @@ instance (F : C ↝ D) : has_one (F ⟹ F) :=
   naturality := begin
                   -- `obviously'` says:
                   intros,
-                  simp!,
+                  simp,
                   rw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma]
                 end }
 
@@ -80,7 +80,7 @@ open categories.functor
   naturality := begin
                   -- `obviously'` says:
                   intros,
-                  simp!,
+                  simp,
                   -- Actually, obviously doesn't use exactly this sequence of rewrites, but achieves the same result
                   rw [← category.associativity_lemma],
                   rw [NaturalTransformation.naturality_lemma],
@@ -100,7 +100,7 @@ notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α �
     -- `obviously'` says:
     fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
     intros,
-    simp!,
+    simp,
     -- again, this isn't actually what obviously says, but it achieves the same effect.
     conv {to_lhs, congr, skip, rw [←category.associativity_lemma] },
     rw [←NaturalTransformation.naturality_lemma],

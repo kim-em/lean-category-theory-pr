@@ -31,7 +31,7 @@ instance ProductCategory : category (C × D) :=
                       automatic_induction,
                       dsimp,
                       dsimp at *,
-                      simp!
+                      simp
                     end,
   right_identity := begin
                       -- `obviously'` says:
@@ -39,7 +39,7 @@ instance ProductCategory : category (C × D) :=
                       automatic_induction,
                       dsimp,
                       dsimp at *,
-                      simp!
+                      simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
@@ -47,7 +47,7 @@ instance ProductCategory : category (C × D) :=
                       automatic_induction,
                       dsimp,
                       dsimp at *,
-                      simp!
+                      simp
                     end }
 
 @[simp] lemma ProductCategory.identity {X : C} {Y : D} : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
@@ -65,7 +65,7 @@ definition RightInjectionAt (Z : D) : C ↝ (C × D) :=
                      -- `obviously'` says:
                      intros,
                      dsimp,
-                     simp!
+                     simp
                    end }
 
 definition LeftInjectionAt (Z : C) : D ↝ (C × D) := 
@@ -80,7 +80,7 @@ definition LeftInjectionAt (Z : C) : D ↝ (C × D) :=
                      -- `obviously'` says:
                      intros,
                      dsimp,
-                     simp!
+                     simp
                    end }
 
 definition LeftProjection : (C × D) ↝ C := 
@@ -119,14 +119,14 @@ definition ProductFunctor (F : A ↝ B) (G : C ↝ D) : (A × C) ↝ (B × D) :=
                      intros,
                      cases X,
                      dsimp,
-                     simp!
+                     simp
                    end,
   functoriality := begin
                      -- `obviously'` says:
                      intros,
                      cases Z, cases Y, cases X,
                      dsimp,
-                     simp!
+                     simp
                    end }
 
 notation F `×` G := ProductFunctor F G
@@ -139,7 +139,7 @@ definition ProductNaturalTransformation {F G : A ↝ B} {H I : C ↝ D} (α : F 
                   cases f, cases Y, cases X,
                   dsimp,
                   dsimp at *,
-                  simp!,
+                  simp,
                   fsplit,
                   dsimp,
                   erw [←NaturalTransformation.naturality_lemma], refl,

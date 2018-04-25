@@ -65,12 +65,12 @@ definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E :=
   identities    := begin 
                      -- `obviously'` says:
                      intros,
-                     simp!,
+                     simp,
                    end,
   functoriality := begin
                      -- `obviously'` says:
                      intros,
-                     simp!
+                     simp
                    end }
 
 infixr ` ⋙ `:80 := FunctorComposition
