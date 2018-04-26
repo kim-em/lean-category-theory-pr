@@ -64,7 +64,7 @@ instance (F : C ↝ D) : has_one (F ⟹ F) :=
                   -- `obviously'` says:
                   intros,
                   simp,
-                  rw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma]
+                  erw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma]
                 end }
 
 notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β
@@ -100,6 +100,7 @@ notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α �
     -- `obviously'` says:
     fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
     intros,
+    dsimp,
     simp,
     -- again, this isn't actually what obviously says, but it achieves the same effect.
     conv {to_lhs, congr, skip, rw [←category.associativity_lemma] },

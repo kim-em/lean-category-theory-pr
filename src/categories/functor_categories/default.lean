@@ -62,9 +62,10 @@ end
     ((T.components X).components Z) ≫ ((G &> f).components Z) :=
 begin
   have p := (T.naturality f),
+  -- obviously', -- says:
   injections_and_clear,
-  simp at *,
-  solve_by_elim `[cc],
+  simp only [funext_simp] at *,
+  solve_by_elim `[cc]
 end
 end
 

@@ -143,12 +143,14 @@ instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorph
 { left_cancellation := begin
                          intros,
                          rw [←category.left_identity_lemma C g, ←category.left_identity_lemma C h],
+                         rw [← is_Isomorphism.witness_2_lemma f],
                          rewrite_search_using `ematch, -- PROJECT Scott is thinking about completing the automation here.
                        end }
 instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := 
 { right_cancellation := begin
                          intros,
                          rw [←category.right_identity_lemma C g, ←category.right_identity_lemma C h],
+                         rw [← is_Isomorphism.witness_1_lemma f],
                          rewrite_search_using `ematch,
                        end }
 

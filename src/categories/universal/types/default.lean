@@ -23,7 +23,7 @@ instance Types_has_Products : has_Products (Type u) :=
                                          intros,
                                          fapply funext,
                                          intros,
-                                         simp at *,
+                                         simp only [funext_simp] at *,
                                          solve_by_elim `[cc],
                                        end } }
 
@@ -44,7 +44,7 @@ instance Types_has_Coproducts : has_Coproducts (Type u) :=
                                            automatic_induction,
                                            dsimp,
                                            dsimp at *,
-                                           simp at *,
+                                           simp only [funext_simp] at *,
                                            solve_by_elim `[cc],
                                          end } }
 
@@ -70,9 +70,9 @@ instance Types_has_BinaryProducts : has_BinaryProducts (Type u) :=
                                                       fapply funext,
                                                       intros,
                                                       fapply pairs_equal,
-                                                      simp at *,
+                                                      simp only [funext_simp] at *,
                                                       solve_by_elim `[cc],
-                                                      simp at *,
+                                                      simp only [funext_simp] at *,
                                                       solve_by_elim `[cc],
                                                     end } }
 
@@ -92,9 +92,10 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) :=
                                                         refl
                                                       end,
                                uniqueness          := λ Z f g lw rw, begin 
+                               -- TODO what is happening here?
                                                                        fapply funext,
                                                                        intros,
-                                                                       simp at *,
+                                                                       simp only [funext_simp] at *,
                                                                        cases x;
                                                                        solve_by_elim `[cc],
                                                                      end } }
@@ -104,7 +105,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                             inclusion     := λ x, x.val,
                             map           := λ γ k h g, ⟨ k g, begin
                                                                  -- `obviously'` says:
-                                                                 simp at *,
+                                                                 simp only [funext_simp] at *,
                                                                  solve_by_elim `[cc],
                                                                end ⟩,
                             factorisation := begin
@@ -127,7 +128,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                                                intros,
                                                fapply subtype.eq,
                                                dsimp at *,
-                                               simp at *,
+                                               simp only [funext_simp] at *,
                                                solve_by_elim `[cc],
                                              end } }
 
@@ -158,11 +159,11 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                   simp,
                                                   intros,
                                                   induction a,
-                                                  simp at *,
+                                                  simp only [funext_simp] at *,
                                                   solve_by_elim `[cc], -- FIXME surely this isn't a terminal goal
                                                   dsimp,
                                                   simp,
-                                                  simp at *,
+                                                  simp only [funext_simp] at *,
                                                   apply constant_on_quotient ; apply_assumption, -- FIXME                                                
                                                   ---
                                                end,                     
@@ -190,7 +191,7 @@ instance Types_has_Coequalizers : has_Coequalizers (Type u) :=
                                                   fapply funext,
                                                   intros,
                                                   induction x,
-                                                  simp at *,
+                                                  simp only [funext_simp] at *,
                                                   solve_by_elim `[cc],
                                                   refl
                                                   ---
