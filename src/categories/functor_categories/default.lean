@@ -22,21 +22,21 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
   left_identity  := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
                       simp,
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
                       simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
                       simp
                     end }

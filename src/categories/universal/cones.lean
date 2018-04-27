@@ -64,21 +64,21 @@ instance Cones (F : J ↝ C) : category (Cone F) :=
   left_identity  := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.universal.ConeMorphism_componentwise_equal,
+                      apply categories.universal.ConeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.universal.ConeMorphism_componentwise_equal,
+                      apply categories.universal.ConeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.universal.ConeMorphism_componentwise_equal,
+                      apply categories.universal.ConeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end }
@@ -105,19 +105,19 @@ definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone 
   identities    := begin
                      -- `obviously'` says:
                      intros,
-                     fapply categories.universal.ConeMorphism_componentwise_equal,
+                     apply categories.universal.ConeMorphism_componentwise_equal,
                      dsimp,
                      simp
                    end,
   functoriality := begin
                      -- `obviously'` says:
                      intros,
-                     fapply categories.universal.ConeMorphism_componentwise_equal,
+                     apply categories.universal.ConeMorphism_componentwise_equal,
                      dsimp,
                      simp
                    end }
 
-structure Cocone (F : Functor J C) :=
+structure Cocone (F : J ↝ C) :=
   (cocone_point  : C)
   (cocone_maps   : Π j : J, (F +> j) ⟶ cocone_point)
   (commutativity : Π {j k : J}, Π f : j ⟶ k, (F &> f) ≫ (cocone_maps k) = cocone_maps j . obviously)
@@ -165,21 +165,21 @@ instance Cocones (F : J ↝ C) : category (Cocone F) :=
   left_identity  := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.universal.CoconeMorphism_componentwise_equal,
+                      apply categories.universal.CoconeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.universal.CoconeMorphism_componentwise_equal,
+                      apply categories.universal.CoconeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
                       intros,
-                      fapply categories.universal.CoconeMorphism_componentwise_equal,
+                      apply categories.universal.CoconeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end }
@@ -187,7 +187,7 @@ instance Cocones (F : J ↝ C) : category (Cocone F) :=
 @[simp] lemma Cocones.identity.cone_morphism {F : J ↝ C} (c : Cocone F) : (𝟙 c : CoconeMorphism c c).cocone_morphism = 𝟙 (c.cocone_point) := by refl
 @[simp] lemma Cocones.compose.cone_morphism {F : J ↝ C} {c d e : Cocone F} (f : c ⟶ d) (g : d ⟶ e) : ((f ≫ g) : CoconeMorphism c e).cocone_morphism = (f : CoconeMorphism c d).cocone_morphism ≫ (g : CoconeMorphism d e).cocone_morphism := by refl
 
-definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F) (Cocone (F ⋙ G)) := 
+definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cocone F) ↝ (Cocone (F ⋙ G)) := 
 { onObjects     := λ X,     { cocone_point    := G +> X.cocone_point,
                               cocone_maps     := λ j, G &> (X.cocone_maps j),
                               commutativity   := begin
@@ -206,14 +206,14 @@ definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : Functor (Cocone F
   identities    := begin
                      -- `obviously'` says
                      intros,
-                     fapply categories.universal.CoconeMorphism_componentwise_equal,
+                     apply categories.universal.CoconeMorphism_componentwise_equal,
                      dsimp,
                      simp
                    end,
   functoriality := begin
                      -- `obviously'` says
                      intros,
-                     fapply categories.universal.CoconeMorphism_componentwise_equal,
+                     apply categories.universal.CoconeMorphism_componentwise_equal,
                      dsimp,
                      simp
                    end }

@@ -44,7 +44,7 @@ instance Opposite : category (Cᵒᵖ) :=
                       simp
                     end }
 
-definition OppositeFunctor (F : Functor C D) : Functor (Cᵒᵖ) (Dᵒᵖ) := 
+definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) := 
 { onObjects     := λ X, F.onObjects X, -- notation (F +> X) fails here, because C ≠ Cᵒᵖ
   onMorphisms   := λ X Y f, F &> f,
   identities    := begin
@@ -64,7 +64,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
   identities    := begin
                      -- `obviously'` says: 
                      intros,
-                     fapply funext,
+                     apply funext,
                      intros,
                      cases X,
                      dsimp,
@@ -76,7 +76,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
                      -- `obviously'` says:
                       ---
                       intros,
-                      fapply funext,
+                      apply funext,
                       intros,
                       cases g, cases f, cases Z, cases Y, cases X,
                       dsimp,

@@ -17,7 +17,7 @@ variable [category D]
 variable {E : Type (w+1)}
 variable [category E]
 
-structure NaturalTransformation (F G : Functor C D) : Type /-((max u v)+1)-/ (max (u+1) v) :=
+structure NaturalTransformation (F G : C ↝ D) : Type /-((max u v)+1)-/ (max (u+1) v) :=
   (components: Π X : C, (F +> X) ⟶ (G +> X))
   (naturality: ∀ {X Y : C} (f : X ⟶ Y), (F &> f) ≫ (components Y) = (components X) ≫ (G &> f) . obviously)
 
@@ -26,7 +26,7 @@ attribute [ematch] NaturalTransformation.naturality_lemma
 
 infixr ` ⟹ `:50  := NaturalTransformation             -- type as \==>
 
-variables {F G H: Functor C D}
+variables {F G H : C ↝ D}
 
 -- Unfortunately this coercion is not reliable enough to be usable.
 -- This defines a coercion so we can write `α X` for `components α X`.
@@ -98,7 +98,7 @@ notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α �
   (α : F ⟹ G) (β : G ⟹ H) (γ : I ⟹ J) (δ : J ⟹ K) : ((α ⊟ β) ◫ (γ ⊟ δ)) = ((α ◫ γ) ⊟ (β ◫ δ)) := 
   begin
     -- `obviously'` says:
-    fapply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+    apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
     intros,
     dsimp,
     simp,

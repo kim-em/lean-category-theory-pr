@@ -39,7 +39,7 @@ instance CategoryOfTypes : category (Type u) :=
 @[simp] lemma Types.identity {α : Type u} (a : α) : (𝟙 α : α → α) a = a := by refl
 @[simp] lemma Types.compose {α β γ : Type u} (f : α → β) (g : β → γ) (a : α) : (((f : α ⟶ β) ≫ (g : β ⟶ γ)) : α ⟶ γ) a = g (f a) := by refl
 
-variables {C : Type (v+1)} [category C] (F G H: Functor C (Type u)) {X Y Z : C} 
+variables {C : Type (v+1)} [category C] (F G H : C ↝ (Type u)) {X Y Z : C} 
 variables (σ : F ⟹ G) (τ : G ⟹ H) 
 
 @[simp,ematch] lemma Functor_to_Types.functoriality (f : X ⟶ Y) (g : Y ⟶ Z) (a : F +> X) : (F &> (f ≫ g)) a = (F &> g) ((F &> f) a) :=
@@ -73,15 +73,15 @@ begin
   refl
 end
 
-definition UniverseLift : Functor (Type u) (Type (u+1)) := 
+definition UniverseLift : (Type u) ↝ (Type (u+1)) := 
 { onObjects     := λ X, ulift.{u+1} X,
   onMorphisms   := λ X Y f, λ x : ulift.{u+1} X, ulift.up (f x.down),
   identities    := begin
                      -- `obviously'` says:
                      intros,
-                     fapply funext,
+                     apply funext,
                      intros,
-                     fapply ulifts_equal,
+                     apply ulifts_equal,
                      refl
                    end,
   functoriality := begin
