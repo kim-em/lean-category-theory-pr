@@ -133,7 +133,7 @@ instance Types_has_Equalizers : has_Equalizers (Type u) :=
                                              end } }
 
 
-@[applicable] lemma constant_on_quotient {α β : Type u} (f g : α → β) {Z : Type u} (k : β → Z) (x y : β) (h : eqv_gen (λ (x y : β), ∃ (a : α), f a = x ∧ g a = y) x y) (w : ∀ (a : α), k (f a) = k (g a)) : k x = k y :=
+@[semiapplicable] lemma constant_on_quotient {α β : Type u} (f g : α → β) {Z : Type u} (k : β → Z) (x y : β) (h : eqv_gen (λ (x y : β), ∃ (a : α), f a = x ∧ g a = y) x y) (w : ∀ (a : α), k (f a) = k (g a)) : k x = k y :=
 begin
   induction h,
   -- obviously' says:
@@ -147,26 +147,13 @@ begin
 end
 
 instance Types_has_Coequalizers : has_Coequalizers (Type u) := 
-{ coequalizer := λ α β f g, { coequalizer   := quotient (eqv_gen.setoid (λ x y, ∃ a : α, f a = x ∧ g a = y)),
+{ coequalizer := λ α β f g, by letI s := eqv_gen.setoid (λ x y, ∃ a : α, f a = x ∧ g a = y);
+                            exact { coequalizer   := quotient s,
                               projection    := begin
                                                  -- `obviously'` says:
                                                  apply quotient.mk
                                                end,
-                              map           := begin 
-                                                 -- `obviously'` says:
-                                                  ---
-                                                  intros,
-                                                  simp,
-                                                  intros,
-                                                  induction a,
-                                                  simp only [funext_simp] at *,
-                                                  solve_by_elim `[cc], -- FIXME surely this isn't a terminal goal
-                                                  dsimp,
-                                                  simp,
-                                                  simp only [funext_simp] at *,
-                                                  apply constant_on_quotient ; apply_assumption, -- FIXME                                                
-                                                  ---
-                                               end,                     
+                              map           := λ Z k w, quotient.lift k begin /- `obviously'` says: -/ intros, simp only [funext_simp] at *, apply categories.types.constant_on_quotient ; assumption end,
                               factorisation := begin
                                                  -- `obviously'` says:
                                                  intros,
