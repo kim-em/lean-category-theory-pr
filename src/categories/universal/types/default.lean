@@ -92,11 +92,12 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) :=
                                                         refl
                                                       end,
                                uniqueness          := λ Z f g lw rw, begin 
-                               -- TODO what is happening here?
+                                                                       -- `obviously'` says:
                                                                        apply funext,
                                                                        intros,
                                                                        simp only [funext_simp] at *,
-                                                                       cases x;
+                                                                       cases x,
+                                                                       solve_by_elim `[cc],
                                                                        solve_by_elim `[cc],
                                                                      end } }
 
