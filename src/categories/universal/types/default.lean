@@ -92,7 +92,7 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) :=
                                                         refl
                                                       end,
                                uniqueness          := λ Z f g lw rw, begin 
-                                                                       -- `obviously'` says:
+                                                                       -- `obviously'` says (with a little help!):
                                                                        apply funext,
                                                                        intros,
                                                                        simp only [funext_simp] at *,

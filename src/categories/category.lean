@@ -46,7 +46,7 @@ infixr ` ⟶ `:10  := category.Hom     -- type as \h
 make_lemma category.left_identity
 make_lemma category.right_identity
 make_lemma category.associativity
--- We tag some lemmas with the attribute @[ematch], for later automation.
+-- We tag some lemmas with the attribute @[ematch], for later automation. (Actually it would be better to use a different attribute, e.g. @[search].)
 attribute [simp,ematch] category.left_identity_lemma category.right_identity_lemma category.associativity_lemma 
 attribute [ematch] category.associativity_lemma 
 
