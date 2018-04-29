@@ -26,8 +26,6 @@ instance (α : Type u) : small (ulift.{u+1 u} α) :=
 
 class small_category (C : Type (u+1)) extends category C, small C.
 
-instance {C : Type (u+1)} [category C] [small C] : small_category C := {}.
-
 -- structure small (α : Type u) : Type (u + 1) :=
 -- up :: (down : α)
 
