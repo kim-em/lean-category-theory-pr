@@ -15,7 +15,8 @@ We use `≅` for isomorphisms.
 
 Functors
 ---
-We use ↝ (`\leadsto` or `\lea` or `\r~`) to denote functors, as in `C ↝ D` for the type of functors from `C` to `D`.
+We use `↝` (`\leadsto` or `\lea` or `\r~`) to denote functors, as in `C ↝ D` for the type of functors from `C` to `D`.
+Unfortunately Johannes reserved `⇒` (`\functor` or `\func`) in core: https://github.com/leanprover/lean/blob/master/library/init/relator.lean, so we can't use that here.
 Perhaps this is unnecessary, and it's better to just write `Functor C D`.
 
 Unfortunately, writing application of functors on objects and morphisms merely by function application is problematic.
@@ -28,6 +29,9 @@ We use `&>` to denote the action of a functor on a morphism, as in `F &> f`.
 
 Natural transformations
 ---
+We use `⟹` (`\nattrans` or `\==>`) to denote the type of natural transformations, e.g. `F ⟹ G`.
+We use `⇔` (`\<=>`) to denote the type of natural isomorphisms.
+
 Unfortunately, while we'd like to write components of natural transformations via function application (e.g. `τ X`),
 this requires coercions to function types, which I don't like.
 

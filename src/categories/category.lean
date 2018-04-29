@@ -46,7 +46,7 @@ infixr ` ⟶ `:10  := category.Hom     -- type as \h
 make_lemma category.left_identity
 make_lemma category.right_identity
 make_lemma category.associativity
--- We tag some lemmas with the attribute @[ematch], for later automation. (Actually it would be better to use a different attribute, e.g. @[search].)
+-- We tag some lemmas with the attribute @[ematch], for later automation.
 attribute [simp,ematch] category.left_identity_lemma category.right_identity_lemma category.associativity_lemma 
 attribute [ematch] category.associativity_lemma 
 
@@ -55,5 +55,18 @@ instance category.has_one : has_one (X ⟶ X) :=
 
 @[simp] def category.left_identity_lemma' (f : X ⟶ Y) : 1 ≫ f = f := begin unfold has_one.one, simp end
 @[simp] def category.right_identity_lemma' (f : X ⟶ Y) : f ≫ 1 = f := begin unfold has_one.one, simp end
+
+structure small (α : Type u) : Type (u + 1) :=
+up :: (down : α)
+
+namespace small
+/- Bijection between α and ulift.{v} α -/
+@[simp] lemma up_down {α : Type u} : ∀ (b : small.{u} α), up (down b) = b
+| (up a) := rfl
+
+@[simp] lemma down_up {α : Type u} (a : α) : down (up.{u} a) = a := rfl
+end small
+
+-- notation a `⟶ₛ` b := category.Hom (small.up a) (small.up b)
 
 end categories

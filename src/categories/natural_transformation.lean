@@ -30,14 +30,14 @@ variables {F G H : C ↝ D}
 
 -- Unfortunately this coercion is not reliable enough to be usable.
 -- This defines a coercion so we can write `α X` for `components α X`.
--- instance NaturalTransformation_to_components : has_coe_to_fun (NaturalTransformation F G) :=
--- {F   := λ f, Π X : C, Hom (F.onObjects X) (G.onObjects X),
---   coe := NaturalTransformation.components}
+instance NaturalTransformation_to_components : has_coe_to_fun (NaturalTransformation F G) :=
+{F   := λ f, Π X : C, (F +> X) ⟶ (G +> X),
+  coe := NaturalTransformation.components}
 
 -- We'll want to be able to prove that two natural transformations are equal if they are componentwise equal.
 @[applicable] lemma NaturalTransformations_componentwise_equal
   (α β : F ⟹ G)
-  (w : ∀ X : C, α.components X = β.components X) : α = β :=
+  (w : ∀ X : C, α X = β X) : α = β :=
   begin
     induction α with α_components α_naturality,
     induction β with β_components β_naturality,
@@ -56,13 +56,14 @@ definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F :=
 instance (F : C ↝ D) : has_one (F ⟹ F) := 
 { one := IdentityNaturalTransformation F }
 
-@[simp] lemma Functor.one.components (F : C ↝ D) (X : C) : (1 : F ⟹ F).components X = 𝟙 (F +> X) := by refl
+@[simp] lemma Functor.one.components (F : C ↝ D) (X : C) : (1 : F ⟹ F) X = 𝟙 (F +> X) := by refl
 
 @[reducible] definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := 
-{ components := λ X, (α.components X) ≫ (β.components X),
+{ components := λ X, (α X) ≫ (β X),
   naturality := begin
                   -- `obviously'` says:
                   intros,
+                  unfold_coes,
                   simp,
                   erw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma]
                 end }
@@ -76,10 +77,11 @@ open categories.functor
   {H I : D ↝ E}
   (α : F ⟹ G)
   (β : H ⟹ I) : (F ⋙ H) ⟹ (G ⋙ I) :=
-{ components := λ X : C, (β.components (F +> X)) ≫ (I &> (α.components X)), 
+{ components := λ X : C, (β (F +> X)) ≫ (I &> (α X)), 
   naturality := begin
                   -- `obviously'` says:
                   intros,
+                  unfold_coes,
                   simp,
                   -- Actually, obviously doesn't use exactly this sequence of rewrites, but achieves the same result
                   rw [← category.associativity_lemma],
@@ -97,10 +99,15 @@ notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α �
   {I J K : D ↝ E}
   (α : F ⟹ G) (β : G ⟹ H) (γ : I ⟹ J) (δ : J ⟹ K) : ((α ⊟ β) ◫ (γ ⊟ δ)) = ((α ◫ γ) ⊟ (β ◫ δ)) := 
   begin
+  -- obviously',
     -- `obviously'` says:
     apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
     intros,
+    unfold_coes,
     dsimp,
+    unfold_coes,
+    dsimp,
+    unfold_coes,
     simp,
     -- again, this isn't actually what obviously says, but it achieves the same effect.
     conv {to_lhs, congr, skip, rw [←category.associativity_lemma] },

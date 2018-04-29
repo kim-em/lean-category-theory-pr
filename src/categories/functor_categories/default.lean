@@ -24,9 +24,13 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       intros,
                       apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
-                      simp,
+                      unfold_coes,
+                      dsimp,
+                      unfold_coes,
+                      erw [category.left_identity_lemma]
                     end,
   right_identity := begin
+  obviously',
                       -- `obviously'` says:
                       intros,
                       apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
