@@ -44,15 +44,16 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       simp
                     end }
 
-structure small_Functor (C : Type (u₁+1)) [small C] [category C] (D : Type (u₂+1)) [category D] : Type ((max (u₁+1) u₂)) :=
-  (onObjects     : small.model C → D)
-  (onMorphisms   : Π {X Y : small.model C}, ((small.smallness C).inv_fun X ⟶ (small.smallness C).inv_fun Y) → ((onObjects X) ⟶ (onObjects Y)))
-  (identities    : ∀ (X : small.model C), onMorphisms (𝟙 ((small.smallness C).inv_fun X)) = 𝟙 (onObjects X) . obviously)
-  -- (functoriality : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), onMorphisms (f ≫ g) = (onMorphisms f) ≫ (onMorphisms g) . obviously)
+def up {C : Type (u₁+1)} [small C]  (X : small.model C) := (small.smallness C).inv_fun X
 
-instance SmallFunctorCategory [small C] : small.{(max (u₁+1) u₂)} (C ↝ D) := 
-{ model := small_Functor C D,
-  smallness := sorry
+structure small_Functor (C : Type (u₁+1)) [small C] [category C] (D : Type (u₂+1)) [category D] : Type (max u₁ (u₂+1)) :=
+  (onObjects     : small.model C → D)
+  (onMorphisms   : Π {X Y : small.model C}, (up X ⟶ up Y) → ((onObjects X) ⟶ (onObjects Y)))
+  (identities    : ∀ (X : small.model C), onMorphisms (𝟙 (up X)) = 𝟙 (onObjects X) . obviously)
+  (functoriality : ∀ {X Y Z : small.model C} (f : up X ⟶ up Y) (g : up Y ⟶ up Z), onMorphisms (f ≫ g) = (onMorphisms f) ≫ (onMorphisms g) . obviously)
+
+instance small_FunctorCategory [small C] : category (small_Functor C D) := 
+{ 
 }
 
 end
