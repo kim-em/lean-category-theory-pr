@@ -1,6 +1,6 @@
 universes u₁ v₁ u₂ v₂
 
-structure Category : Type (max (u₁+1) (v₁+1)) :=
+structure Category :=
   (Obj : Type u₁)
   (Hom : Obj → Obj → Type v₁)
   (identity : Π X : Obj, Hom X X)
@@ -31,6 +31,13 @@ set_option pp.universes true
 #print FunctorCategory -- Category.{(max u₁ u₂ v₁ v₂) (max u₁ v₂)}
 
 /-
+Summarising, we have:
+  Category : Type (max (u₁+1) (v₁+1))
+  C : Category.{u₁ v₁}
+  D : Category.{u₂ v₂}
+  Functor C D : Type (max u₁ u₂ v₁ v₂)
+  NaturalTransformation : Type (max u₁ v₂)
+  FunctorCategory : Category.{(max u₁ u₂ v₁ v₂) (max u₁ v₂)}
 
 If uᵢ=vᵢ+1, we then have:
   Category : Type (v₁+2)
