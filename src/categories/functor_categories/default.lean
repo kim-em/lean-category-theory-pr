@@ -3,6 +3,7 @@
 -- Authors: Tim Baumann, Stephen Morgan, Scott Morrison
 
 import ..natural_transformation
+import ..small_category
 
 open categories
 open categories.functor
@@ -24,17 +25,15 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       intros,
                       apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
-                      unfold_coes,
                       dsimp,
-                      unfold_coes,
-                      erw [category.left_identity_lemma]
+                      simp
                     end,
   right_identity := begin
-  obviously',
                       -- `obviously'` says:
                       intros,
                       apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
                       intros,
+                      dsimp,
                       simp
                     end,
   associativity  := begin
@@ -44,7 +43,20 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       intros,
                       simp
                     end }
+
+structure small_Functor (C : Type (u₁+1)) [small C] [category C] (D : Type (u₂+1)) [category D] : Type ((max (u₁+1) u₂)) :=
+  (onObjects     : small.model C → D)
+  (onMorphisms   : Π {X Y : small.model C}, ((small.smallness C).inv_fun X ⟶ (small.smallness C).inv_fun Y) → ((onObjects X) ⟶ (onObjects Y)))
+  (identities    : ∀ (X : small.model C), onMorphisms (𝟙 ((small.smallness C).inv_fun X)) = 𝟙 (onObjects X) . obviously)
+  -- (functoriality : ∀ {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z), onMorphisms (f ≫ g) = (onMorphisms f) ≫ (onMorphisms g) . obviously)
+
+instance SmallFunctorCategory [small C] : small.{(max (u₁+1) u₂)} (C ↝ D) := 
+{ model := small_Functor C D,
+  smallness := sorry
+}
+
 end
+
 
 section
 variables {C : Type (u₁+1)} [category C] {D : Type (u₂+1)} [category D] {E : Type (u₃+1)} [category E]
