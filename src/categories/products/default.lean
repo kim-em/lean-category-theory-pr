@@ -132,7 +132,7 @@ definition ProductFunctor (F : A ↝ B) (G : C ↝ D) : (A × C) ↝ (B × D) :=
 notation F `×` G := ProductFunctor F G
 
 definition ProductNaturalTransformation {F G : A ↝ B} {H I : C ↝ D} (α : F ⟹ G) (β : H ⟹ I) : (F × H) ⟹ (G × I) :=
-{ components := λ X, (α X.1, β X.2),
+{ components := λ X, (α.components X.1, β.components X.2),
   naturality := begin
                   -- `obviously'` says:
                   intros,

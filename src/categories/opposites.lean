@@ -58,8 +58,8 @@ definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) :=
                      erw [Functor.functoriality_lemma], refl,
                    end }
 
-definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (Cᵒᵖ × C) (Type u₁) := 
-{ onObjects     := λ p, @category.Hom C _ p.1 p.2,
+definition HomPairing (C : Type (u₁+1)) [category C]: Functor (Cᵒᵖ × C) (Type u₁) := 
+{ onObjects     := λ p, @uv_category.Hom C _ p.1 p.2,
   onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2,
   identities    := begin
                      -- `obviously'` says: 
@@ -70,7 +70,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
                      dsimp,
                      dsimp at *,
                      simp,
-                     erw [category.left_identity_lemma],
+                     erw [uv_category.left_identity_lemma],
                    end,
   functoriality := begin
                      -- `obviously'` says:
@@ -83,7 +83,7 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
                       dsimp at *,
                       simp,
                       dsimp,
-                      erw [category.associativity_lemma]
+                      erw [uv_category.associativity_lemma]
                       ---
                    end }
 
@@ -91,18 +91,19 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor.{u₁ u₁} (C�
 -- definition OppositeOpposite (C : Category) : Equivalence (Opposite (Opposite C)) C := sorry
 -- PROJECT opposites preserve products, functors, slices.
 
+-- TODO are these @s really needed?
 @[simp,ematch] lemma ContravariantFunctor.functoriality
   (F : (Cᵒᵖ) ↝ D)
   (X Y Z : (Cᵒᵖ))
   (f : X ⟶ Y) (g : Y ⟶ Z) :
-    F &> ((@categories.category.compose C _ _ _ _ g f) : X ⟶ Z) = (F &> f) ≫ (F &> g) := 
+    F &> ((@categories.uv_category.compose C _ _ _ _ g f) : X ⟶ Z) = (F &> f) ≫ (F &> g) := 
     begin
       -- `obviously'` says:
       erw [Functor.functoriality_lemma]
     end
 
 @[simp,ematch] lemma ContravariantFunctor.identities
-  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.category.identity.{u₁} C _ X)) = 𝟙 (F +> X) :=
+  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.uv_category.identity C _ X)) = 𝟙 (F +> X) :=
   begin
     -- `obviously'` says:
     erw [Functor.identities_lemma],

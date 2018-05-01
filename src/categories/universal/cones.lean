@@ -34,7 +34,7 @@ attribute [simp,ematch] ConeMorphism.commutativity_lemma
 
 @[simp,ematch] def ConeMorphism.commutativity_lemma_assoc {X Y : Cone F} (c : ConeMorphism X Y) (j : J) {Z : C} (z : (F +> j) ⟶ Z): c.cone_morphism ≫ Y.cone_maps j ≫ z = X.cone_maps j ≫ z :=
 begin
-  rw ← category.associativity,
+  rw ← uv_category.associativity,
   simp,
 end
 
@@ -134,7 +134,7 @@ attribute [simp,ematch] CoconeMorphism.commutativity_lemma
 
 @[simp,ematch] def CoconeMorphism.commutativity_lemma_assoc {X Y : Cocone F} (c : CoconeMorphism X Y) (j : J) {Z : C} (z : Y.cocone_point ⟶ Z): (X.cocone_maps j) ≫ c.cocone_morphism ≫ z = (Y.cocone_maps j) ≫ z :=
 begin
-  rw ← category.associativity,
+  rw ← uv_category.associativity,
   simp,
 end
 

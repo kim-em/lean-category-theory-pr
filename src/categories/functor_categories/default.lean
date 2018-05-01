@@ -3,7 +3,6 @@
 -- Authors: Tim Baumann, Stephen Morgan, Scott Morrison
 
 import ..natural_transformation
-import ..small_category
 
 open categories
 open categories.functor
@@ -11,14 +10,15 @@ open categories.natural_transformation
 
 namespace categories.functor_categories
 
-universes u₁ u₂ u₃
+universes u₁ v₁ u₂ v₂ u₃ v₃
 
 section
-variables (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category D] (E : Type (u₃+1)) [category E]
+variables (C : Type u₁) [C_cat : uv_category.{u₁ v₁} C] (D : Type u₂) [D_cat : uv_category.{u₂ v₂} D]
+include C_cat D_cat
 
-instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) := 
+instance FunctorCategory : uv_category (C ↝ D) := 
 { Hom            := λ F G, F ⟹ G,
-  identity       := λ F, 1,
+  identity       := λ F, IdentityNaturalTransformation F,
   compose        := λ _ _ _ α β, α ⊟ β,
   left_identity  := begin
                       -- `obviously'` says:
@@ -43,19 +43,6 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                       intros,
                       simp
                     end }
-
-def up {C : Type (u₁+1)} [small C]  (X : small.model C) := (small.smallness C).inv_fun X
-
-structure small_Functor (C : Type (u₁+1)) [small C] [category C] (D : Type (u₂+1)) [category D] : Type (max u₁ (u₂+1)) :=
-  (onObjects     : small.model C → D)
-  (onMorphisms   : Π {X Y : small.model C}, (up X ⟶ up Y) → ((onObjects X) ⟶ (onObjects Y)))
-  (identities    : ∀ (X : small.model C), onMorphisms (𝟙 (up X)) = 𝟙 (onObjects X) . obviously)
-  (functoriality : ∀ {X Y Z : small.model C} (f : up X ⟶ up Y) (g : up Y ⟶ up Z), onMorphisms (f ≫ g) = (onMorphisms f) ≫ (onMorphisms g) . obviously)
-
-instance small_FunctorCategory [small C] : category (small_Functor C D) := 
-{ 
-}
-
 end
 
 

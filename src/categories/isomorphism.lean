@@ -31,13 +31,13 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 @[simp,ematch] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
 begin
   -- `obviously'` says:
-  erw [←category.associativity_lemma, Isomorphism.witness_1_lemma, category.left_identity_lemma]
+  erw [←uv_category.associativity_lemma, Isomorphism.witness_1_lemma, uv_category.left_identity_lemma]
 end
 
 @[simp,ematch] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
 begin
   -- `obviously'` says:
-  erw [←category.associativity_lemma, Isomorphism.witness_2_lemma, category.left_identity_lemma]
+  erw [←uv_category.associativity_lemma, Isomorphism.witness_2_lemma, uv_category.left_identity_lemma]
 end
 
 instance Isomorphism_coercion_to_morphism : has_coe (X ≅ Y) (X ⟶ Y) :=
@@ -82,7 +82,7 @@ infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
       begin
         induction w,
         dsimp at *,
-        rw [← category.left_identity_lemma C k, ←wα2, category.associativity_lemma, wβ1, category.right_identity_lemma]
+        rw [← uv_category.left_identity_lemma C k, ←wα2, uv_category.associativity_lemma, wβ1, uv_category.right_identity_lemma]
       end,
     -- `obviously'` says:
     induction p, induction w,
@@ -142,14 +142,14 @@ class Monomorphism (f : X ⟶ Y) :=
 instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f  := 
 { left_cancellation := begin
                          intros,
-                         rw [←category.left_identity_lemma C g, ←category.left_identity_lemma C h],
+                         rw [←uv_category.left_identity_lemma C g, ←uv_category.left_identity_lemma C h],
                          rw [← is_Isomorphism.witness_2_lemma f],
                          rewrite_search_using `ematch, -- PROJECT Scott is thinking about completing the automation here.
                        end }
 instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := 
 { right_cancellation := begin
                          intros,
-                         rw [←category.right_identity_lemma C g, ←category.right_identity_lemma C h],
+                         rw [←uv_category.right_identity_lemma C g, ←uv_category.right_identity_lemma C h],
                          rw [← is_Isomorphism.witness_1_lemma f],
                          rewrite_search_using `ematch,
                        end }
