@@ -13,10 +13,7 @@ namespace categories.functor_categories
 universes u₁ v₁ u₂ v₂ u₃ v₃
 
 section
-variables (C : Type u₁) [C_cat : uv_category.{u₁ v₁} C] (D : Type u₂) [D_cat : uv_category.{u₂ v₂} D]
-include C_cat D_cat
-
-instance FunctorCategory : uv_category (C ↝ D) := 
+instance FunctorCategory_uv (C : Type u₁) [uv_category.{u₁ v₁} C] (D : Type u₂) [uv_category.{u₂ v₂} D] : uv_category.{(max u₁ v₁ u₂ v₂) (max u₁ v₂)} (C ↝ D) := 
 { Hom            := λ F G, F ⟹ G,
   identity       := λ F, IdentityNaturalTransformation F,
   compose        := λ _ _ _ α β, α ⊟ β,
@@ -43,6 +40,13 @@ instance FunctorCategory : uv_category (C ↝ D) :=
                       intros,
                       simp
                     end }
+
+instance FunctorCategory_small (C : Type u₁) [small_category C] (D : Type (u₁+1)) [category D] : category.{u₁} (C ↝ D) :=
+  { functor_categories.FunctorCategory_uv C D with .. }
+
+instance FunctorCategory_large (C : Type (u₁+1)) [category C] (D : Type (u₁+1)) [category D] : small_category.{u₁+1} (C ↝ D) :=
+  { functor_categories.FunctorCategory_uv C D with .. }
+
 end
 
 
