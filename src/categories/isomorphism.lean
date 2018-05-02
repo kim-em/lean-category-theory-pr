@@ -10,25 +10,31 @@ open categories.functor
 namespace categories.isomorphism
 universes u v
 
-variable {C : Type u}
-variable [C_cat : uv_category.{u v} C]
-include C_cat
-variables {X Y Z : C}
 
-structure Isomorphism (X Y : C) :=
+structure Isomorphism {C : Type u} [uv_category.{u v} C] (X Y : C) :=
   (morphism : X ⟶ Y)
   (inverse : Y ⟶ X)
   (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
   (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
+
+structure Isomorphism_small {C : Type u}     [small_category C] (X Y : C) extends Isomorphism.{u u} X Y.
+structure Isomorphism_large {C : Type (u+1)} [category C]       (X Y : C) extends Isomorphism.{u+1 u} X Y.
 
 make_lemma Isomorphism.witness_1
 make_lemma Isomorphism.witness_2
 attribute [simp,ematch] Isomorphism.witness_1_lemma Isomorphism.witness_2_lemma
 
 infixr ` ≅ `:10  := Isomorphism             -- type as \cong
--- this notation works in `category` and `small_category`, but not for `uv_category`, because Lean can't infer universes correctly.
+infixr ` ≅ `:11  := Isomorphism_small
+infixr ` ≅ `:12  := Isomorphism_large
 
 set_option pp.universes true
+
+variable {C : Type u}
+variable [C_cat : uv_category.{u v} C]
+include C_cat
+variables {X Y Z : C}
+
 
 -- These lemmas are quite common, to help us avoid having to muck around with associativity.
 -- If anyone has a suggestion for automating them away, I would be very appreciative.
