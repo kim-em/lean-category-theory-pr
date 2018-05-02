@@ -8,10 +8,11 @@ open categories
 open categories.functor
 
 namespace categories.isomorphism
-universes u
+universes u v
 
-variable {C : Type (u+1)}
-variable [category C]
+variable {C : Type u}
+variable [C_cat : uv_category.{u v} C]
+include C_cat
 variables {X Y Z : C}
 
 structure Isomorphism (X Y : C) :=
@@ -25,39 +26,40 @@ make_lemma Isomorphism.witness_2
 attribute [simp,ematch] Isomorphism.witness_1_lemma Isomorphism.witness_2_lemma
 
 infixr ` ≅ `:10  := Isomorphism             -- type as \cong
+-- this notation works in `category` and `small_category`, but not for `uv_category`, because Lean can't infer universes correctly.
+
+set_option pp.universes true
 
 -- These lemmas are quite common, to help us avoid having to muck around with associativity.
 -- If anyone has a suggestion for automating them away, I would be very appreciative.
-@[simp,ematch] lemma Isomorphism.witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
+@[simp,ematch] lemma Isomorphism.witness_1_assoc_lemma (I : Isomorphism.{u v} X Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
 begin
   -- `obviously'` says:
   erw [←uv_category.associativity_lemma, Isomorphism.witness_1_lemma, uv_category.left_identity_lemma]
 end
 
-@[simp,ematch] lemma Isomorphism.witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
+@[simp,ematch] lemma Isomorphism.witness_2_assoc_lemma (I : Isomorphism.{u v} X Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
 begin
   -- `obviously'` says:
   erw [←uv_category.associativity_lemma, Isomorphism.witness_2_lemma, uv_category.left_identity_lemma]
 end
 
-instance Isomorphism_coercion_to_morphism : has_coe (X ≅ Y) (X ⟶ Y) :=
+instance Isomorphism_coercion_to_morphism : has_coe (Isomorphism.{u v} X Y) (X ⟶ Y) :=
 { coe := Isomorphism.morphism }
 
-definition Isomorphism.id (X : C) : X ≅ X := 
-{ morphism  := 1,
-  inverse   := 1, 
+definition Isomorphism.refl (X : C) : Isomorphism.{u v} X X := 
+{ morphism  := uv_category.identity X,
+  inverse   := uv_category.identity X, 
   witness_1 := begin
                  -- `obviously'` says:
-                 simp,
-                 refl
+                 simp
                end,
   witness_2 := begin
                  -- `obviously'` says:
-                 simp,
-                 refl
+                 simp
                end }
 
-@[reducible] definition Isomorphism.comp (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := 
+@[reducible] definition Isomorphism.trans (α : Isomorphism.{u v} X Y) (β : Isomorphism.{u v} Y Z) : Isomorphism.{u v} X Z := 
 { morphism  := α.morphism ≫ β.morphism,
   inverse   := β.inverse ≫ α.inverse,
   witness_1 := begin
@@ -72,7 +74,7 @@ definition Isomorphism.id (X : C) : X ≅ X :=
 infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
 
 @[applicable] lemma Isomorphism_pointwise_equal
-  (α β : X ≅ Y)
+  (α β : Isomorphism.{u v} X Y)
   (w : α.morphism = β.morphism) : α = β :=
   begin
     induction α with f g wα1 wα2,
@@ -89,7 +91,7 @@ infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
     refl
   end
 
-definition Isomorphism.reverse (I : X ≅ Y) : Y ≅ X := 
+definition Isomorphism.symm (I : Isomorphism.{u v} X Y) : Isomorphism.{u v} Y X := 
 { morphism  := I.inverse,
   inverse   := I.morphism,
   witness_1 := begin
@@ -110,7 +112,7 @@ make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2
 attribute [simp,ematch] is_Isomorphism.witness_1_lemma is_Isomorphism.witness_2_lemma
 
-instance is_Isomorphism_of_Isomorphism         (f : X ≅ Y) : is_Isomorphism f.morphism :=
+instance is_Isomorphism_of_Isomorphism         (f : Isomorphism.{u v} X Y) : is_Isomorphism f.morphism :=
 { inverse   := f.inverse,
   witness_1 := begin
                  -- `obviously'` says:
@@ -120,7 +122,7 @@ instance is_Isomorphism_of_Isomorphism         (f : X ≅ Y) : is_Isomorphism f.
                  -- `obviously'` says:
                  simp
                end }
-instance is_Isomorphism_of_Isomorphism_inverse (f : X ≅ Y) : is_Isomorphism f.inverse  := 
+instance is_Isomorphism_of_Isomorphism_inverse (f : Isomorphism.{u v} X Y) : is_Isomorphism f.inverse  := 
 { inverse   := f.morphism,
   witness_1 := begin
                  -- `obviously'` says:
