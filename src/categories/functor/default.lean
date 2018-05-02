@@ -43,21 +43,28 @@ definition IdentityFunctor (C) [category C] : C ↝ C :=
 instance (C) [category C] : has_one (C ↝ C) := 
 { one := IdentityFunctor C }
 
+section
 variable {C : Type (u₁+1)}
 variable [category C]
-variable {D : Type (u₂+1)}
-variable [category D]
-variable {E : Type (u₃+1)}
-variable [category E]
 
 @[simp] lemma IdentityFunctor.onObjects (X : C) : 1 +> X = X := by refl
 @[simp] lemma IdentityFunctor.onMorphisms {X Y : C} (f : X ⟶ Y) : 1 &> f = f := by refl
+end
 
 -- We define a coercion so that we can write `F X` for the functor `F` applied to the object `X`.
 -- One can still write out `onObjects F X` when needed.
 -- instance Functor_to_onObjects : has_coe_to_fun (C ↝ D) :=
 -- { F   := λ f, C → D,
 --   coe := Functor.onObjects }
+
+section
+variable {C : Type u₁}
+variable [C_cat : uv_category.{u₁ v₁} C]
+variable {D : Type u₂}
+variable [D_cat : uv_category.{u₂ v₂} D]
+variable {E : Type u₃}
+variable [E_cat : uv_category.{u₃ v₃} E]
+include C_cat D_cat E_cat
 
 definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
 { onObjects     := λ X, G +> (F +> X),
@@ -72,7 +79,6 @@ definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E :=
                      intros,
                      simp
                    end }
-
 infixr ` ⋙ `:80 := FunctorComposition
 
 @[simp] lemma FunctorComposition.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) +> X = G +> (F +> X) := 
@@ -86,7 +92,15 @@ begin
   -- `obviously'` says:
   refl
 end
+end
 
+section
+variable {C : Type (u₁+1)}
+variable [category C]
+variable {D : Type (u₂+1)}
+variable [category D]
+
+-- TODO this is WIP
 class Functorial (f : C → D) :=
   (onMorphisms   : Π {X Y : C}, (X ⟶ Y) → ((f X) ⟶ (f Y)))
   (identities    : ∀ (X : C), onMorphisms (𝟙 X) = 𝟙 (f X) . obviously)
@@ -100,5 +114,6 @@ instance (F : C ↝ D) : Functorial (F.onObjects) :=
 { onMorphisms := F.onMorphisms }
 
 -- TODO notations?
+end
 
 end categories.functor
