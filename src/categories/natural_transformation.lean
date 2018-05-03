@@ -41,8 +41,7 @@ definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F :=
 
 variables {F G H : C ↝ D}
 
--- TODO remove this reducible?
-@[reducible] definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := 
+definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := 
 { components := λ X, (α.components X) ≫ (β.components X),
   naturality := begin
                   -- `obviously'` says:
@@ -52,6 +51,8 @@ variables {F G H : C ↝ D}
                 end }
 
 notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β    
+
+@[simp,ematch] lemma vertical_composition_of_NaturalTransformations.components (α : F ⟹ G) (β : G ⟹ H) (X : C) : (α ⊟ β).components X = (α.components X) ≫ (β.components X) := by refl
 
 -- We'll want to be able to prove that two natural transformations are equal if they are componentwise equal.
 @[applicable] lemma NaturalTransformations_componentwise_equal
@@ -85,7 +86,7 @@ instance (F : C ↝ D) : has_one (F ⟹ F) :=
 
 open categories.functor
 
-@[reducible] definition horizontal_composition_of_NaturalTransformations
+definition horizontal_composition_of_NaturalTransformations
   {F G : C ↝ D}
   {H I : D ↝ E}
   (α : F ⟹ G)
@@ -106,6 +107,11 @@ open categories.functor
 
 notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α β
 
+@[simp,ematch] lemma horizontal_composition_of_NaturalTransformations.components {F G : C ↝ D}
+  {H I : D ↝ E}
+  (α : F ⟹ G)
+  (β : H ⟹ I) (X : C) : (α ◫ β).components X = (β.components (F +> X)) ≫ (I &> (α.components X)) := by refl
+
 @[ematch] lemma NaturalTransformation.exchange
   {F G H : C ↝ D}
   {I J K : D ↝ E}
@@ -115,7 +121,6 @@ notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α �
     -- `obviously'` says:
     apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
     intros,
-    dsimp,
     simp,
     -- again, this isn't actually what obviously says, but it achieves the same effect.
     conv {to_lhs, congr, skip, rw [←uv_category.associativity_lemma] },
