@@ -25,7 +25,7 @@ infixr ` +> `:70 := Functor.onObjects
 infixr ` &> `:70 := Functor.onMorphisms -- switch to ▹?
 infixr ` ↝ `:70 := Functor -- type as \lea 
 
-definition IdentityFunctor (C) [category C] : C ↝ C := 
+definition IdentityFunctor (C : Type u₁) [uv_category.{u₁ v₁} C] : C ↝ C := 
 { onObjects     := id,
   onMorphisms   := λ _ _ f, f,
   identities    := begin 
@@ -43,11 +43,13 @@ instance (C) [category C] : has_one (C ↝ C) :=
 { one := IdentityFunctor C }
 
 section
-variable {C : Type (u₁+1)}
-variable [category C]
+variable {C : Type u₁}
+variable [uv_category.{u₁ v₁} C]
 
-@[simp] lemma IdentityFunctor.onObjects (X : C) : 1 +> X = X := by refl
-@[simp] lemma IdentityFunctor.onMorphisms {X Y : C} (f : X ⟶ Y) : 1 &> f = f := by refl
+@[simp] lemma IdentityFunctor.onObjects {C : Type u₁}
+ [uv_category.{u₁ v₁} C] (X : C) : (IdentityFunctor C) +> X = X := by refl
+@[simp] lemma IdentityFunctor.onMorphisms {C : Type u₁}
+ [uv_category.{u₁ v₁} C] {X Y : C} (f : X ⟶ Y) : (IdentityFunctor C) &> f = f := by refl
 end
 
 -- We define a coercion so that we can write `F X` for the functor `F` applied to the object `X`.
