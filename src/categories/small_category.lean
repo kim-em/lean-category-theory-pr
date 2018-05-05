@@ -27,18 +27,10 @@ instance (α : Type u) : small (ulift.{u+1 u} α) :=
 
 class small_category (C : Type (u+1)) extends category C, small C.
 
--- structure small (α : Type u) : Type (u + 1) :=
--- up :: (down : α)
+def small.down {C : Type (u+1)} [small C] (X : C)             := (small.smallness C).to_fun  X
+def small.up   {C : Type (u+1)} [small C] (X : small.model C) := (small.smallness C).inv_fun X
 
--- namespace small
--- /- Bijection between α and ulift.{v} α -/
--- @[simp] lemma up_down {α : Type u} : ∀ (b : small.{u} α), up (down b) = b
--- | (up a) := rfl
-
--- @[simp] lemma down_up {α : Type u} (a : α) : down (up.{u} a) = a := rfl
--- end small
-
--- notation a `⟶ₛ` b := category.Hom (small.up a) (small.up b)
-
+notation `𝟙ₛ` X := category.identity (small.up X)   -- type as \b1
+notation X ` ⟶ₛ ` Y : 10 := category.Hom (small.up X) (small.up Y)    -- type as \h
 
 end categories

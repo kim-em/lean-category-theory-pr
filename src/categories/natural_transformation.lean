@@ -69,6 +69,8 @@ instance (F : C ↝ D) : has_one (F ⟹ F) :=
 
 notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β
 
+@[simp,ematch] lemma vertical_composition_of_NaturalTransformations.components (α : F ⟹ G) (β : G ⟹ H) (X : C) : (α ⊟ β).components X = (α.components X) ≫ (β.components X) := by refl
+
 open categories.functor
 
 @[reducible] definition horizontal_composition_of_NaturalTransformations
@@ -91,6 +93,12 @@ open categories.functor
                 end }
 
 notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α β
+
+@[simp,ematch] lemma horizontal_composition_of_NaturalTransformations.components {F G : C ↝ D}
+  {H I : D ↝ E}
+  (α : F ⟹ G)
+  (β : H ⟹ I) (X : C) : (α ◫ β).components X = (β.components (F +> X)) ≫ (I &> (α.components X)) := by refl
+
 
 @[ematch] lemma NaturalTransformation.exchange
   {F G H : C ↝ D}
