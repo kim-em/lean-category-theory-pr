@@ -45,52 +45,10 @@ instance FunctorCategory : category.{(max (u₁+1) u₂)} (C ↝ D) :=
                     end }
 end
 
-section
-
-structure small_Functor (C : Type (u₁+1)) [small_category C] (D : Type (u₁+1)) [category D] : Type (u₁+1) :=
-  (onObjects     : small.model C → D)
-  (onMorphisms   : Π {X Y : small.model C}, (X ⟶ₛ Y) → ((onObjects X) ⟶ (onObjects Y)))
-  (identities    : ∀ (X : small.model C), onMorphisms (𝟙ₛ X) = 𝟙 (onObjects X) . obviously)
-  (functoriality : ∀ {X Y Z : small.model C} (f : X ⟶ₛ Y) (g : Y ⟶ₛ Z), onMorphisms (f ≫ g) = (onMorphisms f) ≫ (onMorphisms g) . obviously)
-
-make_lemma small_Functor.identities
-make_lemma small_Functor.functoriality
-attribute [simp,ematch] small_Functor.functoriality_lemma small_Functor.identities_lemma
-
-infixr ` +>ₛ `:70 := small_Functor.onObjects
-infixr ` &>ₛ `:70 := small_Functor.onMorphisms -- switch to ▹?
-infixr ` ↝ₛ `:70 := small_Functor -- type as \lea 
-
-def small_Functor_equiv (C : Type (u₁+1)) [small_category C] (D : Type (u₁+1)) [category D] : equiv (C ↝ D) (C ↝ₛ D) :=
-{ to_fun  := λ F,
-    { onObjects := λ X, F +> (small.up X),
-      onMorphisms := λ _ _ f, F &> f, },
-  inv_fun := λ F,
-    { onObjects := λ X, F +>ₛ (small.down X),
-      onMorphisms := λ _ _ f, F &>ₛ f, },
-  left_inv := sorry,
-  right_inv := sorry, }
-
-structure small_NaturalTransformation {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D] (F G : C ↝ₛ D) : Type u₁ :=
-  (components: Π X : small.model C, (F +>ₛ X) ⟶ (G +>ₛ X))
-  (naturality: ∀ {X Y : small.model C} (f : X ⟶ₛ Y), (F &>ₛ f) ≫ (components Y) = (components X) ≫ (G &>ₛ f) . obviously)
-
-make_lemma small_NaturalTransformation.naturality
-attribute [ematch] small_NaturalTransformation.naturality_lemma
-
-infixr ` ⟹ₛ `:50  := small_NaturalTransformation             -- type as \==>
-
-def small_NaturalTransformation_equiv {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D] (F G : C ↝ₛ D) : equiv (((small_Functor_equiv C D).inv_fun F) ⟹ ((small_Functor_equiv C D).inv_fun G)) (F ⟹ₛ G) :=
-{ to_fun := sorry,
-  inv_fun := sorry,
-  left_inv := sorry,
-  right_inv := sorry, }
-
 instance small_FunctorCategory (C : Type (u₁+1)) [small_category C] (D : Type (u₁+1)) [category D] : category.{u₁} (small_Functor C D) := 
 { Hom            := λ F G, F ⟹ₛ G,
-  identity       := λ F, 1,
-  compose        := λ _ _ _ α β, α ⊟ β,
-}
+  identity       := λ F, { components := λ X, 𝟙 _ },
+  compose        := λ _ _ _ α β, { components := λ X, (α.components X) ≫ (β.components X) }, }
 end
 
 
