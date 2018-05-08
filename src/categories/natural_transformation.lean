@@ -17,7 +17,7 @@ variable [category D]
 variable {E : Type (w+1)}
 variable [category E]
 
-structure NaturalTransformation (F G : C ↝ D) : Type /- ((max u v)+1) -/ (max (u+1) v) :=
+structure NaturalTransformation (F G : C ↝ D) : Type (max (u+1) v) :=
   (components: Π X : C, (F +> X) ⟶ (G +> X))
   (naturality: ∀ {X Y : C} (f : X ⟶ Y), (F &> f) ≫ (components Y) = (components X) ≫ (G &> f) . obviously)
 
@@ -56,6 +56,7 @@ definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F :=
 instance (F : C ↝ D) : has_one (F ⟹ F) := 
 { one := IdentityNaturalTransformation F }
 
+@[simp] lemma IdentityNaturalTransformation.components (F : C ↝ D) (X : C) : (IdentityNaturalTransformation F).components X = 𝟙 (F +> X) := by refl
 @[simp] lemma Functor.one.components (F : C ↝ D) (X : C) : (1 : F ⟹ F).components X = 𝟙 (F +> X) := by refl
 
 @[reducible] definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H := 

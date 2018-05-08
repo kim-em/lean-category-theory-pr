@@ -12,7 +12,7 @@ namespace categories.functor
 universes u₁ u₂ u₃ 
 
 -- The universe level could be reduced to `((max u₁ u₂)+1)` but this would make life harder later.
-structure Functor (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category D] : Type ((max (u₁+1) u₂)+1) :=
+structure Functor (C : Type (u₁+1)) [category C] (D : Type (u₂+1)) [category D] : Type ((max u₁ u₂)+1) :=
   (onObjects     : C → D)
   (onMorphisms   : Π {X Y : C}, (X ⟶ Y) → ((onObjects X) ⟶ (onObjects Y)))
   (identities    : ∀ (X : C), onMorphisms (𝟙 X) = 𝟙 (onObjects X) . obviously)
