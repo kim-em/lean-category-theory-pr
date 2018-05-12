@@ -3,7 +3,7 @@
 -- Authors: Scott Morrison
 
 import .natural_transformation
-import tidy.congr_struct
+import .heterogeneous_identity
 import data.fintype
 
 namespace categories
@@ -34,70 +34,43 @@ def up   {C : Type (u₁+1)} [small C] (X : small.model C) := (small.smallness C
 @[simp,ematch] lemma up_down {C : Type (u₁+1)} [small C] (X : C)             : up (down X) = X := (small.smallness C).left_inv X
 @[simp,ematch] lemma down_up {C : Type (u₁+1)} [small C] (X : small.model C) : down (up X) = X := (small.smallness C).right_inv X
 
+@[reducible] def small_hom {C : Type (u₁+1)} [small_category C] {X Y : C} (f : X ⟶ Y) : up (down X) ⟶ up (down Y) := (h_identity (by simp)) ≫ f ≫ (h_identity (by simp))
+@[reducible] def large_hom {C : Type (u₁+1)} [small_category C] {X Y : C} (f : up (down X) ⟶ up (down Y)) : X ⟶ Y := (h_identity (by simp)) ≫ f ≫ (h_identity (by simp))
+
 notation `𝟙ₛ` X := category.identity (up X)   -- type as \b1
 notation X ` ⟶ₛ ` Y : 10 := category.Hom (up X) (up Y)    -- type as \h
 
 namespace functor
 
 structure small_Functor (C : Type (u₁+1)) [small_category C] (D : Type (u₂+1)) [category D] : Type ((max u₁ u₂)+1) :=
-  (onObjects     : small.model C → D)
-  (onMorphisms   : Π {X Y : small.model C}, (X ⟶ₛ Y) → ((onObjects X) ⟶ (onObjects Y)))
-  (identities    : ∀ (X : small.model C), onMorphisms (𝟙ₛ X) = 𝟙 (onObjects X) . obviously)
-  (functoriality : ∀ {X Y Z : small.model C} (f : X ⟶ₛ Y) (g : Y ⟶ₛ Z), onMorphisms (f ≫ g) = (onMorphisms f) ≫ (onMorphisms g) . obviously)
+  (onSmallObjects     : small.model C → D)
+  (onSmallMorphisms   : Π {X Y : small.model C}, (X ⟶ₛ Y) → ((onSmallObjects X) ⟶ (onSmallObjects Y)))
+  (identities'    : ∀ (X : small.model C), onSmallMorphisms (𝟙ₛ X) = 𝟙 (onSmallObjects X) . obviously)
+  (functoriality' : ∀ {X Y Z : small.model C} (f : X ⟶ₛ Y) (g : Y ⟶ₛ Z), onSmallMorphisms (f ≫ g) = (onSmallMorphisms f) ≫ (onSmallMorphisms g) . obviously)
 
-make_lemma small_Functor.identities
-make_lemma small_Functor.functoriality
-attribute [simp,ematch] small_Functor.functoriality_lemma small_Functor.identities_lemma
-
-infixr ` +>ₛ `:70 := small_Functor.onObjects
-infixr ` &>ₛ `:70 := small_Functor.onMorphisms -- switch to ▹?
 infixr ` ↝ₛ `:70 := small_Functor -- type as \lea 
 
-@[simp] lemma eq.mpr.trans {α β γ: Prop} (p : α = β) (q : β = γ) (g : γ) : eq.mpr (eq.trans p q) g = eq.mpr p (eq.mpr q g) :=
-begin
-  induction p,
-  induction q,
-  refl,
+section
+variables {C : Type (u₁+1)} [small_category C] {D : Type (u₂+1)} [category D] (F : C ↝ₛ D)
+def small_Functor.onObjects   (X : C) := F.onSmallObjects (down X)
+def small_Functor.onMorphisms {X Y : C} (f : X ⟶ Y) := F.onSmallMorphisms (small_hom f)
+
+@[simp,ematch] lemma small_Functor.identities (X : C) : F.onMorphisms (𝟙 X) = 𝟙 (F.onObjects X) := sorry
+@[simp,ematch] lemma small_Functor.functoriality {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : F.onMorphisms (f ≫ g) = (F.onMorphisms f) ≫ (F.onMorphisms g) := sorry
 end
 
-@[simp] lemma eq.mpr.propext {α : Sort u₁} (a : α) : eq.mpr (propext (eq_self_iff_true a)) trivial = eq.refl a :=
-begin
-  refl,
-end
+infixr ` +> `:70 := small_Functor.onObjects
+infixr ` &> `:70 := small_Functor.onMorphisms -- switch to ▹?
 
-@[simp] lemma eq.mpr.refl {α : Sort u₁} (a b : α) (p : a = b) : (eq.mpr (congr_fun (congr_arg eq p) b) (eq.refl b)) = p :=
-begin
-  induction p,
-  refl,
-end
-
-def h_identity {C : Type (u₁+1)} [category C] {X Y : C} (p : X = Y) : X ⟶ Y :=
-begin
-  rw p,
-  exact 𝟙 Y,
-end
-
-@[simp,ematch] lemma h_identity.refl {C : Type (u₁+1)} [category C] (X : C) : h_identity (eq.refl X) = 𝟙 X :=
-begin
-  refl,
-end
-
-@[simp,ematch] lemma h_identity.trans {C : Type (u₁+1)} [category C] {X Y Z : C} (p : X = Y) (q : Y = Z) : h_identity p ≫ h_identity q = h_identity (p.trans q) :=
-begin
-  induction p,
-  induction q,
-  tidy,
-end
-
-@[reducible] def small_hom {C : Type (u₁+1)} [small_category C] {X Y : C} (f : X ⟶ Y) : up (down X) ⟶ up (down Y) := (h_identity (by simp)) ≫ f ≫ (h_identity (by simp))
+set_option pp.notation false
 
 def small_Functor.up {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D] (F : C ↝ₛ D) : C ↝ D :=
-{ onObjects := λ X, F +>ₛ (down X),
-  onMorphisms := λ X Y f, F &>ₛ (small_hom f), }
+{ onObjects := λ X, F +> X,
+  onMorphisms := λ X Y f, F &> f, }
 
 def Functor.down {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D] (F : C ↝ D) : C ↝ₛ D :=
-{ onObjects := λ X, F +> (up X),
-  onMorphisms := λ _ _ f, F &> f, }
+{ onSmallObjects := λ X, F +> (up X),
+  onSmallMorphisms := λ _ _ f, F &> f, }
 
 def Functor.down_up_to_id {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D] (F : C ↝ D) : F.down.up ⟹ F := sorry
 def Functor.id_to_down_up {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D] (F : C ↝ D) : F ⟹ F.down.up := sorry
@@ -128,12 +101,16 @@ end functor
  
 namespace natural_transformation
 
-structure small_NaturalTransformation {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D] (F G : C ↝ₛ D) : Type u₁ :=
-  (components: Π X : small.model C, (F +>ₛ X) ⟶ (G +>ₛ X))
-  (naturality: ∀ {X Y : small.model C} (f : X ⟶ₛ Y), (F &>ₛ f) ≫ (components Y) = (components X) ≫ (G &>ₛ f) . obviously)
+section
+variables {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D]
 
-make_lemma small_NaturalTransformation.naturality
-attribute [ematch] small_NaturalTransformation.naturality_lemma
+structure small_NaturalTransformation (F G : C ↝ₛ D) : Type u₁ :=
+  (small_components : Π X : small.model C, (F +> (up X)) ⟶ (G +> (up X)))
+  (naturality'      : ∀ {X Y : small.model C} (f : X ⟶ₛ Y), (F &> f) ≫ (small_components Y) = (small_components X) ≫ (G &> f) . obviously)
+
+variables {F G : C ↝ₛ D} 
+
+def small_NaturalTransformation.components (τ : small_NaturalTransformation F G) (X : C) : (F +> X) ⟶ (G +> X) := τ.small_components (down X)
 
 infixr ` ⟹ₛ `:50  := small_NaturalTransformation             -- type as \==>
 

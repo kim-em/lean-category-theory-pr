@@ -38,7 +38,7 @@ variable {C : Type (u+1)}
 variables {W X Y Z : C}
 variable [category C]
 
-notation `𝟙` := category.identity    -- type as \b1
+notation `𝟙`:15 := category.identity    -- type as \b1
 infixr ` ≫ `:80 := category.compose -- type as \gg
 infixr ` ⟶ `:10  := category.Hom     -- type as \h
 
