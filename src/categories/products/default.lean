@@ -12,13 +12,10 @@ namespace categories.products
 
 universes u₁ u₂ u₃ u₄
 
-variable {A : Type (u₁+1)}
-variable [category A]
-variable {B : Type (u₂+1)}
-variable [category B]
-variable {C : Type (u₃+1)}
+section
+variable (C : Type (u₃+1))
 variable [category C]
-variable {D : Type (u₄+1)}
+variable (D : Type (u₄+1))
 variable [category D]
 
 instance ProductCategory : category (C × D) := 
@@ -52,6 +49,12 @@ instance ProductCategory : category (C × D) :=
 
 @[simp,ematch] lemma ProductCategory.identity {X : C} {Y : D} : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
 @[simp,ematch] lemma ProductCategory.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
+end
+
+variable {C : Type (u₃+1)}
+variable [category C]
+variable {D : Type (u₄+1)}
+variable [category D]
 
 definition RightInjectionAt (Z : D) : C ↝ (C × D) := 
 { onObjects     := λ X, (X, Z),
@@ -110,6 +113,11 @@ definition RightProjection : (C × D) ↝ D :=
                      intros,
                      refl
                    end }
+
+variable {A : Type (u₁+1)}
+variable [category A]
+variable {B : Type (u₂+1)}
+variable [category B]
 
 definition ProductFunctor (F : A ↝ B) (G : C ↝ D) : (A × C) ↝ (B × D) :=
 { onObjects     := λ X, (F +> X.1, G +> X.2),
