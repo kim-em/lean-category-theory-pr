@@ -50,13 +50,11 @@ instance small_FunctorCategory (C : Type (u₁+1)) [small_category C] (D : Type 
   identity       := λ F, { small_components := λ X, 𝟙 _ },
   compose        := λ _ _ _ α β, { small_components := λ X, (α.small_components X) ≫ (β.small_components X), naturality' := sorry }, }
 
-
-
 section
 variables {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [small_category D] {E : Type (u₁+1)} [category E]
 
--- @[simp,ematch] lemma FunctorCategory.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟶ F).components X = 𝟙 (F +> X) := by refl
--- @[simp,ematch] lemma FunctorCategory.compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H).components X = (α : F ⟹ G).components X ≫ (β : G ⟹ H).components X:= by refl
+@[simp,ematch] lemma FunctorCategory.identity.components (F : C ↝ₛ D) (X : C) : (𝟙 F : F ⟶ F).components X = 𝟙 (F +> X) := by refl
+@[simp,ematch] lemma FunctorCategory.compose.components {F G H : C ↝ₛ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟶ H).components X = (α : F ⟶ G).components X ≫ (β : G ⟶ H).components X:= by refl
 
 @[ematch] lemma NaturalTransformation_to_FunctorCategory.components_naturality
   {F G : C ↝ₛ (D ↝ₛ E)} (T : F ⟹ₛ G) (X : C) {Y Z : D} (f : Y ⟶ Z)
