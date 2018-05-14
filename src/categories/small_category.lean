@@ -42,7 +42,7 @@ notation X ` ⟶ ` Y : 9 := category.Hom (up X) (up Y)    -- type as \h
 
 namespace functor
 
-structure small_Functor (C : Type (u₁+1)) [small_category C] (D : Type (u₂+1)) [category D] : Type ((max u₁ u₂)+1) :=
+structure small_Functor (C : Type (u₁+1)) [small_category C] (D : Type (u₂+1)) [category D] : Type (max u₁ u₂+1) :=
   (onSmallObjects     : small.model C → D)
   (onSmallMorphisms   : Π {X Y : small.model C}, (X ⟶ Y) → ((onSmallObjects X) ⟶ (onSmallObjects Y)))
   (identities'    : ∀ (X : small.model C), onSmallMorphisms (𝟙ₛ X) = 𝟙 (onSmallObjects X) . obviously)
@@ -94,9 +94,9 @@ end functor
 namespace natural_transformation
 
 section
-variables {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D]
+variables {C : Type (u₁+1)} [small_category C] {D : Type (u₂+1)} [category D]
 
-structure small_NaturalTransformation (F G : C ↝ₛ D) : Type u₁ :=
+structure small_NaturalTransformation (F G : C ↝ₛ D) : Type (max u₁ u₂) :=
   (small_components : Π X : small.model C, (F.onSmallObjects X) ⟶ (G.onSmallObjects X))
   (naturality'      : ∀ {X Y : small.model C} (f : X ⟶ Y), (F.onSmallMorphisms f) ≫ (small_components Y) = (small_components X) ≫ (G.onSmallMorphisms f) . obviously)
 
