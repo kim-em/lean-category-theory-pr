@@ -63,12 +63,12 @@ begin
   induction p,
   tidy,
 end
-
 end
 
 infixr ` +>ₛ `:69 := small_Functor.onObjects
 infixr ` &>ₛ `:69 := small_Functor.onMorphisms -- switch to ▹?
 
+section
 variables {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [category D] 
 
 def small_Functor.up (F : C ↝ₛ D) : C ↝ D :=
@@ -87,7 +87,33 @@ def Functor.down (F : C ↝ D) : C ↝ₛ D :=
 
 def Functor.down_up_to_id (F : C ↝ D) : F.down.up ⟹ F := sorry
 def Functor.id_to_down_up (F : C ↝ D) : F ⟹ F.down.up := sorry
+end
 
+set_option pp.all true
+
+structure small_small_Functor (C : Type (u₁+1)) [small_category C] (D : Type (u₂+1)) [small_category D] : Type (max u₁ u₂) :=
+  (onSmallObjects     : small.model C → small.model D)
+  (onSmallMorphisms   : Π {X Y : small.model C}, (X ⟶ Y) → (up (onSmallObjects X) ⟶ up (onSmallObjects Y)))
+  (identities'    : ∀ (X : small.model C), onSmallMorphisms (𝟙ₛ X) = 𝟙ₛ (onSmallObjects X) . obviously)
+  (functoriality' : ∀ {X Y Z : small.model C} (f : X ⟶ Y) (g : Y ⟶ Z), onSmallMorphisms (f ≫ g) = (onSmallMorphisms f) ≫ (onSmallMorphisms g) . obviously)
+
+infixr ` ↝ₛₛ `:70 := small_small_Functor -- type as \lea 
+
+section
+variables {C : Type (u₁+1)} [small_category C] {D : Type (u₂+1)} [small_category D] (F : C ↝ₛₛ D)
+def small_small_Functor.onObjects   (X : C) := F.onSmallObjects (down X)
+def small_small_Functor.onMorphisms {X Y : C} (f : X ⟶ Y) : up (F.onObjects X) ⟶ up (F.onObjects Y) := F.onSmallMorphisms (small_hom f)
+
+@[simp,ematch] lemma small_small_Functor.identities (X : C) : F.onMorphisms (𝟙 X) = 𝟙ₛ (F.onObjects X) := sorry
+@[simp,ematch] lemma small_small_Functor.functoriality {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) : F.onMorphisms (f ≫ g) = (F.onMorphisms f) ≫ (F.onMorphisms g) := sorry
+
+-- FIXME
+-- @[simp,ematch] lemma small_small_Functor.h_identities (X Y : C) (p : X = Y) : F.onMorphisms (h_identity p) = h_identity (congr_arg F.onObjects p) :=
+-- begin
+--   induction p,
+--   tidy,
+-- end
+end
 
 end functor
  
