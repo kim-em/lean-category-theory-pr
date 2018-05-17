@@ -13,10 +13,22 @@ namespace categories.functor_categories
 
 universes u₁ u₂ u₃
 
+instance small_small_FunctorCategory (C : Type (u₁+1)) [small_category C] (D : Type (u₁+1)) [small_category D] : small_category.{u₁} (small_Functor C D) := 
+{ 
+  Hom            := λ F G, F ⟹ₛ G,
+  identity       := λ F, { small_components := λ X, 𝟙 _ },
+  compose        := λ _ _ _ α β, { small_components := λ X, (α.small_components X) ≫ (β.small_components X), naturality' := sorry }, }
+
 instance small_FunctorCategory (C : Type (u₁+1)) [small_category C] (D : Type (u₁+1)) [category D] : category.{u₁} (small_Functor C D) := 
 { Hom            := λ F G, F ⟹ₛ G,
   identity       := λ F, { small_components := λ X, 𝟙 _ },
   compose        := λ _ _ _ α β, { small_components := λ X, (α.small_components X) ≫ (β.small_components X), naturality' := sorry }, }
+
+instance large_FunctorCategory (C : Type (u₁+1)) [category C] (D : Type (u₁+1)) [category D] : small_category.{u₁+1} (ulift.{u₁+2} (Functor C D)) := 
+{ Hom            := λ F G, F.down ⟹ G.down,
+  identity       := λ F, sorry,
+  compose        := λ _ _ _ α β, sorry, }
+
 
 section
 variables {C : Type (u₁+1)} [small_category C] {D : Type (u₁+1)} [small_category D] {E : Type (u₁+1)} [category E]
