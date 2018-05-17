@@ -139,9 +139,9 @@ end
   (α β : F ⟹ₛ G)
   (w : ∀ X : C, α.components X = β.components X) : α = β :=
   begin
-    induction α with α_components α_naturality,
-    induction β with β_components β_naturality,
-    have hc : α_components = β_components := sorry,
+    cases α,
+    cases β,
+    have hc : α_small_components = β_small_components := sorry,
     subst hc
   end
 

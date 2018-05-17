@@ -3,6 +3,7 @@
 -- Authors: Tim Baumann, Stephen Morgan, Scott Morrison
 
 import .functor
+import tidy.congr_struct
 
 open categories
 open categories.functor
@@ -39,10 +40,7 @@ variables {F G H : C ↝ D}
   (α β : F ⟹ G)
   (w : ∀ X : C, α.components X = β.components X) : α = β :=
   begin
-    induction α with α_components α_naturality,
-    induction β with β_components β_naturality,
-    have hc : α_components = β_components := funext w,
-    subst hc
+  cases α, cases β, congr, exact funext w
   end
 
 definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F := 

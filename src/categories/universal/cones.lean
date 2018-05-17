@@ -40,8 +40,8 @@ end
 
 @[applicable] lemma ConeMorphism_componentwise_equal {X Y : Cone F} {f g : ConeMorphism X Y} (w : f.cone_morphism = g.cone_morphism) : f = g :=
 begin
-  induction f,
-  induction g,
+  cases f,
+  cases g,
   dsimp at w,
   induction w,
   refl,
@@ -141,8 +141,8 @@ end
 
 @[applicable] lemma CoconeMorphism_componentwise_equal {X Y : Cocone F} {f g : CoconeMorphism X Y} (w : f.cocone_morphism = g.cocone_morphism) : f = g :=
 begin
-  induction f,
-  induction g,
+  cases f,
+  cases g,
   dsimp at w,
   induction w,
   refl,
