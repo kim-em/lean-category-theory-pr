@@ -31,25 +31,26 @@ set_option pp.universes true
 #print FunctorCategory -- Category.{(max u₁ u₂ v₁ v₂) (max u₁ v₂)}
 
 /-
+Summarising this, we have:
 
-If uᵢ=vᵢ+1, we then have:
-  Category : Type (v₁+2)
-  C : Category.{v₁+1 v₁}
-  D : Category.{v₂+1 v₂}
-  Functor C D : Type (max v₁+1 v₂+1)
-  NaturalTransformation : Type (max (v₁+1) v₂)
-  FunctorCategory C D : Category.{(max (v₁+1) (v₂+1)) (max (v₁+1) v₂)}
+Category.{u₁ v₁} : Type (max (u₁+1) (v₁+1))
+C : Category.{u₁ v₁}
+D : Category.{u₂ v₂}
+Functor C D : Type (max u₁ u₂ v₁ v₂)
+F G : Functor C D
+NaturalTransformation F G : Type (max u₁ v₂)
+FunctorCategory C D : Category.{(max u₁ u₂ v₁ v₂) (max u₁ v₂)}
 
-If moreover v₂=v₁, then
-  FunctorCategory C D : Category.{(v₁+1) (v₁+1)}
-That is, the FunctorCategory is a whole level up (but small...)
+Let's now experiment with the definitions
+`SmallCategory.{u} := Category.{u u}` and `LargeCategory.{u} := Category.{u+1 u}`.
 
-If C is a small category, so u₁=v₁, and D has u₂=v₂+1, we then have:
-  Functor C D : Type (max v₁ v₂+1)
-  FunctorCategory C D : Category.{(mav v₁ (v₂+1)) (max v₁ v₂)}
+If `C : SmallCategory.{u}, D : SmallCategory.{v}`, then `FunctorCategory C D : Category.{(max u v) (max u v)}`,
+that is, we can arrange for `FunctorCategory C D` to be a `SmallCategory.{(max u v)}`.
 
-If moreover v₂=v₁, then
-  FunctorCategory C D : Category.{(v₁+1) v₁}
-That is, FunctorCategory is a large category at the same level as we started.
+If `C : SmallCategory.{u}, D : LargeCategory.{v}`, then `FunctorCategory C D : Category.{(max u (v+1)) (max u v)}`,
+which is a bit awkward. However if we further specialise to `u = v`, then we can
+arrange for `FunctorCategory C D` to be a `LargeCategory.{u}`.
 
+If `C : LargeCategory.{u}, D : LargeCategory.{v}`, then `FunctorCategory C D : Category.{((max u v)+1) (max (u+1) v)}`,
+which is again awkward, although when `u = v` we can arrange `FunctorCategory C D` to be a `SmallCategory.{u+1}`.
 -/
