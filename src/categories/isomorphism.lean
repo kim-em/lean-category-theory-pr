@@ -7,9 +7,9 @@ import .functor
 open categories
 open categories.functor
 
-namespace categories.isomorphism
 universes u v
 
+namespace categories.isomorphism
 
 structure Isomorphism {C : Type u} [uv_category.{u v} C] (X Y : C) :=
   (morphism : X ⟶ Y)
@@ -17,16 +17,16 @@ structure Isomorphism {C : Type u} [uv_category.{u v} C] (X Y : C) :=
   (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
   (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
 
-structure Isomorphism_small {C : Type u}     [small_category C] (X Y : C) extends Isomorphism.{u u} X Y.
-structure Isomorphism_large {C : Type (u+1)} [category C]       (X Y : C) extends Isomorphism.{u+1 u} X Y.
+-- structure Isomorphism_small {C : Type u}     [small_category C] (X Y : C) extends Isomorphism.{u u} X Y.
+-- structure Isomorphism_large {C : Type (u+1)} [category C]       (X Y : C) extends Isomorphism.{u+1 u} X Y.
 
 make_lemma Isomorphism.witness_1
 make_lemma Isomorphism.witness_2
 attribute [simp,ematch] Isomorphism.witness_1_lemma Isomorphism.witness_2_lemma
 
 infixr ` ≅ `:10  := Isomorphism             -- type as \cong
-infixr ` ≅ `:11  := Isomorphism_small
-infixr ` ≅ `:12  := Isomorphism_large
+-- infixr ` ≅ `:11  := Isomorphism_small
+-- infixr ` ≅ `:12  := Isomorphism_large
 
 set_option pp.universes true
 
@@ -65,7 +65,7 @@ definition Isomorphism.refl (X : C) : Isomorphism.{u v} X X :=
                  simp
                end }
 
-@[reducible] definition Isomorphism.trans (α : Isomorphism.{u v} X Y) (β : Isomorphism.{u v} Y Z) : Isomorphism.{u v} X Z := 
+definition Isomorphism.trans (α : Isomorphism.{u v} X Y) (β : Isomorphism.{u v} Y Z) : Isomorphism.{u v} X Z := 
 { morphism  := α.morphism ≫ β.morphism,
   inverse   := β.inverse ≫ α.inverse,
   witness_1 := begin
@@ -77,7 +77,7 @@ definition Isomorphism.refl (X : C) : Isomorphism.{u v} X X :=
                  simp
                end }
 
-infixr ` ≫ `:80 := Isomorphism.comp -- type as \gg
+infixr ` ♢ `:80 := Isomorphism.trans -- type as \diamonds
 
 @[applicable] lemma Isomorphism_pointwise_equal
   (α β : Isomorphism.{u v} X Y)
@@ -108,6 +108,8 @@ definition Isomorphism.symm (I : Isomorphism.{u v} X Y) : Isomorphism.{u v} Y X 
                  -- `obviously'` says:
                  simp
                end }
+
+
 
 class is_Isomorphism (f : X ⟶ Y) :=
   (inverse : Y ⟶ X)
@@ -178,3 +180,16 @@ instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorp
                                               end ⟩
 
 end categories.isomorphism
+
+variables {C D : Type u}
+variables [C_cat : uv_category.{u v} C]
+variables [D_cat : uv_category.{u v} D]
+include C_cat D_cat
+
+namespace categories.functor
+
+definition Functor.onIsomorphisms (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F +> X) ≅ (F +> Y) :=
+{ morphism := F &> i.morphism,
+  inverse  := F &> i.inverse }
+
+end categories.functor
