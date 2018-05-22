@@ -71,7 +71,7 @@ begin
   -- obviously', -- says:
   injections_and_clear,
   simp only [funext_simp] at *,
-  solve_by_elim `[cc]
+  solve_by_elim {discharger := `[cc]}
 end
 end
 
