@@ -38,13 +38,13 @@ variables {X Y Z : C}
 
 -- These lemmas are quite common, to help us avoid having to muck around with associativity.
 -- If anyone has a suggestion for automating them away, I would be very appreciative.
-@[simp,ematch] lemma Isomorphism.witness_1_assoc_lemma (I : Isomorphism.{u v} X Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
+@[simp,ematch] lemma Isomorphism.witness_1_assoc_lemma (I : Isomorphism X Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
 begin
   -- `obviously'` says:
   erw [←uv_category.associativity_lemma, Isomorphism.witness_1_lemma, uv_category.left_identity_lemma]
 end
 
-@[simp,ematch] lemma Isomorphism.witness_2_assoc_lemma (I : Isomorphism.{u v} X Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
+@[simp,ematch] lemma Isomorphism.witness_2_assoc_lemma (I : Isomorphism X Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
 begin
   -- `obviously'` says:
   erw [←uv_category.associativity_lemma, Isomorphism.witness_2_lemma, uv_category.left_identity_lemma]
@@ -53,7 +53,7 @@ end
 instance Isomorphism_coercion_to_morphism : has_coe (Isomorphism.{u v} X Y) (X ⟶ Y) :=
 { coe := Isomorphism.morphism }
 
-definition Isomorphism.refl (X : C) : Isomorphism.{u v} X X := 
+definition Isomorphism.refl (X : C) : Isomorphism X X := 
 { morphism  := uv_category.identity X,
   inverse   := uv_category.identity X, 
   witness_1 := begin
@@ -65,7 +65,10 @@ definition Isomorphism.refl (X : C) : Isomorphism.{u v} X X :=
                  simp
                end }
 
-definition Isomorphism.trans (α : Isomorphism.{u v} X Y) (β : Isomorphism.{u v} Y Z) : Isomorphism.{u v} X Z := 
+@[simp,ematch] lemma Isomorphism.refl.morphism (X : C) : (Isomorphism.refl X).morphism = 𝟙 X := by refl
+@[simp,ematch] lemma Isomorphism.refl.inverse  (X : C) : (Isomorphism.refl X).inverse  = 𝟙 X := by refl
+
+definition Isomorphism.trans (α : Isomorphism X Y) (β : Isomorphism Y Z) : Isomorphism X Z := 
 { morphism  := α.morphism ≫ β.morphism,
   inverse   := β.inverse ≫ α.inverse,
   witness_1 := begin
@@ -79,8 +82,11 @@ definition Isomorphism.trans (α : Isomorphism.{u v} X Y) (β : Isomorphism.{u v
 
 infixr ` ♢ `:80 := Isomorphism.trans -- type as \diamonds
 
+@[simp,ematch] lemma Isomorphism.trans.morphism (α : Isomorphism X Y) (β : Isomorphism Y Z) : (α ♢ β).morphism = α.morphism ≫ β.morphism := by refl
+@[simp,ematch] lemma Isomorphism.trans.inverse  (α : Isomorphism X Y) (β : Isomorphism Y Z) : (α ♢ β).inverse  = β.inverse ≫ α.inverse   := by refl
+
 @[applicable] lemma Isomorphism_pointwise_equal
-  (α β : Isomorphism.{u v} X Y)
+  (α β : Isomorphism X Y)
   (w : α.morphism = β.morphism) : α = β :=
   begin
     induction α with f g wα1 wα2,
@@ -97,7 +103,7 @@ infixr ` ♢ `:80 := Isomorphism.trans -- type as \diamonds
     refl
   end
 
-definition Isomorphism.symm (I : Isomorphism.{u v} X Y) : Isomorphism.{u v} Y X := 
+definition Isomorphism.symm (I : Isomorphism X Y) : Isomorphism Y X := 
 { morphism  := I.inverse,
   inverse   := I.morphism,
   witness_1 := begin
@@ -120,7 +126,9 @@ make_lemma is_Isomorphism.witness_1
 make_lemma is_Isomorphism.witness_2
 attribute [simp,ematch] is_Isomorphism.witness_1_lemma is_Isomorphism.witness_2_lemma
 
-instance is_Isomorphism_of_Isomorphism         (f : Isomorphism.{u v} X Y) : is_Isomorphism f.morphism :=
+instance is_Isomorphism_of_identity (X : C) : is_Isomorphism (𝟙 X) := 
+{ inverse := 𝟙 X }
+instance is_Isomorphism_of_Isomorphism         (f : Isomorphism X Y) : is_Isomorphism f.morphism :=
 { inverse   := f.inverse,
   witness_1 := begin
                  -- `obviously'` says:
@@ -130,7 +138,7 @@ instance is_Isomorphism_of_Isomorphism         (f : Isomorphism.{u v} X Y) : is_
                  -- `obviously'` says:
                  simp
                end }
-instance is_Isomorphism_of_Isomorphism_inverse (f : Isomorphism.{u v} X Y) : is_Isomorphism f.inverse  := 
+instance is_Isomorphism_of_Isomorphism_inverse (f : Isomorphism X Y) : is_Isomorphism f.inverse  := 
 { inverse   := f.morphism,
   witness_1 := begin
                  -- `obviously'` says:
@@ -191,5 +199,8 @@ namespace categories.functor
 definition Functor.onIsomorphisms (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F +> X) ≅ (F +> Y) :=
 { morphism := F &> i.morphism,
   inverse  := F &> i.inverse }
+
+@[simp,ematch] lemma Functor.onIsomorphisms.morphism (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.onIsomorphisms i).morphism = F &> i.morphism := by refl
+@[simp,ematch] lemma Functor.onIsomorphisms.inverse  (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.onIsomorphisms i).morphism = F &> i.morphism := by refl
 
 end categories.functor

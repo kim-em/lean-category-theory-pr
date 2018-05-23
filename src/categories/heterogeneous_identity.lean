@@ -26,18 +26,18 @@ namespace categories
 open categories.isomorphism
 open categories.functor
 
-def h_identity {C : Type (u₁+1)} [category C] {X Y : C} (p : X = Y) : X ≅ Y :=
+def eq_to_iso {C : Type (u₁+1)} [category C] {X Y : C} (p : X = Y) : X ≅ Y :=
 begin
   rw p,
   exact (Isomorphism.refl Y),
 end
 
-@[simp,ematch] lemma h_identity.refl {C : Type (u₁+1)} [category C] (X : C) : h_identity (eq.refl X) = (Isomorphism.refl X) :=
+@[simp,ematch] lemma eq_to_iso.refl {C : Type (u₁+1)} [category C] (X : C) : eq_to_iso (eq.refl X) = (Isomorphism.refl X) :=
 begin
   refl,
 end
 
-@[simp,ematch] lemma h_identity.trans {C : Type (u₁+1)} [category C] {X Y Z : C} (p : X = Y) (q : Y = Z) : (h_identity p) ♢ (h_identity q) = h_identity (p.trans q) :=
+@[simp,ematch] lemma eq_to_iso.trans {C : Type (u₁+1)} [category C] {X Y Z : C} (p : X = Y) (q : Y = Z) : (eq_to_iso p) ♢ (eq_to_iso q) = eq_to_iso (p.trans q) :=
 begin
   induction p,
   induction q,
@@ -48,7 +48,7 @@ end categories
 open categories
 namespace categories.functor
 
-@[simp,ematch] lemma Functor.h_identities {C : Type (u₁+1)} [category C] {D : Type (u₁+1)} [category D] (F : C ↝ D) (X Y : C) (p : X = Y) : F.onIsomorphisms (h_identity p) = h_identity (congr_arg F.onObjects p) :=
+@[simp,ematch] lemma Functor.eq_to_iso {C : Type (u₁+1)} [category C] {D : Type (u₁+1)} [category D] (F : C ↝ D) (X Y : C) (p : X = Y) : F.onIsomorphisms (eq_to_iso p) = eq_to_iso (congr_arg F.onObjects p) :=
 begin
   induction p,
   tidy,
