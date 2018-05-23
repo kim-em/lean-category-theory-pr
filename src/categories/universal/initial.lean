@@ -47,7 +47,6 @@ lemma InitialObjects_are_unique (X Y : InitialObject C) : X.initial_object ≅ Y
 begin
   -- `obviously'` says:
   fsplit,
-  fsplit,
   apply categories.initial.InitialObject.morphism_from_initial_object_to,
   apply categories.initial.InitialObject.morphism_from_initial_object_to,
   apply categories.initial.InitialObject.uniqueness_of_morphisms_from_initial_object_lemma,
@@ -64,7 +63,6 @@ structure is_terminal (X : C) :=
 lemma TerminalObjects_are_unique (X Y : TerminalObject C) : X.terminal_object ≅ Y.terminal_object :=
 begin
   -- `obviously'` says:
-  fsplit,
   fsplit,
   apply categories.initial.TerminalObject.morphism_to_terminal_object_from,
   apply categories.initial.TerminalObject.morphism_to_terminal_object_from,
