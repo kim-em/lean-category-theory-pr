@@ -13,18 +13,18 @@ open categories.types
 
 namespace categories.opposites
 
-universes u₁ u₂
-
-variable {C : Type (u₁+1)}
-variable [category C]
-variable {D : Type (u₂+1)}
-variable [category D]
+universes u₁ v₁ u₂ v₂
 
 def op (C : Type u₁) : Type u₁ := C
 
 notation C `ᵒᵖ` := op C
 
-instance Opposite : category (Cᵒᵖ) := 
+section
+variable {C : Type u₁}
+variable [C_cat : uv_category.{u₁ v₁} C]
+include C_cat
+
+instance Opposite : uv_category.{u₁ v₁} (Cᵒᵖ) := 
 { Hom            := λ X Y : C, Y ⟶ X,
   compose        := λ _ _ _ f g, g ≫ f,
   identity       := λ X, 𝟙 X,
@@ -44,6 +44,10 @@ instance Opposite : category (Cᵒᵖ) :=
                       simp
                     end }
 
+variable {D : Type u₂}
+variable [D_cat : uv_category.{u₂ v₂} D]
+include D_cat
+
 definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) := 
 { onObjects     := λ X, F.onObjects X, -- notation (F +> X) fails here, because C ≠ Cᵒᵖ
   onMorphisms   := λ X Y f, F &> f,
@@ -58,7 +62,27 @@ definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) :=
                      erw [Functor.functoriality_lemma], refl,
                    end }
 
-definition HomPairing (C : Type (u₁+1)) [category C]: Functor (Cᵒᵖ × C) (Type u₁) := 
+-- TODO are these @s really needed?
+@[simp,ematch] lemma ContravariantFunctor.functoriality
+  (F : (Cᵒᵖ) ↝ D)
+  (X Y Z : (Cᵒᵖ))
+  (f : X ⟶ Y) (g : Y ⟶ Z) :
+    F &> ((@categories.uv_category.compose C _ _ _ _ g f) : X ⟶ Z) = (F &> f) ≫ (F &> g) := 
+    begin
+      -- `obviously'` says:
+      erw [Functor.functoriality_lemma]
+    end
+
+@[simp,ematch] lemma ContravariantFunctor.identities
+  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.uv_category.identity C _ X)) = 𝟙 (F +> X) :=
+  begin
+    -- `obviously'` says:
+    erw [Functor.identities_lemma],
+  end
+                   
+end
+
+definition HomPairing (C : Type u₁) [uv_category.{u₁ v₁} C] : Functor (Cᵒᵖ × C) (Type v₁) := 
 { onObjects     := λ p, @uv_category.Hom C _ p.1 p.2,
   onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2,
   identities    := begin
@@ -91,22 +115,5 @@ definition HomPairing (C : Type (u₁+1)) [category C]: Functor (Cᵒᵖ × C) (
 -- definition OppositeOpposite (C : Category) : Equivalence (Opposite (Opposite C)) C := sorry
 -- PROJECT opposites preserve products, functors, slices.
 
--- TODO are these @s really needed?
-@[simp,ematch] lemma ContravariantFunctor.functoriality
-  (F : (Cᵒᵖ) ↝ D)
-  (X Y Z : (Cᵒᵖ))
-  (f : X ⟶ Y) (g : Y ⟶ Z) :
-    F &> ((@categories.uv_category.compose C _ _ _ _ g f) : X ⟶ Z) = (F &> f) ≫ (F &> g) := 
-    begin
-      -- `obviously'` says:
-      erw [Functor.functoriality_lemma]
-    end
-
-@[simp,ematch] lemma ContravariantFunctor.identities
-  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.uv_category.identity C _ X)) = 𝟙 (F +> X) :=
-  begin
-    -- `obviously'` says:
-    erw [Functor.identities_lemma],
-  end
 
 end categories.opposites
