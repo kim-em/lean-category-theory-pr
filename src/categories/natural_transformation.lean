@@ -16,8 +16,6 @@ variable {C : Type u₁}
 variable [C_cat : uv_category.{u₁ v₁} C]
 variable {D : Type u₂}
 variable [D_cat : uv_category.{u₂ v₂} D]
-variable {E : Type u₃}
-variable [uv_category.{u₃ v₃} E]
 include C_cat D_cat
 
 structure NaturalTransformation (F G : C ↝ D) : Type (max u₁ v₂) :=
