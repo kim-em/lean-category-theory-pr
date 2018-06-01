@@ -50,9 +50,6 @@ attribute [ematch] uv_category.associativity_lemma
 class large_category (C : Type (u+1)) extends uv_category.{u+1 u} C.
 class small_category (C : Type u) extends uv_category.{u u} C.
 
-instance large_category_to_uv_category {C : Type (u+1)} [𝒞 : large_category C] : uv_category.{u+1 u} C := 𝒞.to_uv_category
-instance small_category_to_uv_category {C : Type u}     [𝒞 : small_category C] : uv_category.{u u}   C := 𝒞.to_uv_category
-
 section
 variable {C : Type (u+1)}
 variables {X Y : C}
