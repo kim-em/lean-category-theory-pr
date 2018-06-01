@@ -49,7 +49,7 @@ instance Types_has_Coproducts : has_Coproducts (Type u) :=
                                          end } }
 
 -- Even though this can be automatically generated from `Types_has_Products`, this is a cleaner version.
-instance Types_has_BinaryProducts : has_BinaryProducts (Type u) := 
+instance Types_has_BinaryProducts : has_BinaryProducts.{u+1 u} (Type u) := 
 { binary_product := λ X Y, { product             := X × Y,
                              left_projection     := prod.fst,
                              right_projection    := prod.snd,
@@ -76,7 +76,7 @@ instance Types_has_BinaryProducts : has_BinaryProducts (Type u) :=
                                                       solve_by_elim {discharger := `[cc]},
                                                     end } }
 
-instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) := 
+instance Types_has_BinaryCoproducts : has_BinaryCoproducts.{u+1 u} (Type u) := 
 { binary_coproduct := λ X Y, { coproduct           := X ⊕ Y,
                                left_inclusion      := sum.inl,
                                right_inclusion     := sum.inr,
@@ -101,7 +101,7 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts (Type u) :=
                                                                        solve_by_elim {discharger := `[cc]},
                                                                      end } }
 
-instance Types_has_Equalizers : has_Equalizers (Type u) := 
+instance Types_has_Equalizers : has_Equalizers.{u+1 u} (Type u) := 
 { equalizer := λ α β f g, { equalizer     := {x : α // f x = g x},
                             inclusion     := λ x, x.val,
                             map           := λ γ k h g, ⟨ k g, begin
@@ -147,7 +147,7 @@ begin
   { solve_by_elim {discharger := `[cc]} },
 end
 
-instance Types_has_Coequalizers : has_Coequalizers (Type u) := 
+instance Types_has_Coequalizers : has_Coequalizers.{u+1 u} (Type u) := 
 { coequalizer := λ α β f g, by letI s := eqv_gen.setoid (λ x y, ∃ a : α, f a = x ∧ g a = y);
                             exact { coequalizer   := quotient s,
                               projection    := begin

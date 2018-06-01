@@ -189,12 +189,14 @@ instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorp
 
 end categories.isomorphism
 
-variables {C D : Type u}
-variables [C_cat : uv_category.{u v} C]
-variables [D_cat : uv_category.{u v} D]
-include C_cat D_cat
-
 namespace categories.functor
+
+universes u₁ v₁ u₂ v₂ 
+
+variables {C : Type u₁} {D : Type u₂}
+variables [𝒞 : uv_category.{u₁ v₁} C]
+variables [𝒟 : uv_category.{u₂ v₂} D]
+include 𝒞 𝒟
 
 definition Functor.onIsomorphisms (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F +> X) ≅ (F +> Y) :=
 { morphism := F &> i.morphism,

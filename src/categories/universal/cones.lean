@@ -11,9 +11,10 @@ open categories.initial
 
 namespace categories.universal
 
-universes u v
-variables {J : Type u} [small_category J]
-variables {C : Type (u+1)} [category C] {D : Type (u+1)} [category D]
+universes u v w
+variables {J : Type v} [small_category J]
+variables {C : Type u} [𝒞 : uv_category.{u v} C]
+include 𝒞 
 
 structure Cone (F : J ↝ C) :=
   (cone_point    : C)
@@ -25,7 +26,7 @@ attribute [simp,ematch] Cone.commutativity_lemma
 
 variable {F : J ↝ C}
 
-structure ConeMorphism (X Y : Cone F) : Type u :=
+structure ConeMorphism (X Y : Cone F) : Type v :=
   (cone_morphism : X.cone_point ⟶ Y.cone_point)
   (commutativity : Π j : J, cone_morphism ≫ (Y.cone_maps j) = (X.cone_maps j) . obviously)
 
@@ -47,7 +48,7 @@ begin
   refl,
 end
 
-instance Cones (F : J ↝ C) : category (Cone F) :=
+instance Cones (F : J ↝ C) : uv_category.{(max u v) v} (Cone F) :=
 { Hom            := λ X Y, ConeMorphism X Y,
   compose        := λ X Y Z f g, { cone_morphism := f.cone_morphism ≫ g.cone_morphism,
                                    commutativity := begin
@@ -86,6 +87,10 @@ instance Cones (F : J ↝ C) : category (Cone F) :=
 @[simp] lemma Cones.identity.cone_morphism {F : J ↝ C} (c : Cone F) : (𝟙 c : ConeMorphism c c).cone_morphism = 𝟙 (c.cone_point) := by refl
 @[simp] lemma Cones.compose.cone_morphism {F : J ↝ C} {c d e : Cone F} (f : c ⟶ d) (g : d ⟶ e) : ((f ≫ g) : ConeMorphism c e).cone_morphism = (f : ConeMorphism c d).cone_morphism ≫ (g : ConeMorphism d e).cone_morphism := by refl
 
+section
+variables {D : Type u} [𝒟 : uv_category.{u v} D]
+include 𝒟
+
 definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone (F ⋙ G)) := 
 { onObjects     := λ X,     { cone_point    := G +> X.cone_point,
                               cone_maps     := λ j, G &> (X.cone_maps j), 
@@ -116,6 +121,7 @@ definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone 
                      dsimp,
                      simp
                    end }
+end
 
 structure Cocone (F : J ↝ C) :=
   (cocone_point  : C)
@@ -125,7 +131,7 @@ structure Cocone (F : J ↝ C) :=
 make_lemma Cocone.commutativity
 attribute [simp,ematch] Cocone.commutativity_lemma
 
-structure CoconeMorphism (X Y : Cocone F) : Type u :=
+structure CoconeMorphism (X Y : Cocone F) :=
   (cocone_morphism : X.cocone_point ⟶ Y.cocone_point)
   (commutativity   : Π j : J, (X.cocone_maps j) ≫ cocone_morphism = (Y.cocone_maps j) . obviously)
 
@@ -138,7 +144,6 @@ begin
   simp,
 end
 
-
 @[applicable] lemma CoconeMorphism_componentwise_equal {X Y : Cocone F} {f g : CoconeMorphism X Y} (w : f.cocone_morphism = g.cocone_morphism) : f = g :=
 begin
   induction f,
@@ -148,7 +153,7 @@ begin
   refl,
 end
 
-instance Cocones (F : J ↝ C) : category (Cocone F) := 
+instance Cocones (F : J ↝ C) : uv_category.{(max u v) v} (Cocone F) := 
 { Hom            := λ X Y, CoconeMorphism X Y,
   compose        := λ X Y Z f g, { cocone_morphism := f.cocone_morphism ≫ g.cocone_morphism,
                                    commutativity   := begin
@@ -187,6 +192,10 @@ instance Cocones (F : J ↝ C) : category (Cocone F) :=
 @[simp] lemma Cocones.identity.cone_morphism {F : J ↝ C} (c : Cocone F) : (𝟙 c : CoconeMorphism c c).cocone_morphism = 𝟙 (c.cocone_point) := by refl
 @[simp] lemma Cocones.compose.cone_morphism {F : J ↝ C} {c d e : Cocone F} (f : c ⟶ d) (g : d ⟶ e) : ((f ≫ g) : CoconeMorphism c e).cocone_morphism = (f : CoconeMorphism c d).cocone_morphism ≫ (g : CoconeMorphism d e).cocone_morphism := by refl
 
+section
+variables {D : Type u} [𝒟 : uv_category.{u v} D]
+include 𝒟
+
 definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cocone F) ↝ (Cocone (F ⋙ G)) := 
 { onObjects     := λ X,     { cocone_point    := G +> X.cocone_point,
                               cocone_maps     := λ j, G &> (X.cocone_maps j),
@@ -217,6 +226,7 @@ definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cocone F) ↝ (C
                      dsimp,
                      simp
                    end }
+end
 
 definition LimitCone     (F : J ↝ C) := TerminalObject (Cone F)
 definition ColimitCocone (F : J ↝ C) := InitialObject (Cocone F)
@@ -225,9 +235,9 @@ end categories.universal
 
 namespace categories.functor
 
-universes u
-variables {J : Type u} [small_category J]
-variables {C : Type (u+1)} [category C] {D : Type (u+1)} [category D]
+universes u v
+variables {J : Type v} [small_category J]
+variables {C : Type u} [uv_category.{u v} C] {D : Type u} [uv_category.{u v} D]
 variable {F : J ↝ C}
 
 open categories.universal

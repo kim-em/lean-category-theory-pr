@@ -11,9 +11,9 @@ open categories.isomorphism
 
 namespace categories.initial
 
-universe u
+universes u v
 
-structure InitialObject (C : Type (u+1)) [category C] :=
+structure InitialObject (C : Type u) [uv_category.{u v} C] :=
   (initial_object                              : C)
   (morphism_from_initial_object_to             : ∀ Y : C, initial_object ⟶ Y)
   (uniqueness_of_morphisms_from_initial_object : ∀ Y : C, ∀ f g : initial_object ⟶ Y, f = g . obviously)
@@ -22,7 +22,7 @@ attribute [applicable] InitialObject.morphism_from_initial_object_to
 make_lemma InitialObject.uniqueness_of_morphisms_from_initial_object
 attribute [applicable,ematch] InitialObject.uniqueness_of_morphisms_from_initial_object_lemma
 
-structure TerminalObject (C : Type (u+1)) [category C]  :=
+structure TerminalObject (C : Type u) [uv_category.{u v} C]  :=
   (terminal_object                            : C)
   (morphism_to_terminal_object_from           : ∀ Y : C, Y ⟶ terminal_object)
   (uniqueness_of_morphisms_to_terminal_object : ∀ Y : C, ∀ f g : Y ⟶ terminal_object, f = g . obviously)
@@ -32,8 +32,8 @@ make_lemma TerminalObject.uniqueness_of_morphisms_to_terminal_object
 attribute [applicable,ematch] TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma
 
 section
-variables {C : Type (u+1)} [C_cat : category C]
-include C_cat
+variables {C : Type u} [𝒞 : uv_category.{u v} C]
+include 𝒞
 
 instance InitialObject_coercion_to_object : has_coe (InitialObject C) C :=
 { coe := InitialObject.initial_object }
@@ -71,11 +71,11 @@ begin
 end
 end
 
-class ZeroObject (C : Type (u+1)) [category C] :=
+class ZeroObject (C : Type u) [uv_category.{u v} C] :=
   (zero_object : C)
-  (is_initial  : is_initial  zero_object)
-  (is_terminal : is_terminal zero_object)
+  (is_initial  : is_initial.{u v}  zero_object)
+  (is_terminal : is_terminal.{u v} zero_object)
 
-definition ZeroObject.zero_morphism {C : Type (u+1)} [category C] (Z : ZeroObject C) (X Y : C) : X ⟶ Y := (Z.is_terminal.morphism_to_terminal_object_from X) ≫ (Z.is_initial.morphism_from_initial_object_to Y) 
+definition ZeroObject.zero_morphism {C : Type u} [uv_category.{u v} C] (Z : ZeroObject C) (X Y : C) : X ⟶ Y := (Z.is_terminal.morphism_to_terminal_object_from X) ≫ (Z.is_initial.morphism_from_initial_object_to Y) 
 
 end categories.initial

@@ -12,9 +12,10 @@ open categories.types
 
 namespace categories.universal
 
-universes u₁ u₂
-variables {C : Type (u₁+1)}
-variables [category C]
+universes u v w
+variables {C : Type u}
+variables [𝒞 : uv_category.{u v} C]
+include 𝒞
 variables {X Y : C}
 
 structure Equalizer (f g : X ⟶ Y) :=
@@ -53,7 +54,7 @@ attribute [simp,ematch] BinaryProduct.left_factorisation_lemma BinaryProduct.rig
 attribute [applicable] BinaryProduct.left_projection BinaryProduct.right_projection BinaryProduct.map
 attribute [applicable] BinaryProduct.uniqueness_lemma
 
-structure Product {I : Type u₂} (F : I → C) :=
+structure Product {I : Type w} (F : I → C) :=
   (product       : C)
   (projection    : Π i : I, product ⟶ (F i))
   (map           : ∀ {Z : C} (f : Π i : I, Z ⟶ (F i)), Z ⟶ product)
@@ -101,7 +102,7 @@ attribute [simp,ematch] BinaryCoproduct.left_factorisation_lemma BinaryCoproduct
 attribute [applicable] BinaryCoproduct.left_inclusion BinaryCoproduct.right_inclusion BinaryCoproduct.map
 attribute [applicable] BinaryCoproduct.uniqueness_lemma
 
-structure Coproduct {I : Type u₂} (X : I → C) :=
+structure Coproduct {I : Type w} (X : I → C) :=
   (coproduct     : C)
   (inclusion     : Π i : I, (X i) ⟶ coproduct)
   (map           : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z), coproduct ⟶ Z)

@@ -15,7 +15,7 @@ open categories.functor
 
 universes u v w
 
-instance CategoryOfTypes : category (Type u) :=
+instance CategoryOfTypes : large_category (Type u) :=
 { Hom            := λ a b, (a → b),
   identity       := λ a, id,
   compose        := λ _ _ _ f g, g ∘ f,
@@ -39,7 +39,7 @@ instance CategoryOfTypes : category (Type u) :=
 @[simp] lemma Types.identity {α : Type u} (a : α) : (𝟙 α : α → α) a = a := by refl
 @[simp] lemma Types.compose {α β γ : Type u} (f : α → β) (g : β → γ) (a : α) : (((f : α ⟶ β) ≫ (g : β ⟶ γ)) : α ⟶ γ) a = g (f a) := by refl
 
-variables {C : Type (v+1)} [category C] (F G H : C ↝ (Type u)) {X Y Z : C} 
+variables {C : Type (v+1)} [large_category C] (F G H : C ↝ (Type u)) {X Y Z : C} 
 variables (σ : F ⟹ G) (τ : G ⟹ H) 
 
 @[simp,ematch] lemma Functor_to_Types.functoriality (f : X ⟶ Y) (g : Y ⟶ Z) (a : F +> X) : (F &> (f ≫ g)) a = (F &> g) ((F &> f) a) :=
@@ -66,7 +66,7 @@ begin
   refl
 end  
  
-variables {D : Type (w+1)} [category D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
+variables {D : Type (w+1)} [large_category D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
 @[simp] lemma Functor_to_Types.horizontal_composition (x : (I ⋙ F) +> W) : (ρ ◫ σ).components W x = (G &> ρ.components W) (σ.components (I +> W) x) := 
 begin
   -- `obviously'` says:

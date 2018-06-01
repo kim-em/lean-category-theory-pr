@@ -66,11 +66,11 @@ notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β
 end
 
 variable {C : Type (u₁+1)}
-variable [category C]
+variable [large_category C]
 variable {D : Type (u₂+1)}
-variable [category D]
+variable [large_category D]
 variable {E : Type (u₃+1)}
-variable [category E]
+variable [large_category E]
 variables {F G H : C ↝ D}
 
 -- Unfortunately this coercion is not reliable enough to be usable.

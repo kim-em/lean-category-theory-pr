@@ -39,10 +39,10 @@ instance FunctorCategory_uv (C : Type u₁) [uv_category.{u₁ v₁} C] (D : Typ
                       simp
                     end }
 
-instance FunctorCategory_small (C : Type u₁) [small_category C] (D : Type (u₁+1)) [category D] : category.{u₁} (C ↝ D) :=
+instance FunctorCategory_small (C : Type u₁) [small_category C] (D : Type (u₁+1)) [large_category D] : large_category.{u₁} (C ↝ D) :=
   { functor_categories.FunctorCategory_uv C D with .. }
 
-instance FunctorCategory_large (C : Type (u₁+1)) [category C] (D : Type (u₁+1)) [category D] : small_category.{u₁+1} (C ↝ D) :=
+instance FunctorCategory_large (C : Type (u₁+1)) [large_category C] (D : Type (u₁+1)) [large_category D] : small_category.{u₁+1} (C ↝ D) :=
   { functor_categories.FunctorCategory_uv C D with .. }
 
 end
@@ -57,7 +57,7 @@ include C_cat D_cat
 end
 
 section
-variables {C : Type (u₁+1)} [category C] {D : Type (u₂+1)} [category D] {E : Type (u₃+1)} [category E]
+variables {C : Type (u₁+1)} [large_category C] {D : Type (u₂+1)} [large_category D] {E : Type (u₃+1)} [large_category E]
 
 @[simp,ematch] lemma FunctorCategory_large.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F).components X = 𝟙 (F +> X) := by refl
 @[simp,ematch] lemma FunctorCategory_large.compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H).components X = (α : F ⟹ G).components X ≫ (β : G ⟹ H).components X:= by refl

@@ -39,7 +39,7 @@ definition IdentityFunctor (C : Type u₁) [uv_category.{u₁ v₁} C] : C ↝ C
                      refl
                    end }
 
-instance (C) [category C] : has_one (C ↝ C) := 
+instance (C) [large_category C] : has_one (C ↝ C) := 
 { one := IdentityFunctor C }
 
 section
@@ -97,9 +97,9 @@ end
 
 section
 variable {C : Type (u₁+1)}
-variable [category C]
+variable [large_category C]
 variable {D : Type (u₂+1)}
-variable [category D]
+variable [large_category D]
 
 -- TODO this is WIP
 class Functorial (f : C → D) :=

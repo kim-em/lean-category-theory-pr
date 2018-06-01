@@ -47,19 +47,22 @@ make_lemma uv_category.associativity
 attribute [simp,ematch] uv_category.left_identity_lemma uv_category.right_identity_lemma uv_category.associativity_lemma 
 attribute [ematch] uv_category.associativity_lemma 
 
-class category (C : Type (u+1)) extends uv_category.{u+1 u} C.
+class large_category (C : Type (u+1)) extends uv_category.{u+1 u} C.
 class small_category (C : Type u) extends uv_category.{u u} C.
+
+instance large_category_to_uv_category {C : Type (u+1)} [𝒞 : large_category C] : uv_category.{u+1 u} C := 𝒞.to_uv_category
+instance small_category_to_uv_category {C : Type u}     [𝒞 : small_category C] : uv_category.{u u}   C := 𝒞.to_uv_category
 
 section
 variable {C : Type (u+1)}
 variables {X Y : C}
-variable [category C]
+variable [large_category C]
 
-instance category.has_one : has_one (X ⟶ X) := 
+instance large_category.has_one : has_one (X ⟶ X) := 
 { one := 𝟙 X }
 
-@[simp] def category.left_identity_lemma' (f : X ⟶ Y) : 1 ≫ f = f := begin unfold has_one.one, simp end
-@[simp] def category.right_identity_lemma' (f : X ⟶ Y) : f ≫ 1 = f := begin unfold has_one.one, simp end
+@[simp] def large_category.left_identity_lemma' (f : X ⟶ Y) : 1 ≫ f = f := begin unfold has_one.one, simp end
+@[simp] def large_category.right_identity_lemma' (f : X ⟶ Y) : f ≫ 1 = f := begin unfold has_one.one, simp end
 end
 
 section
