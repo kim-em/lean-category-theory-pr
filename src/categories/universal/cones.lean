@@ -11,12 +11,12 @@ open categories.initial
 
 namespace categories.universal
 
-universes u v w
+universes u v
 variables {J : Type v} [small_category J]
 variables {C : Type u} [𝒞 : uv_category.{u v} C]
 include 𝒞 
 
-structure Cone (F : J ↝ C) :=
+structure Cone (F : J ↝ C) : Type (max u v) :=
   (cone_point    : C)
   (cone_maps     : Π j : J, cone_point ⟶ (F +> j))
   (commutativity : Π {j k : J}, Π f : j ⟶ k, (cone_maps j) ≫ (F &> f) = cone_maps k . obviously)
