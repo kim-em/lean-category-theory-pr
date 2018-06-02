@@ -124,10 +124,10 @@ variables {A : Type u₁}
  [A_cat : uv_category.{u₁ v₁} A]
  {B : Type u₂}
  [B_cat : uv_category.{u₂ v₂} B]
- {C : Type u₁}
- [C_cat : uv_category.{u₁ v₁} C]
- {D : Type u₂}
- [D_cat : uv_category.{u₂ v₂} D]
+ {C : Type u₃}
+ [C_cat : uv_category.{u₃ v₃} C]
+ {D : Type u₄}
+ [D_cat : uv_category.{u₄ v₄} D]
 include A_cat B_cat C_cat D_cat
 
 definition ProductFunctor
