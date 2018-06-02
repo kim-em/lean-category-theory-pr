@@ -17,10 +17,10 @@ universes u₁ v₁ u₂ v₂ u₃ v₃ u₄ v₄
 section
 variable (C : Type u₁)
 variable [uv_category.{u₁ v₁} C]
-variable (D : Type u₁)
-variable [uv_category.{u₁ v₁} D]
+variable (D : Type u₂)
+variable [uv_category.{u₂ v₂} D]
 
-instance ProductCategory : uv_category.{u₁ v₁} (C × D) := 
+instance ProductCategory : uv_category.{(max u₁ u₂) (max v₁ v₂)} (C × D) := 
 { Hom            := λ X Y, ((X.1) ⟶ (Y.1)) × ((X.2) ⟶ (Y.2)),
   identity       := λ X, ⟨ 𝟙 (X.1), 𝟙 (X.2) ⟩,
   compose        := λ _ _ _ f g, (f.1 ≫ g.1, f.2 ≫ g.2),
@@ -47,8 +47,10 @@ instance ProductCategory : uv_category.{u₁ v₁} (C × D) :=
                       dsimp,
                       dsimp at *,
                       simp
-                    end }
+                    end }     
 end 
+
+instance ProductCategory'   (C : Type u₁) [uv_category.{u₁ v₁} C] (D : Type u₁) [uv_category.{u₁ v₁} D] : uv_category.{u₁ v₁} (C × D) := products.ProductCategory C D
 
 section
 variable {C : Type u₁}
