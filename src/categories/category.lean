@@ -47,12 +47,12 @@ make_lemma uv_category.associativity
 attribute [simp,ematch] uv_category.left_identity_lemma uv_category.right_identity_lemma uv_category.associativity_lemma 
 attribute [ematch] uv_category.associativity_lemma 
 
-class large_category (C : Type (u+1)) extends uv_category.{u+1 u} C.
-class small_category (C : Type u) extends uv_category.{u u} C.
+abbreviation large_category (C : Type (u+1)) : Type (u+1) := uv_category.{u+1 u} C
+abbreviation small_category (C : Type u)     : Type (u+1) := uv_category.{u u} C
 
--- These can't be instances (or we'd cause looping), but are sometimes useful.
-def large_category_of_uv_category {C : Type (u+1)} (𝒞 : uv_category.{u+1 u} C) : large_category C := { 𝒞 with .. }
-def small_category_of_uv_category {C : Type u}     (𝒞 : uv_category.{u u}   C) : small_category C := { 𝒞 with .. }
+-- -- These can't be instances (or we'd cause looping), but are sometimes useful.
+-- def large_category_of_uv_category {C : Type (u+1)} (𝒞 : uv_category.{u+1 u} C) : large_category C := { 𝒞 with .. }
+-- def small_category_of_uv_category {C : Type u}     (𝒞 : uv_category.{u u}   C) : small_category C := { 𝒞 with .. }
 
 section
 variable {C : Type (u+1)}
