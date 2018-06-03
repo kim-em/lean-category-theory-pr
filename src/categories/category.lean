@@ -8,17 +8,6 @@ namespace categories
 
 universes u v
 
-/-
-The universe annotations may be suprising here!
-Note that we ask the Obj : Type (u+1), while Hom X Y : Type u.
-This is motivated by:
-1. As `category` is a class, we want all universe levels to be determined by its parameters.
-   (Thus we want to avoid independent universe levels for Obj and Hom.)
-2. The basic example of category is the category of types and functions.
-   This example matches the definition here.
-3. It so far doesn't seem to cause any problems!
--/
-
 /- 
 The propositional fields of `category` are annotated with the auto_param `obviously_stub`, which is just a synonym for `skip`.
 Actually, there is a tactic called `obviously` which is not part of this pull request, which should be used here. It successfully
@@ -39,7 +28,6 @@ infixr ` ≫ `:80 := category.compose -- type as \gg
 infixr ` ⟶ `:10  := category.Hom     -- type as \h
 
 -- make_lemma is a command that creates a lemma from a structure field, discarding all auto_param wrappers from the type.
--- FIXME these three need better names.
 make_lemma category.left_identity
 make_lemma category.right_identity
 make_lemma category.associativity
