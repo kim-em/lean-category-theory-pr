@@ -44,7 +44,7 @@ definition terminal_object [has_TerminalObject.{u v} C] : C := has_TerminalObjec
 end
 
 section
-variables {C : Type u} [𝒞 : uv_category.{u v} C]
+variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 
 definition binary_product [has_BinaryProducts.{u v} C] (X Y : C) := has_BinaryProducts.binary_product.{u v} X Y
