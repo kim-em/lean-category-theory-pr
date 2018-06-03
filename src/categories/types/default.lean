@@ -73,9 +73,9 @@ begin
   refl
 end
 
-definition UniverseLift : (Type u) ↝ (Type (u+1)) := 
-{ onObjects     := λ X, ulift.{u+1} X,
-  onMorphisms   := λ X Y f, λ x : ulift.{u+1} X, ulift.up (f x.down),
+definition UniverseLift : (Type u) ↝ (Type (max u v)) := 
+{ onObjects     := λ X, ulift.{v} X,
+  onMorphisms   := λ X Y f, λ x : ulift.{v} X, ulift.up (f x.down),
   identities    := begin
                      -- `obviously'` says:
                      intros,
