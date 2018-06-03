@@ -41,6 +41,11 @@ class has_Coequalizers :=
 
 definition initial_object [has_InitialObject.{u v} C] : C := has_InitialObject.initial_object.{u v} C
 definition terminal_object [has_TerminalObject.{u v} C] : C := has_TerminalObject.terminal_object.{u v} C
+end
+
+section
+variables {C : Type u} [𝒞 : uv_category.{u v} C]
+include 𝒞
 
 definition binary_product [has_BinaryProducts.{u v} C] (X Y : C) := has_BinaryProducts.binary_product.{u v} X Y
 definition finite_product [has_FiniteProducts.{u v w} C] {I : Type w} [fin : fintype I] (f : I → C) := @has_FiniteProducts.product.{u v w} C _ _ I fin f
@@ -53,12 +58,13 @@ definition coequalizer [has_Coequalizers.{u v} C] {X Y : C} (f g : X ⟶ Y) := h
 end
 
 section
-variables (C : Type (u+1)) [large_category C]
 
-class has_Products :=
+class has_Products (C : Type (u+1)) [large_category C] :=
   (product : Π {I : Type u} (f : I → C), Product.{u+1 u u} f)
-class has_Coproducts :=
+class has_Coproducts (C : Type (u+1)) [large_category C] :=
   (coproduct : Π {I : Type u} (f : I → C), Coproduct.{u+1 u u} f)
+
+variables {C : Type (u+1)} [large_category C]
 
 definition product [has_Products C] {I : Type u} (F : I → C) := has_Products.product F
 definition coproduct [has_Coproducts C] {I : Type u} (F : I → C) := has_Coproducts.coproduct F
