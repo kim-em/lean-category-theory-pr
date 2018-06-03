@@ -39,7 +39,7 @@ definition IdentityFunctor (C : Type u₁) [category.{u₁ v₁} C] : C ↝ C :=
                      refl
                    end }
 
-instance (C) [large_category C] : has_one (C ↝ C) := 
+instance (C) [category C] : has_one (C ↝ C) :=
 { one := IdentityFunctor C }
 
 section
