@@ -13,7 +13,7 @@ namespace categories.functor_categories
 universes u₁ v₁ u₂ v₂ u₃ v₃
 
 section
-instance FunctorCategory_uv (C : Type u₁) [uv_category.{u₁ v₁} C] (D : Type u₂) [uv_category.{u₂ v₂} D] : uv_category.{(max u₁ v₁ u₂ v₂) (max u₁ v₂)} (C ↝ D) := 
+instance FunctorCategory (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₂) [category.{u₂ v₂} D] : category.{(max u₁ v₁ u₂ v₂) (max u₁ v₂)} (C ↝ D) := 
 { Hom            := λ F G, F ⟹ G,
   identity       := λ F, IdentityNaturalTransformation F,
   compose        := λ _ _ _ α β, α ⊟ β,
@@ -39,17 +39,18 @@ instance FunctorCategory_uv (C : Type u₁) [uv_category.{u₁ v₁} C] (D : Typ
                       simp
                     end }
 
+-- TODO are these actually needed?
 instance FunctorCategory_small (C : Type u₁) [small_category C] (D : Type (u₁+1)) [large_category D] : large_category.{u₁} (C ↝ D) :=
-  functor_categories.FunctorCategory_uv C D
+  functor_categories.FunctorCategory C D
 
 instance FunctorCategory_large (C : Type (u₁+1)) [large_category C] (D : Type (u₁+1)) [large_category D] : small_category.{u₁+1} (C ↝ D) :=
-  functor_categories.FunctorCategory_uv C D
+  functor_categories.FunctorCategory C D
 
 end
 
 
 section
-variables {C : Type u₁} [𝒞 : uv_category.{u₁ v₁} C] {D : Type u₂} [𝒟 : uv_category.{u₂ v₂} D]
+variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C] {D : Type u₂} [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
 @[simp,ematch] lemma FunctorCategory.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F).components X = 𝟙 (F +> X) := by refl

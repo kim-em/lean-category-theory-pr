@@ -16,11 +16,11 @@ universes u₁ v₁ u₂ v₂ u₃ v₃ u₄ v₄
 
 section
 variable (C : Type u₁)
-variable [uv_category.{u₁ v₁} C]
+variable [category.{u₁ v₁} C]
 variable (D : Type u₂)
-variable [uv_category.{u₂ v₂} D]
+variable [category.{u₂ v₂} D]
 
-instance ProductCategory : uv_category.{(max u₁ u₂) (max v₁ v₂)} (C × D) := 
+instance ProductCategory : category.{(max u₁ u₂) (max v₁ v₂)} (C × D) := 
 { Hom            := λ X Y, ((X.1) ⟶ (Y.1)) × ((X.2) ⟶ (Y.2)),
   identity       := λ X, ⟨ 𝟙 (X.1), 𝟙 (X.2) ⟩,
   compose        := λ _ _ _ f g, (f.1 ≫ g.1, f.2 ≫ g.2),
@@ -50,20 +50,20 @@ instance ProductCategory : uv_category.{(max u₁ u₂) (max v₁ v₂)} (C × D
                     end }     
 end 
 
-instance ProductCategory'   (C : Type u₁) [uv_category.{u₁ v₁} C] (D : Type u₁) [uv_category.{u₁ v₁} D] : uv_category.{u₁ v₁} (C × D) := products.ProductCategory C D
+instance ProductCategory'   (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₁) [category.{u₁ v₁} D] : category.{u₁ v₁} (C × D) := products.ProductCategory C D
 
 section
 variable {C : Type u₁}
-variable [𝒞 : uv_category.{u₁ v₁} C]
+variable [𝒞 : category.{u₁ v₁} C]
 variable {D : Type u₂}
-variable [𝒟 : uv_category.{u₂ v₂} D]
+variable [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
 @[simp] lemma ProductCategory.identity {X : C} {Y : D} : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
 @[simp] lemma ProductCategory.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
 end
 
-definition RightInjectionAt (C : Type u₁) [uv_category.{u₁ v₁} C] {D : Type u₁} [uv_category.{u₁ v₁} D] (Z : D) : C ↝ (C × D) := 
+definition RightInjectionAt (C : Type u₁) [category.{u₁ v₁} C] {D : Type u₁} [category.{u₁ v₁} D] (Z : D) : C ↝ (C × D) := 
 { onObjects     := λ X, (X, Z),
   onMorphisms   := λ X Y f, (f, 𝟙 Z),
   identities    := begin
@@ -78,7 +78,7 @@ definition RightInjectionAt (C : Type u₁) [uv_category.{u₁ v₁} C] {D : Typ
                      simp
                    end }
 
-definition LeftInjectionAt {C : Type u₁} [uv_category.{u₁ v₁} C] (Z : C) (D : Type u₁) [uv_category.{u₁ v₁} D] : D ↝ (C × D) := 
+definition LeftInjectionAt {C : Type u₁} [category.{u₁ v₁} C] (Z : C) (D : Type u₁) [category.{u₁ v₁} D] : D ↝ (C × D) := 
 { onObjects     := λ X, (Z, X),
   onMorphisms   := λ X Y f, (𝟙 Z, f),
   identities    := begin
@@ -93,7 +93,7 @@ definition LeftInjectionAt {C : Type u₁} [uv_category.{u₁ v₁} C] (Z : C) (
                      simp
                    end }
 
-definition LeftProjection (C : Type u₁) [uv_category.{u₁ v₁} C] (Z : C) (D : Type u₁) [uv_category.{u₁ v₁} D] : (C × D) ↝ C := 
+definition LeftProjection (C : Type u₁) [category.{u₁ v₁} C] (Z : C) (D : Type u₁) [category.{u₁ v₁} D] : (C × D) ↝ C := 
 { onObjects     := λ X, X.1,
   onMorphisms   := λ X Y f, f.1,
   identities    := begin
@@ -107,7 +107,7 @@ definition LeftProjection (C : Type u₁) [uv_category.{u₁ v₁} C] (Z : C) (D
                      refl
                    end }
 
-definition RightProjection (C : Type u₁) [uv_category.{u₁ v₁} C] (Z : C) (D : Type u₁) [uv_category.{u₁ v₁} D] : (C × D) ↝ D := 
+definition RightProjection (C : Type u₁) [category.{u₁ v₁} C] (Z : C) (D : Type u₁) [category.{u₁ v₁} D] : (C × D) ↝ D := 
 { onObjects     := λ X, X.2,
   onMorphisms   := λ X Y f, f.2,
   identities    := begin
@@ -123,13 +123,13 @@ definition RightProjection (C : Type u₁) [uv_category.{u₁ v₁} C] (Z : C) (
 
 section
 variables {A : Type u₁}
- [A_cat : uv_category.{u₁ v₁} A]
+ [A_cat : category.{u₁ v₁} A]
  {B : Type u₂}
- [B_cat : uv_category.{u₂ v₂} B]
+ [B_cat : category.{u₂ v₂} B]
  {C : Type u₃}
- [C_cat : uv_category.{u₃ v₃} C]
+ [C_cat : category.{u₃ v₃} C]
  {D : Type u₄}
- [D_cat : uv_category.{u₄ v₄} D]
+ [D_cat : category.{u₄ v₄} D]
 include A_cat B_cat C_cat D_cat
 
 definition ProductFunctor

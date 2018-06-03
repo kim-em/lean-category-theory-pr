@@ -26,7 +26,7 @@ namespace categories
 open categories.isomorphism
 open categories.functor
 
-variables {C : Type u} [𝒞 : uv_category.{u v} C]
+variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 variables {X Y Z : C}
 
@@ -55,8 +55,8 @@ namespace categories.functor
 
 universes u₁ v₁ u₂ v₂
 
-variables {C : Type u₁} [𝒞 : uv_category.{u₁ v₁} C]
-variables {D : Type u₂} [𝒟 : uv_category.{u₂ v₂} D]
+variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C]
+variables {D : Type u₂} [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
 @[simp,ematch] lemma Functor.eq_to_iso (F : C ↝ D) (X Y : C) (p : X = Y) : F.onIsomorphisms (eq_to_iso p) = eq_to_iso (congr_arg F.onObjects p) :=

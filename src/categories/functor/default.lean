@@ -11,7 +11,7 @@ namespace categories.functor
  
 universes u₁ v₁ u₂ v₂ u₃ v₃
 
-structure Functor (C : Type u₁) [uv_category.{u₁ v₁} C] (D : Type u₂) [uv_category.{u₂ v₂} D] : Type (max u₁ v₁ u₂ v₂) :=
+structure Functor (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₂) [category.{u₂ v₂} D] : Type (max u₁ v₁ u₂ v₂) :=
   (onObjects     : C → D)
   (onMorphisms   : Π {X Y : C}, (X ⟶ Y) → ((onObjects X) ⟶ (onObjects Y)))
   (identities    : ∀ (X : C), onMorphisms (𝟙 X) = 𝟙 (onObjects X) . obviously)
@@ -25,7 +25,7 @@ infixr ` +> `:70 := Functor.onObjects
 infixr ` &> `:70 := Functor.onMorphisms -- switch to ▹?
 infixr ` ↝ `:70 := Functor -- type as \lea 
 
-definition IdentityFunctor (C : Type u₁) [uv_category.{u₁ v₁} C] : C ↝ C := 
+definition IdentityFunctor (C : Type u₁) [category.{u₁ v₁} C] : C ↝ C := 
 { onObjects     := id,
   onMorphisms   := λ _ _ f, f,
   identities    := begin 
@@ -44,12 +44,12 @@ instance (C) [large_category C] : has_one (C ↝ C) :=
 
 section
 variable {C : Type u₁}
-variable [uv_category.{u₁ v₁} C]
+variable [category.{u₁ v₁} C]
 
 @[simp] lemma IdentityFunctor.onObjects {C : Type u₁}
- [uv_category.{u₁ v₁} C] (X : C) : (IdentityFunctor C) +> X = X := by refl
+ [category.{u₁ v₁} C] (X : C) : (IdentityFunctor C) +> X = X := by refl
 @[simp] lemma IdentityFunctor.onMorphisms {C : Type u₁}
- [uv_category.{u₁ v₁} C] {X Y : C} (f : X ⟶ Y) : (IdentityFunctor C) &> f = f := by refl
+ [category.{u₁ v₁} C] {X Y : C} (f : X ⟶ Y) : (IdentityFunctor C) &> f = f := by refl
 end
 
 -- We define a coercion so that we can write `F X` for the functor `F` applied to the object `X`.
@@ -60,11 +60,11 @@ end
 
 section
 variable {C : Type u₁}
-variable [C_cat : uv_category.{u₁ v₁} C]
+variable [C_cat : category.{u₁ v₁} C]
 variable {D : Type u₂}
-variable [D_cat : uv_category.{u₂ v₂} D]
+variable [D_cat : category.{u₂ v₂} D]
 variable {E : Type u₃}
-variable [E_cat : uv_category.{u₃ v₃} E]
+variable [E_cat : category.{u₃ v₃} E]
 include C_cat D_cat E_cat
 
 definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E := 

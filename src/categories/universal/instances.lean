@@ -15,7 +15,7 @@ namespace categories.universal
 universes u v w
 
 section
-variables (C : Type u) [𝒞 : uv_category.{u v} C]
+variables (C : Type u) [𝒞 : category.{u v} C]
 include 𝒞
 
 class has_InitialObject :=

@@ -11,7 +11,7 @@ universes u v
 
 namespace categories.isomorphism
 
-structure Isomorphism {C : Type u} [uv_category.{u v} C] (X Y : C) :=
+structure Isomorphism {C : Type u} [category.{u v} C] (X Y : C) :=
   (morphism : X ⟶ Y)
   (inverse : Y ⟶ X)
   (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
@@ -31,7 +31,7 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 set_option pp.universes true
 
 variable {C : Type u}
-variable [C_cat : uv_category.{u v} C]
+variable [C_cat : category.{u v} C]
 include C_cat
 variables {X Y Z : C}
 
@@ -41,21 +41,21 @@ variables {X Y Z : C}
 @[simp,ematch] lemma Isomorphism.witness_1_assoc_lemma (I : Isomorphism X Y) (f : X ⟶ Z) : I.morphism ≫ I.inverse ≫ f = f := 
 begin
   -- `obviously'` says:
-  erw [←uv_category.associativity_lemma, Isomorphism.witness_1_lemma, uv_category.left_identity_lemma]
+  erw [←category.associativity_lemma, Isomorphism.witness_1_lemma, category.left_identity_lemma]
 end
 
 @[simp,ematch] lemma Isomorphism.witness_2_assoc_lemma (I : Isomorphism X Y) (f : Y ⟶ Z) : I.inverse ≫ I.morphism ≫ f = f := 
 begin
   -- `obviously'` says:
-  erw [←uv_category.associativity_lemma, Isomorphism.witness_2_lemma, uv_category.left_identity_lemma]
+  erw [←category.associativity_lemma, Isomorphism.witness_2_lemma, category.left_identity_lemma]
 end
 
 instance Isomorphism_coercion_to_morphism : has_coe (Isomorphism.{u v} X Y) (X ⟶ Y) :=
 { coe := Isomorphism.morphism }
 
 definition Isomorphism.refl (X : C) : Isomorphism X X := 
-{ morphism  := uv_category.identity X,
-  inverse   := uv_category.identity X, 
+{ morphism  := category.identity X,
+  inverse   := category.identity X, 
   witness_1 := begin
                  -- `obviously'` says:
                  simp
@@ -96,7 +96,7 @@ infixr ` ♢ `:80 := Isomorphism.trans -- type as \diamonds
       begin
         induction w,
         dsimp at *,
-        rw [← uv_category.left_identity_lemma C k, ←wα2, uv_category.associativity_lemma, wβ1, uv_category.right_identity_lemma]
+        rw [← category.left_identity_lemma C k, ←wα2, category.associativity_lemma, wβ1, category.right_identity_lemma]
       end,
     -- `obviously'` says:
     induction p, induction w,
@@ -160,14 +160,14 @@ class Monomorphism (f : X ⟶ Y) :=
 instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f  := 
 { left_cancellation := begin
                          intros,
-                         rw [←uv_category.left_identity_lemma C g, ←uv_category.left_identity_lemma C h],
+                         rw [←category.left_identity_lemma C g, ←category.left_identity_lemma C h],
                          rw [← is_Isomorphism.witness_2_lemma f],
                          rewrite_search_using `ematch, -- PROJECT Scott is thinking about completing the automation here.
                        end }
 instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := 
 { right_cancellation := begin
                          intros,
-                         rw [←uv_category.right_identity_lemma C g, ←uv_category.right_identity_lemma C h],
+                         rw [←category.right_identity_lemma C g, ←category.right_identity_lemma C h],
                          rw [← is_Isomorphism.witness_1_lemma f],
                          rewrite_search_using `ematch,
                        end }
@@ -194,8 +194,8 @@ namespace categories.functor
 universes u₁ v₁ u₂ v₂ 
 
 variables {C : Type u₁} {D : Type u₂}
-variables [𝒞 : uv_category.{u₁ v₁} C]
-variables [𝒟 : uv_category.{u₂ v₂} D]
+variables [𝒞 : category.{u₁ v₁} C]
+variables [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
 definition Functor.onIsomorphisms (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F +> X) ≅ (F +> Y) :=

@@ -13,9 +13,9 @@ universes u₁ v₁ u₂ v₂ u₃ v₃
 
 section
 variable {C : Type u₁}
-variable [C_cat : uv_category.{u₁ v₁} C]
+variable [C_cat : category.{u₁ v₁} C]
 variable {D : Type u₂}
-variable [D_cat : uv_category.{u₂ v₂} D]
+variable [D_cat : category.{u₂ v₂} D]
 include C_cat D_cat
 
 structure NaturalTransformation (F G : C ↝ D) : Type (max u₁ v₂) :=
@@ -45,7 +45,7 @@ definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G
                   -- `obviously'` says:
                   intros,
                   simp,
-                  erw [←uv_category.associativity_lemma, NaturalTransformation.naturality_lemma, uv_category.associativity_lemma, ←NaturalTransformation.naturality_lemma]
+                  erw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma]
                 end }
 
 notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β    
@@ -95,9 +95,9 @@ definition horizontal_composition_of_NaturalTransformations
                   intros,
                   simp,
                   -- Actually, obviously doesn't use exactly this sequence of rewrites, but achieves the same result
-                  rw [← uv_category.associativity_lemma],
+                  rw [← category.associativity_lemma],
                   rw [NaturalTransformation.naturality_lemma],
-                  rw [uv_category.associativity_lemma],
+                  rw [category.associativity_lemma],
                   conv { to_rhs, rw [← Functor.functoriality_lemma] },
                   rw [← α.naturality_lemma],
                   rw [Functor.functoriality_lemma],
@@ -121,9 +121,9 @@ notation α `◫` β:80 := horizontal_composition_of_NaturalTransformations α �
     intros,
     simp,
     -- again, this isn't actually what obviously says, but it achieves the same effect.
-    conv {to_lhs, congr, skip, rw [←uv_category.associativity_lemma] },
+    conv {to_lhs, congr, skip, rw [←category.associativity_lemma] },
     rw [←NaturalTransformation.naturality_lemma],
-    rw [uv_category.associativity_lemma],
+    rw [category.associativity_lemma],
   end
 
 end categories.natural_transformation
