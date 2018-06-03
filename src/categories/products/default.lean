@@ -54,10 +54,10 @@ instance ProductCategory'   (C : Type u₁) [uv_category.{u₁ v₁} C] (D : Typ
 
 section
 variable {C : Type u₁}
-variable [C_cat : uv_category.{u₁ v₁} C]
-variable {D : Type u₁}
-variable [D_cat : uv_category.{u₁ v₁} D]
-include C_cat D_cat
+variable [𝒞 : uv_category.{u₁ v₁} C]
+variable {D : Type u₂}
+variable [𝒟 : uv_category.{u₂ v₂} D]
+include 𝒞 𝒟
 
 @[simp] lemma ProductCategory.identity {X : C} {Y : D} : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
 @[simp] lemma ProductCategory.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
@@ -161,7 +161,7 @@ definition ProductFunctor
 notation F `×` G := ProductFunctor F G
 
 @[simp,ematch] lemma ProductFunctor.onObjects   (F : A ↝ B) (G : C ↝ D) (a : A) (c : C) : (F × G) +> (a, c) = (F +> a, G +> c) := by refl
-@[simp,ematch] lemma ProductFunctor.onMorphisms (F : A ↝ B) (G : C ↝ D) {a a' : A} {c c' : C} (f : a ⟶ a') (g : c ⟶ c') : (F × G) &> (f, g) = (F &> f, G &> g) := by refl
+@[simp,ematch] lemma ProductFunctor.onMorphisms (F : A ↝ B) (G : C ↝ D) {a a' : A} {c c' : C} (f : (a, c) ⟶ (a', c')) : (F × G).onMorphisms f = (F &> f.1, G &> f.2) := by refl
 
 definition ProductNaturalTransformation 
 {F G : A ↝ B} {H I : C ↝ D} (α : F ⟹ G) (β : H ⟹ I) : (F × H) ⟹ (G × I) :=
@@ -172,12 +172,11 @@ definition ProductNaturalTransformation
                   cases f, cases Y, cases X,
                   dsimp,
                   dsimp at *,
-
+                  simp,
+                  dsimp,
                   fsplit,
-                  dsimp,
-                  erw [←NaturalTransformation.naturality_lemma], refl,
-                  dsimp,
-                  erw [←NaturalTransformation.naturality_lemma], refl,
+                  erw [NaturalTransformation.naturality_lemma],
+                  erw [NaturalTransformation.naturality_lemma]
                 end }
 
 notation α `×` β := ProductNaturalTransformation α β
