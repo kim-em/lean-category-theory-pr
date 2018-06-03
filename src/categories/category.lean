@@ -39,13 +39,13 @@ abbreviation large_category (C : Type (u+1)) : Type (u+1) := category.{u+1 u} C
 abbreviation small_category (C : Type u)     : Type (u+1) := category.{u u} C
 
 -- TODO reconsider whether providing `has_one` is actually valuable
+instance category.has_one {C : Type u} {X : C} [category C] : has_one (X ⟶ X) :=
+{ one := 𝟙 X }
+
 section
 variable {C : Type (u+1)}
 variables {X Y : C}
 variable [large_category C]
-
-instance large_category.has_one : has_one (X ⟶ X) := 
-{ one := 𝟙 X }
 
 @[simp] def large_category.left_identity_lemma' (f : X ⟶ Y) : 1 ≫ f = f := begin unfold has_one.one, simp end
 @[simp] def large_category.right_identity_lemma' (f : X ⟶ Y) : f ≫ 1 = f := begin unfold has_one.one, simp end
@@ -55,9 +55,6 @@ section
 variable {C : Type u}
 variables {X Y : C}
 variable [small_category C]
-
-instance small_category.has_one : has_one (X ⟶ X) := 
-{ one := 𝟙 X }
 
 @[simp] def small_category.left_identity_lemma' (f : X ⟶ Y) : 1 ≫ f = f := begin unfold has_one.one, simp end
 @[simp] def small_category.right_identity_lemma' (f : X ⟶ Y) : f ≫ 1 = f := begin unfold has_one.one, simp end
