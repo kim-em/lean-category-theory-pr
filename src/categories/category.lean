@@ -50,10 +50,7 @@ attribute [ematch] category.associativity_lemma
 abbreviation large_category (C : Type (u+1)) : Type (u+1) := category.{u+1 u} C
 abbreviation small_category (C : Type u)     : Type (u+1) := category.{u u} C
 
--- -- These can't be instances (or we'd cause looping), but are sometimes useful.
--- def large_category_of_category {C : Type (u+1)} (𝒞 : category.{u+1 u} C) : large_category C := { 𝒞 with .. }
--- def small_category_of_category {C : Type u}     (𝒞 : category.{u u}   C) : small_category C := { 𝒞 with .. }
-
+-- TODO reconsider whether providing `has_one` is actually valuable
 section
 variable {C : Type (u+1)}
 variables {X Y : C}
