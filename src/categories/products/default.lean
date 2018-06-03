@@ -160,6 +160,9 @@ definition ProductFunctor
 
 notation F `×` G := ProductFunctor F G
 
+@[simp,ematch] lemma ProductFunctor.onObjects   (F : A ↝ B) (G : C ↝ D) (a : A) (c : C) : (F × G) +> (a, c) = (F +> a, G +> c) := by refl
+@[simp,ematch] lemma ProductFunctor.onMorphisms (F : A ↝ B) (G : C ↝ D) {a a' : A} {c c' : C} (f : a ⟶ a') (g : c ⟶ c') : (F × G) &> (f, g) = (F &> f, G &> g) := by refl
+
 definition ProductNaturalTransformation 
 {F G : A ↝ B} {H I : C ↝ D} (α : F ⟹ G) (β : H ⟹ I) : (F × H) ⟹ (G × I) :=
 { components := λ X, (α.components X.1, β.components X.2),
@@ -169,7 +172,7 @@ definition ProductNaturalTransformation
                   cases f, cases Y, cases X,
                   dsimp,
                   dsimp at *,
-                  simp,
+
                   fsplit,
                   dsimp,
                   erw [←NaturalTransformation.naturality_lemma], refl,
