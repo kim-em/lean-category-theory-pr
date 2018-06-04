@@ -52,12 +52,6 @@ variable [category.{u₁ v₁} C]
  [category.{u₁ v₁} C] {X Y : C} (f : X ⟶ Y) : (IdentityFunctor C) &> f = f := by refl
 end
 
--- We define a coercion so that we can write `F X` for the functor `F` applied to the object `X`.
--- One can still write out `onObjects F X` when needed.
--- instance Functor_to_onObjects : has_coe_to_fun (C ↝ D) :=
--- { F   := λ f, C → D,
---   coe := Functor.onObjects }
-
 section
 variable {C : Type u₁}
 variable [𝒞 : category.{u₁ v₁} C]
