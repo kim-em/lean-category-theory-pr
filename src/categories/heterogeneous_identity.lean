@@ -3,24 +3,6 @@ import .isomorphism
 
 universes u v
 
--- @[simp] lemma eq.mpr.trans {α β γ: Prop} (p : α = β) (q : β = γ) (g : γ) : eq.mpr (eq.trans p q) g = eq.mpr p (eq.mpr q g) :=
--- begin
---   induction p,
---   induction q,
---   refl,
--- end
-
--- @[simp] lemma eq.mpr.propext {α : Sort u₁} (a : α) : eq.mpr (propext (eq_self_iff_true a)) trivial = eq.refl a :=
--- begin
---   refl,
--- end
-
--- @[simp] lemma eq.mpr.refl {α : Sort u₁} (a b : α) (p : a = b) : (eq.mpr (congr_fun (congr_arg eq p) b) (eq.refl b)) = p :=
--- begin
---   induction p,
---   refl,
--- end
-
 namespace categories
 
 open categories.isomorphism
