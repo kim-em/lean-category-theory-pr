@@ -21,8 +21,8 @@ notation C `ᵒᵖ` := op C
 
 section
 variable {C : Type u₁}
-variable [C_cat : category.{u₁ v₁} C]
-include C_cat
+variable [𝒞 : category.{u₁ v₁} C]
+include 𝒞
 
 instance Opposite : category.{u₁ v₁} (Cᵒᵖ) := 
 { Hom            := λ X Y : C, Y ⟶ X,
@@ -45,8 +45,8 @@ instance Opposite : category.{u₁ v₁} (Cᵒᵖ) :=
                     end }
 
 variable {D : Type u₂}
-variable [D_cat : category.{u₂ v₂} D]
-include D_cat
+variable [𝒟 : category.{u₂ v₂} D]
+include 𝒟
 
 definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) := 
 { onObjects     := λ X, F.onObjects X, -- notation (F +> X) fails here, because C ≠ Cᵒᵖ

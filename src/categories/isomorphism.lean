@@ -31,8 +31,8 @@ infixr ` ≅ `:10  := Isomorphism             -- type as \cong
 set_option pp.universes true
 
 variable {C : Type u}
-variable [C_cat : category.{u v} C]
-include C_cat
+variable [𝒞 : category.{u v} C]
+include 𝒞
 variables {X Y Z : C}
 
 

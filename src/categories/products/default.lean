@@ -123,14 +123,14 @@ definition RightProjection (C : Type u₁) [category.{u₁ v₁} C] (Z : C) (D :
 
 section
 variables {A : Type u₁}
- [A_cat : category.{u₁ v₁} A]
+ [𝒜 : category.{u₁ v₁} A]
  {B : Type u₂}
- [B_cat : category.{u₂ v₂} B]
+ [ℬ : category.{u₂ v₂} B]
  {C : Type u₃}
- [C_cat : category.{u₃ v₃} C]
+ [𝒞 : category.{u₃ v₃} C]
  {D : Type u₄}
- [D_cat : category.{u₄ v₄} D]
-include A_cat B_cat C_cat D_cat
+ [𝒟 : category.{u₄ v₄} D]
+include 𝒜 ℬ 𝒞 𝒟
 
 definition ProductFunctor
  (F : A ↝ B) (G : C ↝ D) : (A × C) ↝ (B × D) :=

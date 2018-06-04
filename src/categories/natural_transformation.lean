@@ -13,10 +13,10 @@ universes u₁ v₁ u₂ v₂ u₃ v₃
 
 section
 variable {C : Type u₁}
-variable [C_cat : category.{u₁ v₁} C]
+variable [𝒞 : category.{u₁ v₁} C]
 variable {D : Type u₂}
-variable [D_cat : category.{u₂ v₂} D]
-include C_cat D_cat
+variable [𝒟 : category.{u₂ v₂} D]
+include 𝒞 𝒟
 
 structure NaturalTransformation (F G : C ↝ D) : Type (max u₁ v₂) :=
   (components: Π X : C, (F +> X) ⟶ (G +> X))

@@ -60,12 +60,12 @@ end
 
 section
 variable {C : Type u₁}
-variable [C_cat : category.{u₁ v₁} C]
+variable [𝒞 : category.{u₁ v₁} C]
 variable {D : Type u₂}
-variable [D_cat : category.{u₂ v₂} D]
+variable [𝒟 : category.{u₂ v₂} D]
 variable {E : Type u₃}
-variable [E_cat : category.{u₃ v₃} E]
-include C_cat D_cat E_cat
+variable [ℰ : category.{u₃ v₃} E]
+include 𝒞 𝒟 ℰ
 
 definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
 { onObjects     := λ X, G +> (F +> X),
