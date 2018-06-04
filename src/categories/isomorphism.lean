@@ -111,7 +111,6 @@ definition Isomorphism.symm (I : Isomorphism X Y) : Isomorphism Y X :=
                end }
 
 
-
 class is_Isomorphism (f : X ⟶ Y) :=
   (inverse : Y ⟶ X)
   (witness_1 : f ≫ inverse = 𝟙 X . obviously)
