@@ -154,17 +154,18 @@ class Monomorphism (f : X ⟶ Y) :=
 
 instance Epimorphism_of_Isomorphism  (f : X ⟶ Y) [is_Isomorphism f] : Epimorphism f  := 
 { left_cancellation := begin
+                         -- This is an interesting test case for better rewrite automation.
                          intros,
                          rw [←category.left_identity_lemma C g, ←category.left_identity_lemma C h],
                          rw [← is_Isomorphism.witness_2_lemma f],
-                         rewrite_search_using `ematch, -- PROJECT Scott is thinking about completing the automation here.
+                         erw [category.associativity_lemma, w, category.associativity_lemma],
                        end }
 instance Monomorphism_of_Isomorphism (f : X ⟶ Y) [is_Isomorphism f] : Monomorphism f := 
 { right_cancellation := begin
                          intros,
                          rw [←category.right_identity_lemma C g, ←category.right_identity_lemma C h],
                          rw [← is_Isomorphism.witness_1_lemma f],
-                         rewrite_search_using `ematch,
+                         erw [←category.associativity_lemma, w, ←category.associativity_lemma]
                        end }
 
 @[simp] lemma cancel_Epimorphism  (f : X ⟶ Y) [Epimorphism f]  (g h : Y ⟶ Z) : (f ≫ g = f ≫ h) ↔ g = h := 

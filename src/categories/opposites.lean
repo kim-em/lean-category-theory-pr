@@ -62,7 +62,6 @@ definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) :=
                      erw [Functor.functoriality_lemma], refl,
                    end }
 
--- TODO are these @s really needed?
 @[simp,ematch] lemma ContravariantFunctor.functoriality
   (F : (Cᵒᵖ) ↝ D)
   (X Y Z : (Cᵒᵖ))
@@ -97,8 +96,7 @@ definition HomPairing (C : Type u₁) [category.{u₁ v₁} C] : Functor (Cᵒ�
                      erw [category.left_identity_lemma],
                    end,
   functoriality := begin
-                     -- `obviously'` says:
-                      ---
+                      -- `obviously'` says:
                       intros,
                       apply funext,
                       intros,
@@ -108,12 +106,6 @@ definition HomPairing (C : Type u₁) [category.{u₁ v₁} C] : Functor (Cᵒ�
                       simp,
                       dsimp,
                       erw [category.associativity_lemma]
-                      ---
                    end }
-
--- PROJECT prove C^op^op is C
--- definition OppositeOpposite (C : Category) : Equivalence (Opposite (Opposite C)) C := sorry
--- PROJECT opposites preserve products, functors, slices.
-
 
 end categories.opposites
