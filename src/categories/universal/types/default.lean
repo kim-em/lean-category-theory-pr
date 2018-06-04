@@ -29,7 +29,7 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts.{u+1 u} (Type u) :=
                                left_inclusion      := sum.inl,
                                right_inclusion     := sum.inr,
                                map                 := λ _ f g z, sum.cases_on z f g,
-                               uniqueness          := λ Z f g lw rw, begin tidy, cases x, tidy end } }
+                               uniqueness          := λ Z f g lw rw, begin tidy, cases x, obviously end } }
 
 instance Types_has_Equalizers : has_Equalizers.{u+1 u} (Type u) := 
 { equalizer := λ α β f g, { equalizer     := {x : α // f x = g x},
@@ -48,5 +48,5 @@ instance Types_has_Coequalizers : has_Coequalizers.{u+1 u} (Type u) :=
                             { coequalizer   := quotient s,
                               projection    := by obviously,
                               map           := λ Z k w, quotient.lift k (by obviously),
-                              witness       := begin tidy, apply eqv_gen.rel, tidy, end } }
+                              witness       := begin tidy, apply eqv_gen.rel, obviously, end } }
 end categories.types
