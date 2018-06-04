@@ -23,8 +23,8 @@ class category (Obj : Type u) : Type (max u (v+1)) :=
   (right_identity : ∀ {X Y : Obj} (f : Hom X Y), compose f (identity Y) = f . obviously)
   (associativity  : ∀ {W X Y Z : Obj} (f : Hom W X) (g : Hom X Y) (h : Hom Y Z), compose (compose f g) h = compose f (compose g h) . obviously)
 
-notation `𝟙` := category.identity    -- type as \b1
-infixr ` ≫ `:80 := category.compose -- type as \gg
+notation `𝟙` := category.identity     -- type as \b1
+infixr ` ≫ `:80 := category.compose   -- type as \gg
 infixr ` ⟶ `:10  := category.Hom     -- type as \h
 
 -- make_lemma is a command that creates a lemma from a structure field, discarding all auto_param wrappers from the type.
@@ -38,7 +38,6 @@ attribute [ematch] category.associativity_lemma
 abbreviation large_category (C : Type (u+1)) : Type (u+1) := category.{u+1 u} C
 abbreviation small_category (C : Type u)     : Type (u+1) := category.{u u} C
 
--- TODO reconsider whether providing `has_one` is actually valuable
 instance category.has_one {C : Type u} {X : C} [category C] : has_one (X ⟶ X) :=
 { one := 𝟙 X }
 

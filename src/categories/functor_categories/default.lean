@@ -40,11 +40,11 @@ instance FunctorCategory (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₂
                     end }
 
 -- TODO are these actually needed?
-instance FunctorCategory_small (C : Type u₁) [small_category C] (D : Type (u₁+1)) [large_category D] : large_category.{u₁} (C ↝ D) :=
-  functor_categories.FunctorCategory C D
+-- instance FunctorCategory_small (C : Type u₁) [small_category C] (D : Type (u₁+1)) [large_category D] : large_category.{u₁} (C ↝ D) :=
+--   functor_categories.FunctorCategory C D
 
-instance FunctorCategory_large (C : Type (u₁+1)) [large_category C] (D : Type (u₁+1)) [large_category D] : small_category.{u₁+1} (C ↝ D) :=
-  functor_categories.FunctorCategory C D
+-- instance FunctorCategory_large (C : Type (u₁+1)) [large_category C] (D : Type (u₁+1)) [large_category D] : small_category.{u₁+1} (C ↝ D) :=
+--   functor_categories.FunctorCategory C D
 
 end
 

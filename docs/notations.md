@@ -38,8 +38,3 @@ this requires coercions to function types, which I don't like.
 For now we just write out `τ.components X`.
 
 For vertical and horiztonal composition of natural transformations we "cutely" use `⊟` (`\boxminus`) and `◫` (currently untypeable, but we could ask for `\boxbar`).
-
-
-TODO:
-* Do we need notation that allows specifying the category explicitly when talking about sets of morphisms?
-* Unfortunately there is a bug in VS Code, so when you enter the 𝟙 character it switches to right-to-left typing, which is a bit confusing.

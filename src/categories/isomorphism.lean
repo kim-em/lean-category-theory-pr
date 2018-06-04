@@ -17,16 +17,11 @@ structure Isomorphism {C : Type u} [category.{u v} C] (X Y : C) :=
   (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
   (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
 
--- structure Isomorphism_small {C : Type u}     [small_category C] (X Y : C) extends Isomorphism.{u u} X Y.
--- structure Isomorphism_large {C : Type (u+1)} [category C]       (X Y : C) extends Isomorphism.{u+1 u} X Y.
-
 make_lemma Isomorphism.witness_1
 make_lemma Isomorphism.witness_2
 attribute [simp,ematch] Isomorphism.witness_1_lemma Isomorphism.witness_2_lemma
 
 infixr ` ≅ `:10  := Isomorphism             -- type as \cong
--- infixr ` ≅ `:11  := Isomorphism_small
--- infixr ` ≅ `:12  := Isomorphism_large
 
 set_option pp.universes true
 

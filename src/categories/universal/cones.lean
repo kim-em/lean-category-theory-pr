@@ -140,15 +140,16 @@ attribute [simp,ematch] CoconeMorphism.commutativity_lemma
 
 @[simp,ematch] def CoconeMorphism.commutativity_lemma_assoc {X Y : Cocone F} (c : CoconeMorphism X Y) (j : J) {Z : C} (z : Y.cocone_point ⟶ Z): (X.cocone_maps j) ≫ c.cocone_morphism ≫ z = (Y.cocone_maps j) ≫ z :=
 begin
-  rw ← category.associativity,
-  simp,
+  -- `obviously'` says:
+  erw [←category.associativity_lemma, CoconeMorphism.commutativity_lemma]
 end
 
 @[applicable] lemma CoconeMorphism_componentwise_equal {X Y : Cocone F} {f g : CoconeMorphism X Y} (w : f.cocone_morphism = g.cocone_morphism) : f = g :=
 begin
   induction f,
   induction g,
-  dsimp at w,
+  -- `obviously'` says:
+  dsimp at *,
   induction w,
   refl,
 end

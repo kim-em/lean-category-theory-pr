@@ -12,8 +12,6 @@ namespace categories.products
 
 universes u₁ v₁ u₂ v₂ u₃ v₃ u₄ v₄
 
--- For now we only allow products of categories at the same universe level, to make type inference a bit easier. This could be generalised, but we'd have to provide specific instances at various universe levels.
-
 section
 variable (C : Type u₁)
 variable [category.{u₁ v₁} C]
