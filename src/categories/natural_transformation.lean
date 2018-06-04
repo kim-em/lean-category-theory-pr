@@ -65,19 +65,14 @@ notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β
 
 end
 
-variable {C : Type (u₁+1)}
-variable [large_category C]
-variable {D : Type (u₂+1)}
-variable [large_category D]
-variable {E : Type (u₃+1)}
-variable [large_category E]
+variable {C : Type u₁}
+variable [𝒞 : category.{u₁ v₁} C]
+variable {D : Type u₂}
+variable [𝒟 : category.{u₂ v₂} D]
+variable {E : Type u₃}
+variable [ℰ : category.{u₃ v₃} E]
+include 𝒞 𝒟 ℰ
 variables {F G H : C ↝ D}
-
--- Unfortunately this coercion is not reliable enough to be usable.
--- This defines a coercion so we can write `α X` for `components α X`.
--- instance NaturalTransformation_to_components : has_coe_to_fun (NaturalTransformation F G) :=
--- {F   := λ f, Π X : C, (F +> X) ⟶ (G +> X),
---   coe := NaturalTransformation.components}
 
 instance (F : C ↝ D) : has_one (F ⟹ F) := 
 { one := IdentityNaturalTransformation F }
