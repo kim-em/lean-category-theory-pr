@@ -44,12 +44,11 @@ instance (C) [category C] : has_one (C ↝ C) :=
 
 section
 variable {C : Type u₁}
-variable [category.{u₁ v₁} C]
+variable [𝒞 : category.{u₁ v₁} C]
+include 𝒞
 
-@[simp] lemma IdentityFunctor.onObjects {C : Type u₁}
- [category.{u₁ v₁} C] (X : C) : (IdentityFunctor C) +> X = X := by refl
-@[simp] lemma IdentityFunctor.onMorphisms {C : Type u₁}
- [category.{u₁ v₁} C] {X Y : C} (f : X ⟶ Y) : (IdentityFunctor C) &> f = f := by refl
+@[simp] lemma IdentityFunctor.onObjects (X : C) : (IdentityFunctor C) +> X = X := by refl
+@[simp] lemma IdentityFunctor.onMorphisms {X Y : C} (f : X ⟶ Y) : (IdentityFunctor C) &> f = f := by refl
 end
 
 section

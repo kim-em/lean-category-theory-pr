@@ -10,9 +10,8 @@ open categories.functor
 
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
-variables {X Y Z : C}
 
-def eq_to_iso (p : X = Y) : X ≅ Y :=
+def eq_to_iso {X Y : C} (p : X = Y) : X ≅ Y :=
 begin
   rw p,
   exact (Isomorphism.refl Y),
@@ -23,7 +22,7 @@ begin
   refl,
 end
 
-@[simp,ematch] lemma eq_to_iso.trans (p : X = Y) (q : Y = Z) : (eq_to_iso p) ♢ (eq_to_iso q) = eq_to_iso (p.trans q) :=
+@[simp,ematch] lemma eq_to_iso.trans {X Y Z : C} (p : X = Y) (q : Y = Z) : (eq_to_iso p) ♢ (eq_to_iso q) = eq_to_iso (p.trans q) :=
 begin
   induction p,
   induction q,
@@ -41,7 +40,7 @@ variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C]
 variables {D : Type u₂} [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
-@[simp,ematch] lemma Functor.eq_to_iso (F : C ↝ D) (X Y : C) (p : X = Y) : F.onIsomorphisms (eq_to_iso p) = eq_to_iso (congr_arg F.onObjects p) :=
+@[simp,ematch] lemma Functor.eq_to_iso (F : C ↝ D) {X Y : C} (p : X = Y) : F.onIsomorphisms (eq_to_iso p) = eq_to_iso (congr_arg F.onObjects p) :=
 begin
   induction p,
   tidy,
