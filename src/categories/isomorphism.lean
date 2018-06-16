@@ -121,7 +121,8 @@ make_lemma is_Isomorphism.witness_2
 attribute [simp,ematch] is_Isomorphism.witness_1_lemma is_Isomorphism.witness_2_lemma
 
 instance is_Isomorphism_of_identity (X : C) : is_Isomorphism (𝟙 X) := 
-{ inverse := 𝟙 X }
+{ inverse := 𝟙 X, }
+
 instance is_Isomorphism_of_Isomorphism         (f : Isomorphism X Y) : is_Isomorphism f.morphism :=
 { inverse   := f.inverse,
   witness_1 := begin
