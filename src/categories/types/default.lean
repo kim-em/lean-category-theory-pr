@@ -81,7 +81,7 @@ definition UniverseLift : (Type u) ↝ (Type (max u v)) :=
                      intros,
                      apply funext,
                      intros,
-                     cases x,
+                     apply ulift.ext,
                      refl
                    end,
   functoriality := begin
