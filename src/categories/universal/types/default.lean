@@ -69,7 +69,7 @@ instance Types_has_BinaryProducts : has_BinaryProducts.{u+1 u} (Type u) :=
                                                       intros,
                                                       apply funext,
                                                       intros,
-                                                      apply pairs_equal,
+                                                      apply pair.ext,
                                                       simp only [funext_simp] at *,
                                                       solve_by_elim {discharger := `[cc]},
                                                       simp only [funext_simp] at *,
