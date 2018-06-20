@@ -80,7 +80,7 @@ infixr ` ♢ `:80 := Isomorphism.trans -- type as \diamonds
 @[simp,ematch] lemma Isomorphism.trans.morphism (α : Isomorphism X Y) (β : Isomorphism Y Z) : (α ♢ β).morphism = α.morphism ≫ β.morphism := by refl
 @[simp,ematch] lemma Isomorphism.trans.inverse  (α : Isomorphism X Y) (β : Isomorphism Y Z) : (α ♢ β).inverse  = β.inverse ≫ α.inverse   := by refl
 
-@[applicable] lemma Isomorphism_pointwise_equal
+@[extensionality] lemma Isomorphism_pointwise_equal
   (α β : Isomorphism X Y)
   (w : α.morphism = β.morphism) : α = β :=
   begin

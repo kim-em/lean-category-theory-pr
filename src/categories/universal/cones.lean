@@ -39,7 +39,7 @@ begin
   simp,
 end
 
-@[applicable] lemma ConeMorphism_componentwise_equal {X Y : Cone F} {f g : ConeMorphism X Y} (w : f.cone_morphism = g.cone_morphism) : f = g :=
+@[extensionality] lemma ConeMorphism_componentwise_equal {X Y : Cone F} {f g : ConeMorphism X Y} (w : f.cone_morphism = g.cone_morphism) : f = g :=
 begin
   induction f,
   induction g,
@@ -144,7 +144,7 @@ begin
   erw [←category.associativity_lemma, CoconeMorphism.commutativity_lemma]
 end
 
-@[applicable] lemma CoconeMorphism_componentwise_equal {X Y : Cocone F} {f g : CoconeMorphism X Y} (w : f.cocone_morphism = g.cocone_morphism) : f = g :=
+@[extensionality] lemma CoconeMorphism_componentwise_equal {X Y : Cocone F} {f g : CoconeMorphism X Y} (w : f.cocone_morphism = g.cocone_morphism) : f = g :=
 begin
   induction f,
   induction g,
