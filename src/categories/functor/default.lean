@@ -21,9 +21,13 @@ make_lemma Functor.identities
 make_lemma Functor.functoriality
 attribute [simp,ematch] Functor.functoriality_lemma Functor.identities_lemma
 
-infixr ` +> `:70 := Functor.onObjects
+-- infixr ` +> `:70 := Functor.onObjects
 infixr ` &> `:70 := Functor.onMorphisms -- switch to ▹?
 infixr ` ↝ `:70 := Functor -- type as \lea 
+
+instance {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u₂ v₂} D] : has_coe_to_fun (C ↝ D) :=
+{ F   := λ F, C → D,
+  coe := λ F, F.onObjects }
 
 definition IdentityFunctor (C : Type u₁) [category.{u₁ v₁} C] : C ↝ C := 
 { onObjects     := id,
@@ -47,7 +51,7 @@ variable {C : Type u₁}
 variable [𝒞 : category.{u₁ v₁} C]
 include 𝒞
 
-@[simp] lemma IdentityFunctor.onObjects (X : C) : (IdentityFunctor C) +> X = X := by refl
+@[simp] lemma IdentityFunctor.onObjects (X : C) : (IdentityFunctor C) X = X := by refl
 @[simp] lemma IdentityFunctor.onMorphisms {X Y : C} (f : X ⟶ Y) : (IdentityFunctor C) &> f = f := by refl
 end
 
@@ -61,12 +65,19 @@ variable [ℰ : category.{u₃ v₃} E]
 include 𝒞 𝒟 ℰ
 
 definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
-{ onObjects     := λ X, G +> (F +> X),
+{ onObjects     := λ X, G (F X),
   onMorphisms   := λ _ _ f, G &> (F &> f),
   identities    := begin 
                      -- `obviously'` says:
+                    --  obviously',
+                     intros,
+                      simp at *,
+                      unfold_coes,
+                      -- dsimp {unfold_reducible:=tt},
+                      erw [Functor.identities_lemma], refl,
                      intros,
                      simp,
+                     unfold_coes,
                    end,
   functoriality := begin
                      -- `obviously'` says:

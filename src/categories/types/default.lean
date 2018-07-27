@@ -54,20 +54,20 @@ begin
   simp,
 end
 
-@[ematch] lemma Functor_to_Types.naturality (f : X ⟶ Y) (x : F +> X) : σ.components Y ((F &> f) x) = (G &> f) (σ.components X x) := 
+@[ematch] lemma Functor_to_Types.naturality (f : X ⟶ Y) (x : F +> X) : σ Y ((F &> f) x) = (G &> f) (σ X x) := 
 begin 
   have p := σ.naturality_lemma f,
   exact congr_fun p x,
 end.
 
-@[simp] lemma Functor_to_Types.vertical_composition (x : F +> X) : (σ ⊟ τ).components X x = τ.components X (σ.components X x) :=
+@[simp] lemma Functor_to_Types.vertical_composition (x : F +> X) : (σ ⊟ τ) X x = τ X (σ X x) :=
 begin 
   -- `obviously'` says:
   refl
 end  
  
 variables {D : Type (w+1)} [large_category D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
-@[simp] lemma Functor_to_Types.horizontal_composition (x : (I ⋙ F) +> W) : (ρ ◫ σ).components W x = (G &> ρ.components W) (σ.components (I +> W) x) := 
+@[simp] lemma Functor_to_Types.horizontal_composition (x : (I ⋙ F) +> W) : (ρ ◫ σ) W x = (G &> ρ W) (σ (I +> W) x) := 
 begin
   -- `obviously'` says:
   refl
