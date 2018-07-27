@@ -12,10 +12,10 @@ universes u v
 namespace categories.isomorphism
 
 structure Isomorphism {C : Type u} [category.{u v} C] (X Y : C) :=
-  (morphism : X ⟶ Y)
-  (inverse : Y ⟶ X)
-  (witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
-  (witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
+(morphism : X ⟶ Y)
+(inverse : Y ⟶ X)
+(witness_1 : morphism ≫ inverse = 𝟙 X . obviously)
+(witness_2 : inverse ≫ morphism = 𝟙 Y . obviously)
 
 make_lemma Isomorphism.witness_1
 make_lemma Isomorphism.witness_2

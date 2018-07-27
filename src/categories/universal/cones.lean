@@ -17,9 +17,9 @@ variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞 
 
 structure Cone (F : J ↝ C) : Type (max u v) :=
-  (cone_point    : C)
-  (cone_maps     : Π j : J, cone_point ⟶ (F +> j))
-  (commutativity : Π {j k : J}, Π f : j ⟶ k, (cone_maps j) ≫ (F &> f) = cone_maps k . obviously)
+(cone_point    : C)
+(cone_maps     : Π j : J, cone_point ⟶ (F +> j))
+(commutativity : Π {j k : J}, Π f : j ⟶ k, (cone_maps j) ≫ (F &> f) = cone_maps k . obviously)
 
 make_lemma Cone.commutativity
 attribute [simp,ematch] Cone.commutativity_lemma
@@ -124,16 +124,16 @@ definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone 
 end
 
 structure Cocone (F : J ↝ C) :=
-  (cocone_point  : C)
-  (cocone_maps   : Π j : J, (F +> j) ⟶ cocone_point)
-  (commutativity : Π {j k : J}, Π f : j ⟶ k, (F &> f) ≫ (cocone_maps k) = cocone_maps j . obviously)
+(cocone_point  : C)
+(cocone_maps   : Π j : J, (F +> j) ⟶ cocone_point)
+(commutativity : Π {j k : J}, Π f : j ⟶ k, (F &> f) ≫ (cocone_maps k) = cocone_maps j . obviously)
 
 make_lemma Cocone.commutativity
 attribute [simp,ematch] Cocone.commutativity_lemma
 
 structure CoconeMorphism (X Y : Cocone F) :=
-  (cocone_morphism : X.cocone_point ⟶ Y.cocone_point)
-  (commutativity   : Π j : J, (X.cocone_maps j) ≫ cocone_morphism = (Y.cocone_maps j) . obviously)
+(cocone_morphism : X.cocone_point ⟶ Y.cocone_point)
+(commutativity   : Π j : J, (X.cocone_maps j) ≫ cocone_morphism = (Y.cocone_maps j) . obviously)
 
 make_lemma CoconeMorphism.commutativity
 attribute [simp,ematch] CoconeMorphism.commutativity_lemma
