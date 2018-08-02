@@ -60,8 +60,9 @@ definition Isomorphism.refl (X : C) : Isomorphism X X :=
                  simp
                end }
 
-@[simp,ematch] lemma Isomorphism.refl.morphism (X : C) : (Isomorphism.refl X).morphism = 𝟙 X := by refl
-@[simp,ematch] lemma Isomorphism.refl.inverse  (X : C) : (Isomorphism.refl X).inverse  = 𝟙 X := by refl
+-- TODO maybe these can have ematch?
+@[simp] lemma Isomorphism.refl.morphism (X : C) : (Isomorphism.refl X).morphism = 𝟙 X := by refl
+@[simp] lemma Isomorphism.refl.inverse  (X : C) : (Isomorphism.refl X).inverse  = 𝟙 X := by refl
 
 definition Isomorphism.trans (α : Isomorphism X Y) (β : Isomorphism Y Z) : Isomorphism X Z := 
 { morphism  := α.morphism ≫ β.morphism,

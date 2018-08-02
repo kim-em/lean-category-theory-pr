@@ -57,8 +57,8 @@ variable {D : Type u₂}
 variable [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
-@[simp] lemma ProductCategory.identity {X : C} {Y : D} : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
-@[simp] lemma ProductCategory.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
+@[simp,ematch] lemma ProductCategory.identity (X : C) (Y : D) : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
+@[simp,ematch] lemma ProductCategory.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
 end
 
 definition RightInjectionAt (C : Type u₁) [category.{u₁ v₁} C] {D : Type u₁} [category.{u₁ v₁} D] (Z : D) : C ↝ (C × D) := 
