@@ -31,10 +31,27 @@ structure Kernel (f : X ⟶ Y) :=
 definition Kernel_to_Equalizer (f : X ⟶ Y) (kernel : Kernel f) : Equalizer f (zero_morphism X Y) :=
 { equalizer := kernel.kernel,
   inclusion := kernel.inclusion,
-  map       := λ Z k w, kernel.map k begin simp at w, exact w, end,
+  map       := λ Z k w, kernel.map k begin simp [zero_morphism_left] at w, exact w, end,  -- TODO why do we need to specify zero_morphism_left explicitly here? Isn't it a simp lemma?
   witness := sorry, -- FIXME
   factorisation := sorry,
   uniqueness := sorry }
+
+structure Cokernel (f : X ⟶ Y) :=
+  (cokernel      : C)
+  (projection    : Y ⟶ cokernel)
+  (map           : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), cokernel ⟶ Z)
+  (witness       : f ≫ projection = zero_morphism X cokernel . obviously)
+  (factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), projection ≫ (map k w) = k . obviously)
+  (uniqueness    : ∀ {Z : C} (a b : cokernel ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously)
+
+definition Cokernel_to_Coequalizer (f : X ⟶ Y) (cokernel : Cokernel f) : Coequalizer f (zero_morphism X Y) :=
+{ coequalizer := cokernel.cokernel,
+  projection  := cokernel.projection,
+  map         := λ Z k w, cokernel.map k begin simp at w, exact w, end,
+  witness     := sorry, -- FIXME
+  factorisation := sorry,
+  uniqueness  := sorry }
+
 
 -- TODO Kernels_are_unique, from Equalizers_are_unique
 
@@ -44,11 +61,15 @@ variables (C)
 
 class has_Kernels :=
   (kernel : Π {X Y : C} (f : X ⟶ Y), Kernel f)
+class has_Cokernels :=
+  (cokernel : Π {X Y : C} (f : X ⟶ Y), Cokernel f)
 
 variables {C}
 
 def kernel [has_Kernels.{u v} C] {X Y : C} (f : X ⟶ Y) := has_Kernels.kernel f
 def kernel_object [has_Kernels.{u v} C] {X Y : C} (f : X ⟶ Y) : C := (kernel f).kernel
+def cokernel [has_Cokernels.{u v} C] {X Y : C} (f : X ⟶ Y) := has_Cokernels.cokernel f
+def cokernel_object [has_Cokernels.{u v} C] {X Y : C} (f : X ⟶ Y) : C := (cokernel f).cokernel
 
 end
 end categories.universal
