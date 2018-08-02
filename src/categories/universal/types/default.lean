@@ -24,7 +24,7 @@ instance Types_has_Products : has_Products (Type u) :=
                                          apply funext,
                                          intros,
                                          simp only [funext_simp] at *,
-                                         solve_by_elim {discharger := `[cc]},
+                                         solve_by_elim,
                                        end } }
 
 instance Types_has_Coproducts : has_Coproducts (Type u) := 
@@ -45,7 +45,7 @@ instance Types_has_Coproducts : has_Coproducts (Type u) :=
                                            dsimp,
                                            dsimp at *,
                                            simp only [funext_simp] at *,
-                                           solve_by_elim {discharger := `[cc]},
+                                           solve_by_elim,
                                          end } }
 
 -- Even though this can be automatically generated from `Types_has_Products`, this is a cleaner version.
@@ -71,9 +71,9 @@ instance Types_has_BinaryProducts : has_BinaryProducts.{u+1 u} (Type u) :=
                                                       intros,
                                                       apply pair.ext,
                                                       simp only [funext_simp] at *,
-                                                      solve_by_elim {discharger := `[cc]},
+                                                      solve_by_elim,
                                                       simp only [funext_simp] at *,
-                                                      solve_by_elim {discharger := `[cc]},
+                                                      solve_by_elim,
                                                     end } }
 
 instance Types_has_BinaryCoproducts : has_BinaryCoproducts.{u+1 u} (Type u) := 
@@ -97,8 +97,8 @@ instance Types_has_BinaryCoproducts : has_BinaryCoproducts.{u+1 u} (Type u) :=
                                                                        intros,
                                                                        simp only [funext_simp] at *,
                                                                        cases x,
-                                                                       solve_by_elim {discharger := `[cc]},
-                                                                       solve_by_elim {discharger := `[cc]},
+                                                                       solve_by_elim,
+                                                                       solve_by_elim,
                                                                      end } }
 
 instance Types_has_Equalizers : has_Equalizers.{u+1 u} (Type u) := 
@@ -107,7 +107,7 @@ instance Types_has_Equalizers : has_Equalizers.{u+1 u} (Type u) :=
                             map           := λ γ k h g, ⟨ k g, begin
                                                                  -- `obviously'` says:
                                                                  simp only [funext_simp] at *,
-                                                                 solve_by_elim {discharger := `[cc]},
+                                                                 solve_by_elim,
                                                                end ⟩,
                             factorisation := begin
                                                -- `obviously'` says:
@@ -120,7 +120,7 @@ instance Types_has_Equalizers : has_Equalizers.{u+1 u} (Type u) :=
                                                intros,
                                                automatic_induction,
                                                dsimp,
-                                               solve_by_elim {discharger := `[cc]},
+                                               solve_by_elim,
                                              end,
                             uniqueness    := begin
                                                -- `obviously'` says:
@@ -130,7 +130,7 @@ instance Types_has_Equalizers : has_Equalizers.{u+1 u} (Type u) :=
                                                apply subtype.eq,
                                                dsimp at *,
                                                simp only [funext_simp] at *,
-                                               solve_by_elim {discharger := `[cc]},
+                                               solve_by_elim,
                                              end } }
 
 
@@ -141,10 +141,10 @@ begin
   { cases h_a,
     cases h_a_h,
     induction h_a_h_right, induction h_a_h_left,
-    solve_by_elim {discharger := `[cc]} },
+    solve_by_elim },
   { refl },
-  { solve_by_elim {discharger := `[cc]} },
-  { solve_by_elim {discharger := `[cc]} },
+  { solve_by_elim },
+  { solve_by_elim {discharger := `[cc]} }, -- FIXME shouldn't need cc?
 end
 
 instance Types_has_Coequalizers : has_Coequalizers.{u+1 u} (Type u) := 
@@ -167,7 +167,7 @@ instance Types_has_Coequalizers : has_Coequalizers.{u+1 u} (Type u) :=
                                                  apply quotient.sound,
                                                  apply eqv_gen.rel,
                                                  fsplit,
-                                                 solve_by_elim {discharger := `[cc]},
+                                                 solve_by_elim,
                                                  fsplit,
                                                  refl,
                                                  refl
@@ -180,7 +180,7 @@ instance Types_has_Coequalizers : has_Coequalizers.{u+1 u} (Type u) :=
                                                   intros,
                                                   induction x,
                                                   simp only [funext_simp] at *,
-                                                  solve_by_elim {discharger := `[cc]},
+                                                  solve_by_elim,
                                                   refl
                                                   ---
                                                end } }
