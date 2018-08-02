@@ -69,13 +69,23 @@ begin
   apply categories.initial.TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma,
   apply categories.initial.TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma
 end
-end
 
-class ZeroObject (C : Type u) [category.{u v} C] :=
+end 
+
+
+structure ZeroObject (C : Type u) [category.{u v} C] :=
   (zero_object : C)
   (is_initial  : is_initial.{u v}  zero_object)
   (is_terminal : is_terminal.{u v} zero_object)
 
-definition ZeroObject.zero_morphism {C : Type u} [category.{u v} C] (Z : ZeroObject C) (X Y : C) : X ⟶ Y := (Z.is_terminal.morphism_to_terminal_object_from X) ≫ (Z.is_initial.morphism_from_initial_object_to Y) 
+
+variables {C : Type u} [𝒞 : category.{u v} C]
+include 𝒞
+
+instance ZeroObject_coercion_to_object : has_coe (ZeroObject C) C :=
+{ coe := ZeroObject.zero_object }
+
+definition ZeroObject.zero_morphism (Z : ZeroObject C) (X Y : C) : X ⟶ Y := (Z.is_terminal.morphism_to_terminal_object_from X) ≫ (Z.is_initial.morphism_from_initial_object_to Y) 
+
 
 end categories.initial

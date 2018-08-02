@@ -12,6 +12,13 @@ open categories.types
 
 namespace categories.universal
 
+/-
+We give "explicit" definitions of (co)equalizers, and (finite) (co)products. Of course these are special cases of (co)limits,
+but they are used so pervasively that they need a convenient interface.
+
+TODO: pullbacks and pushouts should be here too.
+-/
+
 universes u v w
 variables {C : Type u}
 variables [𝒞 : category.{u v} C]
@@ -32,9 +39,6 @@ make_lemma Equalizer.uniqueness
 attribute [simp,ematch] Equalizer.factorisation_lemma
 attribute [applicable] Equalizer.inclusion Equalizer.map
 attribute [applicable] Equalizer.uniqueness_lemma
-
--- Or should we write out yet another structure, and prove it agrees with the equalizer?
-definition Kernel [Z : ZeroObject C] (f : X ⟶ Y) := Equalizer f (Z.zero_morphism X Y)
 
 structure BinaryProduct (X Y : C) :=
 (product             : C)
@@ -82,8 +86,6 @@ attribute [simp,ematch] Coequalizer.factorisation_lemma
 attribute [applicable] Coequalizer.projection Coequalizer.map
 attribute [applicable] Coequalizer.uniqueness_lemma
 
-definition Cokernel [Z : ZeroObject C] (f : X ⟶ Y) := Coequalizer f (Z.zero_morphism X Y)
-
 structure BinaryCoproduct (X Y : C) :=
 (coproduct           : C)
 (left_inclusion      : X ⟶ coproduct)
@@ -109,7 +111,7 @@ structure Coproduct {I : Type w} (X : I → C) :=
 (factorisation : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z) (i : I), (inclusion i) ≫ (map f) = f i . obviously)
 (uniqueness    : ∀ {Z : C} (f g : coproduct ⟶ Z) (witness : ∀ i : I, (inclusion i) ≫ f = (inclusion i) ≫ g), f = g . obviously)
 
--- Coming in later PRs: all these things are unique up to unique isomorphism, and are special cases of (co)limits.
+-- Coming in later PRs: all these things special cases of (co)limits, and hence are unique up to unique isomorphism.
 
 end categories.universal
 
