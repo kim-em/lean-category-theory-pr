@@ -46,7 +46,7 @@ variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C] {D : Type u₂} [𝒟 
 include 𝒞 𝒟
 
 @[simp,ematch] lemma FunctorCategory.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F) X = 𝟙 (F +> X) := by refl
-@[simp,ematch] lemma FunctorCategory.compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H) X = (α : F ⟹ G) X ≫ (β : G ⟹ H) X:= by refl
+@[simp,ematch] lemma FunctorCategory.compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H) X = (α : F ⟹ G) X ≫ (β : G ⟹ H) X := by refl
 end
 
 section
@@ -72,7 +72,7 @@ begin
   -- obviously' says:
   injections_and_clear,
   simp only [funext_simp] at *,
-  solve_by_elim {discharger := `[cc]}
+  solve_by_elim
 end
 end
 

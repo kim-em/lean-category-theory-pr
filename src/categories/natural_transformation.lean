@@ -55,7 +55,8 @@ definition vertical_composition_of_NaturalTransformations (α : F ⟹ G) (β : G
 
 notation α `⊟` β:80 := vertical_composition_of_NaturalTransformations α β    
 
-@[simp,ematch] lemma vertical_composition_of_NaturalTransformations.components (α : F ⟹ G) (β : G ⟹ H) (X : C) : (α ⊟ β) X = (α X) ≫ (β X) := by refl
+@[simp] lemma vertical_composition_of_NaturalTransformations.components (α : F ⟹ G) (β : G ⟹ H) (X : C) : (α ⊟ β) X = (α X) ≫ (β X) := by refl
+-- local attribute [ematch] vertical_composition_of_NaturalTransformations.components 
 
 -- We'll want to be able to prove that two natural transformations are equal if they are componentwise equal.
 @[extensionality] lemma NaturalTransformations_componentwise_equal
