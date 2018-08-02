@@ -26,10 +26,11 @@ do
   s ← simp_lemmas.mk_default,
   t ← infer_type G,
   t' ← s.dsimplify [F] t {fail_if_unchanged := ff},
+  trace t',
   to_expr ```(congr_arg (%%G : %%t') %%W)
 
-meta def J : tactic expr := to_expr ``(5)
-example : false :=
+lemma test2 (m n : ℕ) (w : m = n) : G n == G m :=
 begin
- have j := /- execute J here -/ sorry,
+  let h := by tactic.get_local `w >>= λ W, mk_congr_arg_using_dsimp `(G) W `F,
+  rw h,
 end
