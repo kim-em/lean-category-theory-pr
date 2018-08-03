@@ -73,6 +73,7 @@ instance ProductCategory_uniform : category.{u₁ v₁} (C × D) := products.Pro
 @[simp,ematch] lemma ProductCategory_uniform.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
 end
 
+section
 variables (C : Type u₁) [small_category C] (D : Type u₁) [small_category D] (E : Type u₂) [ℰ : category.{u₂ v₂} E]
 include ℰ
 
@@ -80,7 +81,7 @@ include ℰ
 lemma test (X : C) (Y : D) (F : C ↝ (D ↝ E)): (F &> (@category.identity (C × D) (products.ProductCategory_uniform C D) (X, Y)).fst) Y = 𝟙 ((F +> X) +> Y) := 
 begin
 -- simp,
-
+-- rewrite ProductCategory_uniform.identity,
 let P := @coe_fn (F +> @prod.fst C D (X, Y) ⟶ F +> @prod.fst C D (X, Y))
   (@natural_transformation.has_coe_to_fun D _inst_2 E ℰ (F +> @prod.fst C D (X, Y)) (F +> @prod.fst C D (X, Y))),
 
@@ -110,7 +111,7 @@ dsimp [P] at Z,
 perform_nth_rewrite [ProductCategory_uniform.identity] 0,
 rewrite ProductCategory_uniform.identity,
 end
-
+end
 
 definition RightInjectionAt (C : Type u₁) [category.{u₁ v₁} C] {D : Type u₁} [category.{u₁ v₁} D] (Z : D) : C ↝ (C × D) := 
 { onObjects     := λ X, (X, Z),

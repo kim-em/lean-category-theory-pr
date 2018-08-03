@@ -20,17 +20,23 @@ end
 
 open tactic
 
-meta def mk_congr_arg_using_dsimp (G W : expr) (F : name) : tactic expr := 
+meta def mk_congr_arg_using_dsimp (G W : expr) (F : name) : tactic unit := 
 -- I have no idea how to achieve this: this doesn't work, but is my best guess.
 do
   s ← simp_lemmas.mk_default,
   t ← infer_type G,
   t' ← s.dsimplify [F] t {fail_if_unchanged := ff},
-  trace t',
-  to_expr ```(congr_arg (%%G : %%t') %%W)
 
+  tactic.definev `g t' G,
+
+  ca ← to_expr ```(congr_arg (g : %%t') %%W),
+  cat ← infer_type ca,
+  he ← tactic.definev `h cat ca,
+  `[dsimp [g] at h]
+  
 lemma test2 (m n : ℕ) (w : m = n) : G n == G m :=
 begin
-  let h := by tactic.get_local `w >>= λ W, mk_congr_arg_using_dsimp `(G) W `F,
+  -- tactic.get_local `w >>= λ W, mk_congr_arg_using_dsimp `(G) W `F >>= tactic.trace,
+  ((tactic.get_local `w) >>= λ W, mk_congr_arg_using_dsimp `(G) W `F),
   rw h,
 end
