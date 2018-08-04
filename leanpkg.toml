@@ -6,5 +6,3 @@ path = "src"
 
 [dependencies]
 lean-tidy = {git = "https://github.com/semorrison/lean-tidy", rev = "6a2708d342217968b1a40362337f3a8bd7c4528e"}
-super = {git = "https://github.com/leanprover/super", rev = "717e5f34761fb80a33456eec0b01f8be11432028"}
-mini_crush = {git = "https://github.com/leanprover/mini_crush", rev = "03c955233c20accaaa2f8445dd910cf9ec2cac58"}
