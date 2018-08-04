@@ -51,7 +51,7 @@ end
 
 section
 variables {C : Type (u₁+1)} [large_category C] {D : Type (u₂+1)} [large_category D] {E : Type (u₃+1)} [large_category E]
-
+-- TODO Are these used?
 @[simp,ematch] lemma FunctorCategory_large.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F) X = 𝟙 (F +> X) := by refl
 @[simp,ematch] lemma FunctorCategory_large.compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H) X = (α : F ⟹ G) X ≫ (β : G ⟹ H) X:= by refl
 

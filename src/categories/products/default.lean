@@ -80,7 +80,7 @@ include ℰ
 
 lemma test (X : C) (Y : D) (F : C ↝ (D ↝ E)): (F &> (@category.identity (C × D) (products.ProductCategory_uniform C D) (X, Y)).fst) Y = 𝟙 ((F +> X) +> Y) := 
 begin
--- simp,
+unfold_coes,
 -- rewrite ProductCategory_uniform.identity,
 let P := @coe_fn (F +> @prod.fst C D (X, Y) ⟶ F +> @prod.fst C D (X, Y))
   (@natural_transformation.has_coe_to_fun D _inst_2 E ℰ (F +> @prod.fst C D (X, Y)) (F +> @prod.fst C D (X, Y))),
