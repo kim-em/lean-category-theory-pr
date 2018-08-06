@@ -102,7 +102,7 @@ definition hcomp
 
 notation α `◫` β:80 := hcomp α β
 
-@[simp,ematch] lemma hcomp.components {F G : C ↝ D}
+@[simp] lemma hcomp.components {F G : C ↝ D}
   {H I : D ↝ E}
   (α : F ⟹ G)
   (β : H ⟹ I) (X : C) : (α ◫ β) X = (β (F +> X)) ≫ (I &> (α X)) := by refl
