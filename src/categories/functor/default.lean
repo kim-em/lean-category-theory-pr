@@ -53,7 +53,7 @@ variable {C : Type u₁}
 variable [𝒞 : category.{u₁ v₁} C]
 include 𝒞
 
-@[simp] lemma id.onObjects (X : C) : (id C) +> X = X := rfl
+@[simp] lemma id.onObjects (X : C) : (id C) X = X := rfl
 @[simp] lemma id.onMorphisms {X Y : C} (f : X ⟶ Y) : (id C) &> f = f := rfl
 end
 
@@ -67,11 +67,12 @@ variable [ℰ : category.{u₃ v₃} E]
 include 𝒞 𝒟 ℰ
 
 definition comp (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
-{ onObjects     := λ X, G +> (F +> X),
+{ onObjects     := λ X, G (F X),
   onMorphisms   := λ _ _ f, G &> (F &> f),
   identities    := begin 
                      -- `obviously'` says:
                      intros,
+                     dsimp at *,
                      simp at *,
                    end,
   functoriality := begin
