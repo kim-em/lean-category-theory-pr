@@ -23,11 +23,11 @@ infixr ` +> `:70 := Functor.onObjects
 infixr ` &> `:70 := Functor.onMorphisms -- switch to ▹?
 infixr ` ↝ `:70 := Functor -- type as \lea 
 
+namespace Functor
+
 instance {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u₂ v₂} D] : has_coe_to_fun (C ↝ D) :=
 { F   := λ F, C → D,
   coe := λ F, F.onObjects }
-
-namespace Functor
 
 @[simp] lemma unfold_coercion {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u₂ v₂} D] (F : C ↝ D) (X : C) : F X = F +> X := rfl
 
@@ -81,8 +81,7 @@ definition comp (F : C ↝ D) (G : D ↝ E) : C ↝ E :=
                    end }
 infixr ` ⋙ `:80 := comp
 
-@[simp] lemma comp.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) +> X = G +> (F +> X) := rfl
-
+@[simp] lemma comp.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) X = G (F X) := rfl
 @[simp] lemma comp.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := rfl
 end
 end Functor
