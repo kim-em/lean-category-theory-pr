@@ -5,13 +5,13 @@
 import categories.universal.instances
 import categories.util.Two
 
-open categories
-open categories.initial
-open categories.types
+open category_theory
+open category_theory.initial
+open category_theory.types
 
 universes u v
 
-namespace categories.universal
+namespace category_theory.universal
 
 variable {C : Type (u+1)}
 variable [large_category C]
@@ -53,4 +53,4 @@ instance BinaryProducts_from_FiniteProducts [has_FiniteProducts.{u+1 u w} C] : h
       right_factorisation := λ _ f g, p.factorisation (Two.dependent_choice f g) Two._1,
       uniqueness          := λ _ f g u v, p.uniqueness f g (λ X, begin cases X, exact u, exact v, end) } }
 
-end categories.universal
+end category_theory.universal

@@ -3,7 +3,7 @@
 -- Authors: Stephen Morgan, Scott Morrison
 import ..functor_categories
 
-namespace categories
+namespace category_theory
 
 universes u₁ v₁ u₂ v₂ u₃ v₃ u₄ v₄
 
@@ -64,7 +64,7 @@ variable [𝒟 : category.{u₁ v₁} D]
 include 𝒞 𝒟
 
 -- TODO rename?
-instance ProductCategory_uniform : category.{u₁ v₁} (C × D) := categories.ProductCategory C D
+instance ProductCategory_uniform : category.{u₁ v₁} (C × D) := category_theory.ProductCategory C D
 
 -- TOOD these are probably unnecessary
 -- TODO rename?
@@ -195,4 +195,4 @@ definition ProductNaturalTransformation
 
 notation α `×` β := ProductNaturalTransformation α β
 
-end categories
+end category_theory

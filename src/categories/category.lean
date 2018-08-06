@@ -4,7 +4,7 @@
 
 import .tactics
 
-namespace categories
+namespace category_theory
 
 universes u v
 
@@ -59,4 +59,4 @@ variable [small_category C]
 @[simp] def small_category.right_identity_lemma' (f : X ⟶ Y) : f ≫ 1 = f := begin unfold has_one.one, simp end
 end
 
-end categories
+end category_theory

@@ -5,9 +5,7 @@
 import ..category
 import ..tactics
 
-open categories
-
-namespace categories
+namespace category_theory
  
 universes u₁ v₁ u₂ v₂ u₃ v₃
 
@@ -97,4 +95,4 @@ end
 end
 end Functor
 
-end categories
+end category_theory

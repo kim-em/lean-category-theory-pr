@@ -3,8 +3,9 @@ import .isomorphism
 
 universes u v
 
-namespace categories
+namespace category_theory
 
+section
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 
@@ -25,11 +26,9 @@ begin
   induction q,
   tidy,
 end
+end
 
-end categories
-
-open categories
-namespace categories.functor
+namespace Functor
 
 universes u₁ v₁ u₂ v₂
 
@@ -42,5 +41,6 @@ begin
   induction p,
   tidy,
 end
-end categories.functor
+end Functor
+end category_theory
 

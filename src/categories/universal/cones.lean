@@ -5,10 +5,10 @@
 import .initial
 import ..functor
 
-open categories
-open categories.initial
+open category_theory
+open category_theory.initial
 
-namespace categories.universal
+namespace category_theory.universal
 
 universes u v
 variables {J : Type v} [small_category J]
@@ -64,21 +64,21 @@ instance Cones (F : J ↝ C) : category.{(max u v) v} (Cone F) :=
   left_identity  := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.universal.ConeMorphism_componentwise_equal,
+                      apply category_theory.universal.ConeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.universal.ConeMorphism_componentwise_equal,
+                      apply category_theory.universal.ConeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.universal.ConeMorphism_componentwise_equal,
+                      apply category_theory.universal.ConeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end }
@@ -109,14 +109,14 @@ definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone 
   identities    := begin
                      -- `obviously'` says:
                      intros,
-                     apply categories.universal.ConeMorphism_componentwise_equal,
+                     apply category_theory.universal.ConeMorphism_componentwise_equal,
                      dsimp,
                      simp
                    end,
   functoriality := begin
                      -- `obviously'` says:
                      intros,
-                     apply categories.universal.ConeMorphism_componentwise_equal,
+                     apply category_theory.universal.ConeMorphism_componentwise_equal,
                      dsimp,
                      simp
                    end }
@@ -170,21 +170,21 @@ instance Cocones (F : J ↝ C) : category.{(max u v) v} (Cocone F) :=
   left_identity  := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.universal.CoconeMorphism_componentwise_equal,
+                      apply category_theory.universal.CoconeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.universal.CoconeMorphism_componentwise_equal,
+                      apply category_theory.universal.CoconeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.universal.CoconeMorphism_componentwise_equal,
+                      apply category_theory.universal.CoconeMorphism_componentwise_equal,
                       dsimp,
                       simp
                     end }
@@ -215,14 +215,14 @@ definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cocone F) ↝ (C
   identities    := begin
                      -- `obviously'` says
                      intros,
-                     apply categories.universal.CoconeMorphism_componentwise_equal,
+                     apply category_theory.universal.CoconeMorphism_componentwise_equal,
                      dsimp,
                      simp
                    end,
   functoriality := begin
                      -- `obviously'` says
                      intros,
-                     apply categories.universal.CoconeMorphism_componentwise_equal,
+                     apply category_theory.universal.CoconeMorphism_componentwise_equal,
                      dsimp,
                      simp
                    end }
@@ -231,18 +231,18 @@ end
 definition LimitCone     (F : J ↝ C) := TerminalObject (Cone F)
 definition ColimitCocone (F : J ↝ C) := InitialObject (Cocone F)
 
-end categories.universal
+end category_theory.universal
 
-namespace categories.functor
+namespace category_theory.Functor
 
 universes u v
 variables {J : Type v} [small_category J]
 variables {C : Type u} [category.{u v} C] {D : Type u} [category.{u v} D]
 variable {F : J ↝ C}
 
-open categories.universal
+open category_theory.universal
 
-definition Functor.onCones   (G : C ↝ D) (c : Cone F)   : Cone (F ⋙ G)   := (Cones_functoriality F G) +> c
-definition Functor.onCocones (G : C ↝ D) (c : Cocone F) : Cocone (F ⋙ G) := (Cocones_functoriality F G) +> c
+definition onCones   (G : C ↝ D) (c : Cone F)   : Cone (F ⋙ G)   := (Cones_functoriality F G) +> c
+definition onCocones (G : C ↝ D) (c : Cocone F) : Cocone (F ⋙ G) := (Cocones_functoriality F G) +> c
 
-end categories.functor
+end category_theory.Functor

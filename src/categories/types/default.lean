@@ -7,9 +7,9 @@ import ..isomorphism
 import ..functor
 import ..natural_transformation
 
-namespace categories.types
+open category_theory
 
-open categories
+namespace category_theory.types
 
 universes u v w
 
@@ -88,4 +88,4 @@ definition UniverseLift : (Type u) ↝ (Type (max u v)) :=
                      refl
                    end }
 
-end categories.types
+end category_theory.types

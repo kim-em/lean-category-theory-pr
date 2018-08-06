@@ -6,9 +6,9 @@ import ..isomorphism
 import ..functor_categories
 import ..opposites
 
-open categories
+open category_theory
 
-namespace categories.initial
+namespace category_theory.initial
 
 universes u v
 
@@ -46,10 +46,10 @@ lemma InitialObjects_are_unique (X Y : InitialObject C) : X.initial_object ≅ Y
 begin
   -- `obviously'` says:
   fsplit,
-  apply categories.initial.InitialObject.morphism_from_initial_object_to,
-  apply categories.initial.InitialObject.morphism_from_initial_object_to,
-  apply categories.initial.InitialObject.uniqueness_of_morphisms_from_initial_object_lemma,
-  apply categories.initial.InitialObject.uniqueness_of_morphisms_from_initial_object_lemma
+  apply category_theory.initial.InitialObject.morphism_from_initial_object_to,
+  apply category_theory.initial.InitialObject.morphism_from_initial_object_to,
+  apply category_theory.initial.InitialObject.uniqueness_of_morphisms_from_initial_object_lemma,
+  apply category_theory.initial.InitialObject.uniqueness_of_morphisms_from_initial_object_lemma
 end
 
 instance TerminalObject_coercion_to_object : has_coe (TerminalObject C) C :=
@@ -63,10 +63,10 @@ lemma TerminalObjects_are_unique (X Y : TerminalObject C) : X.terminal_object �
 begin
   -- `obviously'` says:
   fsplit,
-  apply categories.initial.TerminalObject.morphism_to_terminal_object_from,
-  apply categories.initial.TerminalObject.morphism_to_terminal_object_from,
-  apply categories.initial.TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma,
-  apply categories.initial.TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma
+  apply category_theory.initial.TerminalObject.morphism_to_terminal_object_from,
+  apply category_theory.initial.TerminalObject.morphism_to_terminal_object_from,
+  apply category_theory.initial.TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma,
+  apply category_theory.initial.TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma
 end
 
 end 
@@ -87,4 +87,4 @@ instance ZeroObject_coercion_to_object : has_coe (ZeroObject C) C :=
 definition ZeroObject.zero_morphism (Z : ZeroObject C) (X Y : C) : X ⟶ Y := (Z.is_terminal.morphism_to_terminal_object_from X) ≫ (Z.is_initial.morphism_from_initial_object_to Y) 
 
 
-end categories.initial
+end category_theory.initial

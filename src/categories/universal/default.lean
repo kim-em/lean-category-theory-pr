@@ -4,11 +4,11 @@
 
 import .cones
 
-open categories
-open categories.initial
-open categories.types
+open category_theory
+open category_theory.initial
+open category_theory.types
 
-namespace categories.universal
+namespace category_theory.universal
 
 /-
 We give "explicit" definitions of (co)equalizers, and (finite) (co)products. Of course these are special cases of (co)limits,
@@ -111,5 +111,5 @@ structure Coproduct {I : Type w} (X : I → C) :=
 
 -- Coming in later PRs: all these things special cases of (co)limits, and hence are unique up to unique isomorphism.
 
-end categories.universal
+end category_theory.universal
 

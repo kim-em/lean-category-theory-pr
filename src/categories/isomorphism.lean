@@ -5,11 +5,9 @@
 import .category
 import .functor
 
-open categories
-
 universes u v
 
-namespace categories
+namespace category_theory
 
 structure Isomorphism {C : Type u} [category.{u v} C] (X Y : C) :=
 (morphism : X ⟶ Y)
@@ -205,4 +203,4 @@ definition onIsomorphisms (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F +> X) ≅ (
 
 end Functor
 
-end categories
+end category_theory

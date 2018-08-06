@@ -4,9 +4,7 @@
 
 import .functor
 
-open categories
-
-namespace categories
+namespace category_theory
 
 universes u₁ v₁ u₂ v₂ u₃ v₃
 
@@ -122,4 +120,4 @@ notation α `◫` β:80 := hcomp α β
   end
 
 end NaturalTransformation
-end categories
+end category_theory

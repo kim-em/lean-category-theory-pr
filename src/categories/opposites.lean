@@ -6,7 +6,7 @@ import .functor
 import .products
 import .types
 
-namespace categories
+namespace category_theory
 
 universes u₁ v₁ u₂ v₂
 
@@ -61,14 +61,14 @@ definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) :=
   (F : (Cᵒᵖ) ↝ D)
   (X Y Z : (Cᵒᵖ))
   (f : X ⟶ Y) (g : Y ⟶ Z) :
-    F &> ((@categories.category.compose C _ _ _ _ g f) : X ⟶ Z) = (F &> f) ≫ (F &> g) := 
+    F &> ((@category_theory.category.compose C _ _ _ _ g f) : X ⟶ Z) = (F &> f) ≫ (F &> g) := 
     begin
       -- `obviously'` says:
       erw [Functor.functoriality_lemma]
     end
 
 @[simp,ematch] lemma ContravariantFunctor.identities
-  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@categories.category.identity C _ X)) = 𝟙 (F +> X) :=
+  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F &> (@category_theory.category.identity C _ X)) = 𝟙 (F +> X) :=
   begin
     -- `obviously'` says:
     erw [Functor.identities_lemma],
@@ -103,4 +103,4 @@ definition HomPairing (C : Type u₁) [category.{u₁ v₁} C] : Functor (Cᵒ�
                       erw [category.associativity_lemma]
                    end }
 
-end categories
+end category_theory

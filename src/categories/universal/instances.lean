@@ -4,11 +4,11 @@
 
 import categories.universal
 
-open categories
-open categories.initial
-open categories.types
+open category_theory
+open category_theory.initial
+open category_theory.types
 
-namespace categories.universal
+namespace category_theory.universal
 
 universes u v w
 
@@ -80,5 +80,5 @@ definition product [has_Products C] {I : Type u} (F : I → C) := has_Products.p
 definition coproduct [has_Coproducts C] {I : Type u} (F : I → C) := has_Coproducts.coproduct F
 end
 
-end categories.universal
+end category_theory.universal
 

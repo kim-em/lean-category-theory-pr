@@ -4,7 +4,7 @@
 
 import ..natural_transformation
 
-namespace categories
+namespace category_theory
 
 universes u₁ v₁ u₂ v₂ u₃ v₃
 
@@ -72,4 +72,4 @@ end
 end
 
 end FunctorCategory
-end categories
+end category_theory

@@ -1,9 +1,9 @@
 import ...types
 import ..instances
 
-open categories.universal
+open category_theory.universal
 
-namespace categories.types
+namespace category_theory.types
 
 universe u
 
@@ -154,7 +154,7 @@ instance Types_has_Coequalizers : has_Coequalizers.{u+1 u} (Type u) :=
                                                  -- `obviously'` says:
                                                  apply quotient.mk
                                                end,
-                              map           := λ Z k w, quotient.lift k begin /- `obviously'` says: -/ intros, simp only [funext_simp] at *, apply categories.types.constant_on_quotient ; assumption end,
+                              map           := λ Z k w, quotient.lift k begin /- `obviously'` says: -/ intros, simp only [funext_simp] at *, apply category_theory.types.constant_on_quotient ; assumption end,
                               factorisation := begin
                                                  -- `obviously'` says:
                                                  intros,
@@ -184,4 +184,4 @@ instance Types_has_Coequalizers : has_Coequalizers.{u+1 u} (Type u) :=
                                                   refl
                                                   ---
                                                end } }
-end categories.types
+end category_theory.types
