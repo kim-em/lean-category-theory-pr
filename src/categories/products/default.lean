@@ -5,7 +5,6 @@ import ..functor_categories
 
 open categories
 open categories.functor
-open categories.natural_transformation
 open categories.functor_categories
 
 namespace categories.products

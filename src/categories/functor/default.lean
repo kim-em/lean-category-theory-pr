@@ -25,11 +25,15 @@ infixr ` +> `:70 := Functor.onObjects
 infixr ` &> `:70 := Functor.onMorphisms -- switch to ▹?
 infixr ` ↝ `:70 := Functor -- type as \lea 
 
--- instance {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u₂ v₂} D] : has_coe_to_fun (C ↝ D) :=
--- { F   := λ F, C → D,
---   coe := λ F, F.onObjects }
+instance {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u₂ v₂} D] : has_coe_to_fun (C ↝ D) :=
+{ F   := λ F, C → D,
+  coe := λ F, F.onObjects }
 
-definition IdentityFunctor (C : Type u₁) [category.{u₁ v₁} C] : C ↝ C := 
+namespace Functor
+
+@[simp] lemma simplify_coercion {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u₂ v₂} D] (F : C ↝ D) (X : C) : F X = F +> X := by refl
+
+definition id (C : Type u₁) [category.{u₁ v₁} C] : C ↝ C := 
 { onObjects     := id,
   onMorphisms   := λ _ _ f, f,
   identities    := begin 
@@ -44,15 +48,15 @@ definition IdentityFunctor (C : Type u₁) [category.{u₁ v₁} C] : C ↝ C :=
                    end }
 
 instance (C) [category C] : has_one (C ↝ C) :=
-{ one := IdentityFunctor C }
+{ one := id C }
 
 section
 variable {C : Type u₁}
 variable [𝒞 : category.{u₁ v₁} C]
 include 𝒞
 
-@[simp] lemma IdentityFunctor.onObjects (X : C) : (IdentityFunctor C) +> X = X := by refl
-@[simp] lemma IdentityFunctor.onMorphisms {X Y : C} (f : X ⟶ Y) : (IdentityFunctor C) &> f = f := by refl
+@[simp] lemma id.onObjects (X : C) : (id C) +> X = X := by refl
+@[simp] lemma id.onMorphisms {X Y : C} (f : X ⟶ Y) : (id C) &> f = f := by refl
 end
 
 section
@@ -64,7 +68,7 @@ variable {E : Type u₃}
 variable [ℰ : category.{u₃ v₃} E]
 include 𝒞 𝒟 ℰ
 
-definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
+definition comp (F : C ↝ D) (G : D ↝ E) : C ↝ E := 
 { onObjects     := λ X, G +> (F +> X),
   onMorphisms   := λ _ _ f, G &> (F &> f),
   identities    := begin 
@@ -77,19 +81,20 @@ definition FunctorComposition (F : C ↝ D) (G : D ↝ E) : C ↝ E :=
                      intros,
                      simp at *
                    end }
-infixr ` ⋙ `:80 := FunctorComposition
+infixr ` ⋙ `:80 := comp
 
-@[simp] lemma FunctorComposition.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) +> X = G +> (F +> X) := 
+@[simp] lemma comp.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) +> X = G +> (F +> X) := 
 begin
   -- `obviously'` says:
   refl
 end
 
-@[simp] lemma FunctorComposition.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := 
+@[simp] lemma comp.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := 
 begin
   -- `obviously'` says:
   refl
 end
 end
+end Functor
 
 end categories.functor

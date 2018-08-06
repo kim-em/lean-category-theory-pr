@@ -6,7 +6,7 @@ import ..natural_transformation
 
 open categories
 open categories.functor
-open categories.natural_transformation
+open categories
 
 namespace categories.functor_categories
 
@@ -15,26 +15,26 @@ universes u₁ v₁ u₂ v₂ u₃ v₃
 section
 instance FunctorCategory (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₂) [category.{u₂ v₂} D] : category.{(max u₁ v₁ u₂ v₂) (max u₁ v₂)} (C ↝ D) := 
 { Hom            := λ F G, F ⟹ G,
-  identity       := λ F, IdentityNaturalTransformation F,
+  identity       := λ F, NaturalTransformation.id F,
   compose        := λ _ _ _ α β, α ⊟ β,
   left_identity  := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      apply NaturalTransformation.componentwise_equal,
                       intros,
                       simp
                     end,
   right_identity := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      apply NaturalTransformation.componentwise_equal,
                       intros,
                       simp
                     end,
   associativity  := begin
                       -- `obviously'` says:
                       intros,
-                      apply categories.natural_transformation.NaturalTransformations_componentwise_equal,
+                      apply NaturalTransformation.componentwise_equal,
                       intros,
                       simp
                     end }
