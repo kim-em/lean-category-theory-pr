@@ -5,8 +5,6 @@
 import categories.universal.instances
 
 open categories
-open categories.functor
-open categories.isomorphism
 open categories.initial
 open categories.types
 

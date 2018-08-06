@@ -10,8 +10,6 @@ import ..natural_transformation
 namespace categories.types
 
 open categories
-open categories.isomorphism
-open categories.functor
 
 universes u v w
 

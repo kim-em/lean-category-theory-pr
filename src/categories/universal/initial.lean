@@ -7,7 +7,6 @@ import ..functor_categories
 import ..opposites
 
 open categories
-open categories.isomorphism
 
 namespace categories.initial
 

@@ -5,8 +5,6 @@
 import .cones
 
 open categories
-open categories.functor
-open categories.isomorphism
 open categories.initial
 open categories.types
 

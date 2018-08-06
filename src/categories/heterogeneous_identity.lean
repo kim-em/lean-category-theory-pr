@@ -5,9 +5,6 @@ universes u v
 
 namespace categories
 
-open categories.isomorphism
-open categories.functor
-
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 

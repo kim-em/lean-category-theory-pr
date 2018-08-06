@@ -6,7 +6,6 @@ import .initial
 import ..functor
 
 open categories
-open categories.functor
 open categories.initial
 
 namespace categories.universal

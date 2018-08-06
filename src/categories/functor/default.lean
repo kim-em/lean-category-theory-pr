@@ -7,7 +7,7 @@ import ..tactics
 
 open categories
 
-namespace categories.functor
+namespace categories
  
 universes u₁ v₁ u₂ v₂ u₃ v₃
 
@@ -97,4 +97,4 @@ end
 end
 end Functor
 
-end categories.functor
+end categories

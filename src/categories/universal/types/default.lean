@@ -2,7 +2,7 @@ import ...types
 import ..instances
 
 open categories.universal
-open categories.isomorphism
+
 namespace categories.types
 
 universe u
@@ -144,7 +144,7 @@ begin
     solve_by_elim },
   { refl },
   { solve_by_elim },
-  { solve_by_elim {discharger := `[cc]} }, -- FIXME shouldn't need cc?
+  { erw [h_ih_a, h_ih_a_1] }
 end
 
 instance Types_has_Coequalizers : has_Coequalizers.{u+1 u} (Type u) := 

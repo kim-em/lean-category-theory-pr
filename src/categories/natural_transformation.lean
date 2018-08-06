@@ -5,7 +5,6 @@
 import .functor
 
 open categories
-open categories.functor
 
 namespace categories
 
@@ -26,11 +25,11 @@ attribute [ematch] NaturalTransformation.naturality_lemma
 
 infixr ` ⟹ `:50  := NaturalTransformation             -- type as \==>
 
+namespace NaturalTransformation
+
 instance {F G : C ↝ D} : has_coe_to_fun (F ⟹ G) :=
 { F   := λ α, Π X : C, (F +> X) ⟶ (G +> X),
   coe := λ α, α.components }
-
-namespace NaturalTransformation
 
 definition id (F : C ↝ D) : F ⟹ F := 
 { components := λ X, 𝟙 (F +> X),
@@ -77,8 +76,6 @@ include ℰ
 
 instance (F : C ↝ D) : has_one (F ⟹ F) := 
 { one := id F }
-
-open categories.functor
 
 definition hcomp
   {F G : C ↝ D}

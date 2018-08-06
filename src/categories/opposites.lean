@@ -6,18 +6,13 @@ import .functor
 import .products
 import .types
 
-open categories
-open categories.functor
-open categories.products
-open categories.types
-
-namespace categories.opposites
+namespace categories
 
 universes u₁ v₁ u₂ v₂
 
-def op (C : Type u₁) : Type u₁ := C
+def Opposite.op (C : Type u₁) : Type u₁ := C
 
-notation C `ᵒᵖ` := op C
+notation C `ᵒᵖ` := Opposite.op C
 
 section
 variable {C : Type u₁}
@@ -108,4 +103,4 @@ definition HomPairing (C : Type u₁) [category.{u₁ v₁} C] : Functor (Cᵒ�
                       erw [category.associativity_lemma]
                    end }
 
-end categories.opposites
+end categories

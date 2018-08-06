@@ -4,15 +4,10 @@
 
 import ..natural_transformation
 
-open categories
-open categories.functor
-open categories
-
-namespace categories.functor_categories
+namespace categories
 
 universes u₁ v₁ u₂ v₂ u₃ v₃
 
-section
 instance FunctorCategory (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₂) [category.{u₂ v₂} D] : category.{(max u₁ v₁ u₂ v₂) (max u₁ v₂)} (C ↝ D) := 
 { Hom            := λ F G, F ⟹ G,
   identity       := λ F, NaturalTransformation.id F,
@@ -38,22 +33,22 @@ instance FunctorCategory (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₂
                       intros,
                       simp
                     end }
-end
 
+namespace FunctorCategory
 
 section
 variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C] {D : Type u₂} [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
-@[simp,ematch] lemma FunctorCategory.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F) X = 𝟙 (F +> X) := by refl
-@[simp,ematch] lemma FunctorCategory.compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H) X = (α : F ⟹ G) X ≫ (β : G ⟹ H) X := by refl
+@[simp,ematch] lemma identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F) X = 𝟙 (F +> X) := by refl
+@[simp,ematch] lemma compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H) X = (α : F ⟹ G) X ≫ (β : G ⟹ H) X := by refl
 end
 
 section
 variables {C : Type (u₁+1)} [large_category C] {D : Type (u₂+1)} [large_category D] {E : Type (u₃+1)} [large_category E]
 -- TODO Are these used?
-@[simp,ematch] lemma FunctorCategory_large.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F) X = 𝟙 (F +> X) := by refl
-@[simp,ematch] lemma FunctorCategory_large.compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H) X = (α : F ⟹ G) X ≫ (β : G ⟹ H) X:= by refl
+@[simp,ematch] lemma large_identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F) X = 𝟙 (F +> X) := by refl
+@[simp,ematch] lemma large_compose.components {F G H : C ↝ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) : ((α ≫ β) : F ⟹ H) X = (α : F ⟹ G) X ≫ (β : G ⟹ H) X:= by refl
 
 @[ematch] lemma NaturalTransformation_to_FunctorCategory.components_naturality
   {F G : C ↝ (D ↝ E)} (T : F ⟹ G) (X : C) {Y Z : D} (f : Y ⟶ Z)
@@ -76,4 +71,5 @@ begin
 end
 end
 
-end categories.functor_categories
+end FunctorCategory
+end categories

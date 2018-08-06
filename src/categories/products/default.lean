@@ -3,11 +3,7 @@
 -- Authors: Stephen Morgan, Scott Morrison
 import ..functor_categories
 
-open categories
-open categories.functor
-open categories.functor_categories
-
-namespace categories.products
+namespace categories
 
 universes u₁ v₁ u₂ v₂ u₃ v₃ u₄ v₄
 
@@ -47,6 +43,8 @@ instance ProductCategory : category.{(max u₁ u₂) (max v₁ v₂)} (C × D) :
                     end }     
 end 
 
+namespace ProductCategory
+
 section
 variable {C : Type u₁}
 variable [𝒞 : category.{u₁ v₁} C]
@@ -65,9 +63,11 @@ variable (D : Type u₁)
 variable [𝒟 : category.{u₁ v₁} D]
 include 𝒞 𝒟
 
-instance ProductCategory_uniform : category.{u₁ v₁} (C × D) := products.ProductCategory C D
+-- TODO rename?
+instance ProductCategory_uniform : category.{u₁ v₁} (C × D) := categories.ProductCategory C D
 
 -- TOOD these are probably unnecessary
+-- TODO rename?
 @[simp,ematch] lemma ProductCategory_uniform.identity (X : C) (Y : D) : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
 @[simp,ematch] lemma ProductCategory_uniform.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
 end
@@ -130,7 +130,8 @@ definition RightProjection (C : Type u₁) [category.{u₁ v₁} C] (Z : C) (D :
                      refl
                    end }
 
-section
+end ProductCategory
+
 variables {A : Type u₁}
  [𝒜 : category.{u₁ v₁} A]
  {B : Type u₂}
@@ -169,8 +170,10 @@ definition ProductFunctor
 
 notation F `×` G := ProductFunctor F G
 
-@[simp,ematch] lemma ProductFunctor.onObjects   (F : A ↝ B) (G : C ↝ D) (a : A) (c : C) : (F × G) +> (a, c) = (F +> a, G +> c) := by refl
-@[simp,ematch] lemma ProductFunctor.onMorphisms (F : A ↝ B) (G : C ↝ D) {a a' : A} {c c' : C} (f : (a, c) ⟶ (a', c')) : (F × G).onMorphisms f = (F &> f.1, G &> f.2) := by refl
+namespace ProductFunctor
+@[simp,ematch] lemma onObjects   (F : A ↝ B) (G : C ↝ D) (a : A) (c : C) : (F × G) +> (a, c) = (F +> a, G +> c) := by refl
+@[simp,ematch] lemma onMorphisms (F : A ↝ B) (G : C ↝ D) {a a' : A} {c c' : C} (f : (a, c) ⟶ (a', c')) : (F × G).onMorphisms f = (F &> f.1, G &> f.2) := by refl
+end ProductFunctor
 
 definition ProductNaturalTransformation 
 {F G : A ↝ B} {H I : C ↝ D} (α : F ⟹ G) (β : H ⟹ I) : (F × H) ⟹ (G × I) :=
@@ -191,6 +194,5 @@ definition ProductNaturalTransformation
                 end }
 
 notation α `×` β := ProductNaturalTransformation α β
-end
 
-end categories.products
+end categories
