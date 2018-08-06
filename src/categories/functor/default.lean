@@ -29,7 +29,7 @@ instance {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u�
 
 namespace Functor
 
-@[simp] lemma simplify_coercion {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u₂ v₂} D] (F : C ↝ D) (X : C) : F X = F +> X := by refl
+@[simp] lemma unfold_coercion {C : Type u₁} [category.{u₁ v₁} C] {D : Type u₂} [category.{u₂ v₂} D] (F : C ↝ D) (X : C) : F X = F +> X := rfl
 
 definition id (C : Type u₁) [category.{u₁ v₁} C] : C ↝ C := 
 { onObjects     := id,
@@ -53,8 +53,8 @@ variable {C : Type u₁}
 variable [𝒞 : category.{u₁ v₁} C]
 include 𝒞
 
-@[simp] lemma id.onObjects (X : C) : (id C) +> X = X := by refl
-@[simp] lemma id.onMorphisms {X Y : C} (f : X ⟶ Y) : (id C) &> f = f := by refl
+@[simp] lemma id.onObjects (X : C) : (id C) +> X = X := rfl
+@[simp] lemma id.onMorphisms {X Y : C} (f : X ⟶ Y) : (id C) &> f = f := rfl
 end
 
 section

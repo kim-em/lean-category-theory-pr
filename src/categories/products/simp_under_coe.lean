@@ -19,7 +19,7 @@ instance ProductCategory : category (C × D) :=
 { Hom            := λ X Y, ((X.1) ⟶ (Y.1)) × ((X.2) ⟶ (Y.2)),
   identity       := λ X, ⟨ 𝟙 (X.1), 𝟙 (X.2) ⟩ }    
 
-@[simp] lemma ProductCategory.identity (X : C) (Y : D) : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
+@[simp] lemma ProductCategory.identity (X : C) (Y : D) : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := rfl
 
 structure Functor  :=
 (onObjects     : C → D)
@@ -50,7 +50,7 @@ instance FunctorCategory : category (C ↝ D) :=
 { Hom            := λ F G, F ⟹ G,
   identity       := λ F, IdentityNaturalTransformation F }
 
-@[simp] lemma FunctorCategory.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F) X = 𝟙 (F +> X) := by refl
+@[simp] lemma FunctorCategory.identity.components (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F) X = 𝟙 (F +> X) := rfl
 
 lemma test (E : Type u) [ℰ : category E] (X : C) (Y : D) (F : C ↝ (D ↝ E)) : (F &> (prod.fst (𝟙 (X, Y)))) Y = 𝟙 ((F +> X) +> Y) :=
 begin
@@ -77,7 +77,7 @@ begin
 end
 
 -- We can define an alternative version of that @[simp] lemma, with the coercion removed. 
-@[simp] lemma FunctorCategory.identity.components' (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F).components X = 𝟙 (F +> X) := by refl
+@[simp] lemma FunctorCategory.identity.components' (F : C ↝ D) (X : C) : (𝟙 F : F ⟹ F).components X = 𝟙 (F +> X) := rfl
 
 lemma test'' (E : Type u) [ℰ : category E] (X : C) (Y : D) (F : C ↝ (D ↝ E)) : (F &> (prod.fst (𝟙 (X, Y)))) Y = 𝟙 ((F +> X) +> Y) :=
 begin

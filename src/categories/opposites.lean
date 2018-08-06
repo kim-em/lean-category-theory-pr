@@ -99,7 +99,6 @@ definition HomPairing (C : Type u₁) [category.{u₁ v₁} C] : Functor (Cᵒ�
                       dsimp,
                       dsimp at *,
                       simp,
-                      dsimp,
                       erw [category.associativity_lemma]
                    end }
 

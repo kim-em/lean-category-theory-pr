@@ -33,9 +33,9 @@ instance CategoryOfTypes : large_category (Type u) :=
                      refl
                    end }
 
-@[simp] lemma Types.Hom {α β : Type u} : (α ⟶ β) = (α → β) := by refl  
-@[simp] lemma Types.identity {α : Type u} (a : α) : (𝟙 α : α → α) a = a := by refl
-@[simp] lemma Types.compose {α β γ : Type u} (f : α → β) (g : β → γ) (a : α) : (((f : α ⟶ β) ≫ (g : β ⟶ γ)) : α ⟶ γ) a = g (f a) := by refl
+@[simp] lemma Types.Hom {α β : Type u} : (α ⟶ β) = (α → β) := rfl  
+@[simp] lemma Types.identity {α : Type u} (a : α) : (𝟙 α : α → α) a = a := rfl
+@[simp] lemma Types.compose {α β γ : Type u} (f : α → β) (g : β → γ) (a : α) : (((f : α ⟶ β) ≫ (g : β ⟶ γ)) : α ⟶ γ) a = g (f a) := rfl
 
 variables {C : Type (v+1)} [large_category C] (F G H : C ↝ (Type u)) {X Y Z : C} 
 variables (σ : F ⟹ G) (τ : G ⟹ H) 

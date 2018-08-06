@@ -58,8 +58,8 @@ definition refl (X : C) : Isomorphism X X :=
                end }
 
 -- TODO maybe these can have ematch?
-@[simp] lemma refl.morphism (X : C) : (Isomorphism.refl X).morphism = 𝟙 X := by refl
-@[simp] lemma refl.inverse  (X : C) : (Isomorphism.refl X).inverse  = 𝟙 X := by refl
+@[simp] lemma refl.morphism (X : C) : (Isomorphism.refl X).morphism = 𝟙 X := rfl
+@[simp] lemma refl.inverse  (X : C) : (Isomorphism.refl X).inverse  = 𝟙 X := rfl
 
 definition trans (α : Isomorphism X Y) (β : Isomorphism Y Z) : Isomorphism X Z := 
 { morphism  := α.morphism ≫ β.morphism,
@@ -75,8 +75,8 @@ definition trans (α : Isomorphism X Y) (β : Isomorphism Y Z) : Isomorphism X Z
 
 infixr ` ♢ `:80 := Isomorphism.trans -- type as \diamonds
 
-@[simp,ematch] lemma trans.morphism (α : Isomorphism X Y) (β : Isomorphism Y Z) : (α ♢ β).morphism = α.morphism ≫ β.morphism := by refl
-@[simp,ematch] lemma trans.inverse  (α : Isomorphism X Y) (β : Isomorphism Y Z) : (α ♢ β).inverse  = β.inverse ≫ α.inverse   := by refl
+@[simp,ematch] lemma trans.morphism (α : Isomorphism X Y) (β : Isomorphism Y Z) : (α ♢ β).morphism = α.morphism ≫ β.morphism := rfl
+@[simp,ematch] lemma trans.inverse  (α : Isomorphism X Y) (β : Isomorphism Y Z) : (α ♢ β).inverse  = β.inverse ≫ α.inverse   := rfl
 
 @[extensionality] lemma pointwise_equal
   (α β : Isomorphism X Y)
@@ -198,8 +198,8 @@ definition onIsomorphisms (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F +> X) ≅ (
 { morphism := F &> i.morphism,
   inverse  := F &> i.inverse }
 
-@[simp,ematch] lemma onIsomorphisms.morphism (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.onIsomorphisms i).morphism = F &> i.morphism := by refl
-@[simp,ematch] lemma onIsomorphisms.inverse  (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.onIsomorphisms i).morphism = F &> i.morphism := by refl
+@[simp,ematch] lemma onIsomorphisms.morphism (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.onIsomorphisms i).morphism = F &> i.morphism := rfl
+@[simp,ematch] lemma onIsomorphisms.inverse  (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.onIsomorphisms i).morphism = F &> i.morphism := rfl
 
 end Functor
 

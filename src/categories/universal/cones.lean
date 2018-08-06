@@ -83,8 +83,8 @@ instance Cones (F : J ↝ C) : category.{(max u v) v} (Cone F) :=
                       simp
                     end }
 
-@[simp] lemma Cones.identity.cone_morphism {F : J ↝ C} (c : Cone F) : (𝟙 c : ConeMorphism c c).cone_morphism = 𝟙 (c.cone_point) := by refl
-@[simp] lemma Cones.compose.cone_morphism {F : J ↝ C} {c d e : Cone F} (f : c ⟶ d) (g : d ⟶ e) : ((f ≫ g) : ConeMorphism c e).cone_morphism = (f : ConeMorphism c d).cone_morphism ≫ (g : ConeMorphism d e).cone_morphism := by refl
+@[simp] lemma Cones.identity.cone_morphism {F : J ↝ C} (c : Cone F) : (𝟙 c : ConeMorphism c c).cone_morphism = 𝟙 (c.cone_point) := rfl
+@[simp] lemma Cones.compose.cone_morphism {F : J ↝ C} {c d e : Cone F} (f : c ⟶ d) (g : d ⟶ e) : ((f ≫ g) : ConeMorphism c e).cone_morphism = (f : ConeMorphism c d).cone_morphism ≫ (g : ConeMorphism d e).cone_morphism := rfl
 
 section
 variables {D : Type u} [𝒟 : category.{u v} D]
@@ -189,8 +189,8 @@ instance Cocones (F : J ↝ C) : category.{(max u v) v} (Cocone F) :=
                       simp
                     end }
 
-@[simp] lemma Cocones.identity.cone_morphism {F : J ↝ C} (c : Cocone F) : (𝟙 c : CoconeMorphism c c).cocone_morphism = 𝟙 (c.cocone_point) := by refl
-@[simp] lemma Cocones.compose.cone_morphism {F : J ↝ C} {c d e : Cocone F} (f : c ⟶ d) (g : d ⟶ e) : ((f ≫ g) : CoconeMorphism c e).cocone_morphism = (f : CoconeMorphism c d).cocone_morphism ≫ (g : CoconeMorphism d e).cocone_morphism := by refl
+@[simp] lemma Cocones.identity.cone_morphism {F : J ↝ C} (c : Cocone F) : (𝟙 c : CoconeMorphism c c).cocone_morphism = 𝟙 (c.cocone_point) := rfl
+@[simp] lemma Cocones.compose.cone_morphism {F : J ↝ C} {c d e : Cocone F} (f : c ⟶ d) (g : d ⟶ e) : ((f ≫ g) : CoconeMorphism c e).cocone_morphism = (f : CoconeMorphism c d).cocone_morphism ≫ (g : CoconeMorphism d e).cocone_morphism := rfl
 
 section
 variables {D : Type u} [𝒟 : category.{u v} D]

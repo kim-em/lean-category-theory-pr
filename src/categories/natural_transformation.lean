@@ -29,6 +29,8 @@ instance {F G : C ↝ D} : has_coe_to_fun (F ⟹ G) :=
 { F   := λ α, Π X : C, (F +> X) ⟶ (G +> X),
   coe := λ α, α.components }
 
+@[simp] lemma unfold_coercion {F G : C ↝ D} (α : F ⟹ G) (X : C) : α X = α.components X := rfl
+
 definition id (F : C ↝ D) : F ⟹ F := 
 { components := λ X, 𝟙 (F +> X),
   naturality := begin
@@ -37,7 +39,7 @@ definition id (F : C ↝ D) : F ⟹ F :=
                   simp
                 end }
 
-@[simp] lemma id.components (F : C ↝ D) (X : C) : (id F) X = 𝟙 (F +> X) := by refl
+@[simp] lemma id.components (F : C ↝ D) (X : C) : (id F) X = 𝟙 (F +> X) := rfl
 
 variables {F G H : C ↝ D}
 
@@ -47,13 +49,12 @@ definition vcomp (α : F ⟹ G) (β : G ⟹ H) : F ⟹ H :=
                   -- `obviously'` says:
                   intros,
                   simp at *,
-                  unfold_coes,
-                  erw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma],
+                  rw [←category.associativity_lemma, NaturalTransformation.naturality_lemma, category.associativity_lemma, ←NaturalTransformation.naturality_lemma],
                 end }
 
 notation α `⊟` β:80 := vcomp α β    
 
-@[simp] lemma vcomp.components (α : F ⟹ G) (β : G ⟹ H) (X : C) : (α ⊟ β) X = (α X) ≫ (β X) := by refl
+@[simp] lemma vcomp.components (α : F ⟹ G) (β : G ⟹ H) (X : C) : (α ⊟ β) X = (α X) ≫ (β X) := rfl
 -- local attribute [ematch] vertical_composition_of_NaturalTransformations.components 
 
 -- We'll want to be able to prove that two natural transformations are equal if they are componentwise equal.
@@ -85,7 +86,6 @@ definition hcomp
                   -- `obviously'` says:
                   intros,
                   simp at *,
-                  unfold_coes,
                   -- Actually, obviously doesn't use exactly this sequence of rewrites, but achieves the same result
                   rw [← category.associativity_lemma],
                   rw [NaturalTransformation.naturality_lemma],
@@ -100,7 +100,7 @@ notation α `◫` β:80 := hcomp α β
 @[simp] lemma hcomp.components {F G : C ↝ D}
   {H I : D ↝ E}
   (α : F ⟹ G)
-  (β : H ⟹ I) (X : C) : (α ◫ β) X = (β (F +> X)) ≫ (I &> (α X)) := by refl
+  (β : H ⟹ I) (X : C) : (α ◫ β) X = (β (F +> X)) ≫ (I &> (α X)) := rfl
 
 @[ematch] lemma exchange
   {F G H : C ↝ D}
@@ -112,7 +112,6 @@ notation α `◫` β:80 := hcomp α β
     apply componentwise_equal,
     intros,
     simp at *,
-    unfold_coes,
     -- again, this isn't actually what obviously says, but it achieves the same effect.
     conv {to_lhs, congr, skip, rw [←category.associativity_lemma] },
     rw [←NaturalTransformation.naturality_lemma],

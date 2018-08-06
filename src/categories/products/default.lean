@@ -52,8 +52,8 @@ variable {D : Type u₂}
 variable [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
-@[simp,ematch] lemma ProductCategory.identity (X : C) (Y : D) : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
-@[simp,ematch] lemma ProductCategory.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
+@[simp,ematch] lemma ProductCategory.identity (X : C) (Y : D) : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := rfl
+@[simp,ematch] lemma ProductCategory.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := rfl
 end
 
 section
@@ -68,8 +68,8 @@ instance ProductCategory_uniform : category.{u₁ v₁} (C × D) := category_the
 
 -- TOOD these are probably unnecessary
 -- TODO rename?
-@[simp,ematch] lemma ProductCategory_uniform.identity (X : C) (Y : D) : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := by refl
-@[simp,ematch] lemma ProductCategory_uniform.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := by refl
+@[simp,ematch] lemma ProductCategory_uniform.identity (X : C) (Y : D) : 𝟙 (X, Y) = (𝟙 X, 𝟙 Y) := rfl
+@[simp,ematch] lemma ProductCategory_uniform.compose {P Q R : C} {S T U : D} (f : (P, S) ⟶ (Q, T)) (g : (Q, T) ⟶ (R, U)) : f ≫ g = (f.1 ≫ g.1, f.2 ≫ g.2) := rfl
 end
 
 definition RightInjectionAt (C : Type u₁) [category.{u₁ v₁} C] {D : Type u₁} [category.{u₁ v₁} D] (Z : D) : C ↝ (C × D) := 
@@ -153,7 +153,6 @@ definition ProductFunctor
                      dsimp,
                      erw Functor.identities_lemma, 
                      erw Functor.identities_lemma,
-                     refl,
                    end,
   functoriality := begin
                      -- `obviously'` says (something equivalent to):
@@ -165,14 +164,13 @@ definition ProductFunctor
                      dsimp at *,
                      erw Functor.functoriality_lemma,
                      erw Functor.functoriality_lemma,
-                     refl
                    end }
 
 notation F `×` G := ProductFunctor F G
 
 namespace ProductFunctor
-@[simp,ematch] lemma onObjects   (F : A ↝ B) (G : C ↝ D) (a : A) (c : C) : (F × G) +> (a, c) = (F +> a, G +> c) := by refl
-@[simp,ematch] lemma onMorphisms (F : A ↝ B) (G : C ↝ D) {a a' : A} {c c' : C} (f : (a, c) ⟶ (a', c')) : (F × G).onMorphisms f = (F &> f.1, G &> f.2) := by refl
+@[simp,ematch] lemma onObjects   (F : A ↝ B) (G : C ↝ D) (a : A) (c : C) : (F × G) +> (a, c) = (F +> a, G +> c) := rfl
+@[simp,ematch] lemma onMorphisms (F : A ↝ B) (G : C ↝ D) {a a' : A} {c c' : C} (f : (a, c) ⟶ (a', c')) : (F × G).onMorphisms f = (F &> f.1, G &> f.2) := rfl
 end ProductFunctor
 
 definition ProductNaturalTransformation 
@@ -185,11 +183,8 @@ definition ProductNaturalTransformation
                   dsimp,
                   dsimp at *,
                   simp,
-                  dsimp,
                   fsplit,
-                  unfold_coes,
                   erw [NaturalTransformation.naturality_lemma],
-                  unfold_coes,
                   erw [NaturalTransformation.naturality_lemma],
                 end }
 
