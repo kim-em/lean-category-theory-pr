@@ -81,17 +81,9 @@ definition comp (F : C ↝ D) (G : D ↝ E) : C ↝ E :=
                    end }
 infixr ` ⋙ `:80 := comp
 
-@[simp] lemma comp.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) +> X = G +> (F +> X) := 
-begin
-  -- `obviously'` says:
-  refl
-end
+@[simp] lemma comp.onObjects (F : C ↝ D) (G : D ↝ E) (X : C) : (F ⋙ G) +> X = G +> (F +> X) := rfl
 
-@[simp] lemma comp.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := 
-begin
-  -- `obviously'` says:
-  refl
-end
+@[simp] lemma comp.onMorphisms (F : C ↝ D) (G : D ↝ E) (X Y: C) (f : X ⟶ Y) : (F ⋙ G) &> f = G.onMorphisms (F &> f) := rfl
 end
 end Functor
 

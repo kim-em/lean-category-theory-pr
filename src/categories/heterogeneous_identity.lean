@@ -15,10 +15,7 @@ begin
   exact (Isomorphism.refl Y),
 end
 
-@[simp,ematch] lemma eq_to_iso.refl (X : C) : eq_to_iso (eq.refl X) = (Isomorphism.refl X) :=
-begin
-  refl,
-end
+@[simp,ematch] lemma eq_to_iso.refl (X : C) : eq_to_iso (eq.refl X) = (Isomorphism.refl X) := rfl
 
 @[simp,ematch] lemma eq_to_iso.trans {X Y Z : C} (p : X = Y) (q : Y = Z) : (eq_to_iso p) ♢ (eq_to_iso q) = eq_to_iso (p.trans q) :=
 begin
