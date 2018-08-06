@@ -17,6 +17,7 @@ instance FunctorCategory (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₂
                       intros,
                       apply NaturalTransformation.componentwise_equal,
                       intros,
+                      dsimp,
                       simp
                     end,
   right_identity := begin
@@ -24,6 +25,7 @@ instance FunctorCategory (C : Type u₁) [category.{u₁ v₁} C] (D : Type u₂
                       intros,
                       apply NaturalTransformation.componentwise_equal,
                       intros,
+                      dsimp,
                       simp
                     end,
   associativity  := begin

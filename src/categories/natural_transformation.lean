@@ -15,7 +15,7 @@ variable [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
 structure NaturalTransformation (F G : C ↝ D) : Type (max u₁ v₂) :=
-(components: Π X : C, (F +> X) ⟶ (G +> X))
+(components: Π X : C, (F X) ⟶ (G X))
 (naturality: ∀ {X Y : C} (f : X ⟶ Y), (F &> f) ≫ (components Y) = (components X) ≫ (G &> f) . obviously)
 
 make_lemma NaturalTransformation.naturality
@@ -39,7 +39,7 @@ definition id (F : C ↝ D) : F ⟹ F :=
                   simp
                 end }
 
-@[simp] lemma id.components (F : C ↝ D) (X : C) : (id F) X = 𝟙 (F +> X) := rfl
+@[simp] lemma id.components (F : C ↝ D) (X : C) : (id F) X = 𝟙 (F X) := rfl
 
 variables {F G H : C ↝ D}
 
@@ -81,10 +81,11 @@ definition hcomp
   {H I : D ↝ E}
   (α : F ⟹ G)
   (β : H ⟹ I) : (F ⋙ H) ⟹ (G ⋙ I) :=
-{ components := λ X : C, (β (F +> X)) ≫ (I &> (α X)), 
+{ components := λ X : C, (β (F X)) ≫ (I &> (α X)), 
   naturality := begin
                   -- `obviously'` says:
                   intros,
+                  dsimp at *,
                   simp at *,
                   -- Actually, obviously doesn't use exactly this sequence of rewrites, but achieves the same result
                   rw [← category.associativity_lemma],
@@ -97,24 +98,17 @@ definition hcomp
 
 notation α `◫` β:80 := hcomp α β
 
-@[simp] lemma hcomp.components {F G : C ↝ D}
-  {H I : D ↝ E}
-  (α : F ⟹ G)
-  (β : H ⟹ I) (X : C) : (α ◫ β) X = (β (F +> X)) ≫ (I &> (α X)) := rfl
+@[simp] lemma hcomp.components {F G : C ↝ D} {H I : D ↝ E} (α : F ⟹ G) (β : H ⟹ I) (X : C) : (α ◫ β) X = (β (F X)) ≫ (I &> (α X)) := rfl
 
-@[ematch] lemma exchange
-  {F G H : C ↝ D}
-  {I J K : D ↝ E}
-  (α : F ⟹ G) (β : G ⟹ H) (γ : I ⟹ J) (δ : J ⟹ K) : ((α ⊟ β) ◫ (γ ⊟ δ)) = ((α ◫ γ) ⊟ (β ◫ δ)) := 
+@[ematch] lemma exchange {F G H : C ↝ D} {I J K : D ↝ E} (α : F ⟹ G) (β : G ⟹ H) (γ : I ⟹ J) (δ : J ⟹ K) : ((α ⊟ β) ◫ (γ ⊟ δ)) = ((α ◫ γ) ⊟ (β ◫ δ)) := 
   begin
-  -- obviously',
     -- `obviously'` says:
-    apply componentwise_equal,
-    intros,
+    ext,
+    dsimp at *,
     simp at *,
     -- again, this isn't actually what obviously says, but it achieves the same effect.
     conv {to_lhs, congr, skip, rw [←category.associativity_lemma] },
-    rw [←NaturalTransformation.naturality_lemma],
+    rw [←naturality_lemma],
     rw [category.associativity_lemma],
   end
 
