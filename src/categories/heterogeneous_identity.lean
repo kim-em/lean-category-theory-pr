@@ -1,4 +1,8 @@
-import .functor
+-- Copyright (c) 2018 Scott Morrison. All rights reserved.
+-- Released under Apache 2.0 license as described in the file LICENSE.
+-- Authors: Scott Morrison
+
+import category_theory.functor
 import .isomorphism
 
 universes u v
@@ -21,15 +25,15 @@ end
 begin /- obviously' says: -/ ext, induction q, induction p, dsimp at *, simp at * end
 end
 
-namespace Functor
+namespace functor
 
 universes u₁ v₁ u₂ v₂
 
 variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C] {D : Type u₂} [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
-@[simp,ematch] lemma eq_to_iso (F : C ↝ D) {X Y : C} (p : X = Y) : F.on_isos (eq_to_iso p) = eq_to_iso (congr_arg F.onObjects p) :=
+@[simp,ematch] lemma eq_to_iso (F : C ↝ D) {X Y : C} (p : X = Y) : F.on_isos (eq_to_iso p) = eq_to_iso (congr_arg F.obj p) :=
 begin /- obviously says: -/ ext, induction p, dsimp at *, simp at * end
-end Functor
+end functor
 end category_theory
 

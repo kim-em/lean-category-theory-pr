@@ -2,8 +2,10 @@
 -- Released under Apache 2.0 license as described in the file LICENSE.
 -- Authors: Tim Baumann, Stephen Morgan, Scott Morrison
 
-import .category
-import .functor
+import category_theory.category
+import category_theory.functor
+
+import .tactics
 
 universes u v
 
@@ -15,8 +17,8 @@ structure iso {C : Type u} [category.{u v} C] (X Y : C) :=
 (map_inv_id : map ≫ inv = 𝟙 X . obviously)
 (inv_map_id : inv ≫ map = 𝟙 Y . obviously)
 
-make_lemma iso.map_inv_id
-make_lemma iso.inv_map_id
+restate_axiom iso.map_inv_id
+restate_axiom iso.inv_map_id
 attribute [simp,ematch] iso.map_inv_id_lemma iso.inv_map_id_lemma
 
 infixr ` ≅ `:10  := iso             -- type as \cong
@@ -33,16 +35,16 @@ instance : has_coe (iso.{u v} X Y) (X ⟶ Y) :=
 
 -- These lemmas are quite common, to help us avoid having to muck around with associativity.
 -- If anyone has a suggestion for automating them away, I would be very appreciative.
-@[simp,ematch] lemma witness_1_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.map ≫ I.inv ≫ f = f := 
+@[simp,ematch] lemma map_inv_id_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.map ≫ I.inv ≫ f = f := 
 begin
   -- `obviously'` says:
-  rw [←category.associativity_lemma, iso.map_inv_id_lemma, category.left_identity_lemma]
+  rw [←category.assoc_lemma, iso.map_inv_id_lemma, category.id_comp_lemma]
 end
 
-@[simp,ematch] lemma witness_2_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inv ≫ I.map ≫ f = f := 
+@[simp,ematch] lemma inv_map_id_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inv ≫ I.map ≫ f = f := 
 begin
   -- `obviously'` says:
-  rw [←category.associativity_lemma, iso.inv_map_id_lemma, category.left_identity_lemma]
+  rw [←category.assoc_lemma, iso.inv_map_id_lemma, category.id_comp_lemma]
 end
 
 definition refl (X : C) : X ≅ X := 
@@ -77,7 +79,7 @@ infixr ` ♢ `:80 := iso.trans -- type as \diamonds
       begin
         induction w,
         dsimp at *,
-        rw [← category.left_identity_lemma C k, ←wα2, category.associativity_lemma, wβ1, category.right_identity_lemma]
+        rw [← category.id_comp_lemma C k, ←wα2, category.assoc_lemma, wβ1, category.comp_id_lemma]
       end,
     -- `obviously'` says:
     induction p, induction w,
@@ -93,18 +95,20 @@ definition symm (I : X ≅ Y) : Y ≅ X :=
 end iso
 
 class is_iso (f : X ⟶ Y) :=
-  (inv : Y ⟶ X)
-  (map_inv_id : f ≫ inv = 𝟙 X . obviously)
-  (inv_map_id : inv ≫ f = 𝟙 Y . obviously)
+(inv : Y ⟶ X)
+(map_inv_id : f ≫ inv = 𝟙 X . obviously)
+(inv_map_id : inv ≫ f = 𝟙 Y . obviously)
 
-make_lemma is_iso.map_inv_id
-make_lemma is_iso.inv_map_id
+restate_axiom is_iso.map_inv_id
+restate_axiom is_iso.inv_map_id
 attribute [simp,ematch] is_iso.map_inv_id_lemma is_iso.inv_map_id_lemma
 
 namespace is_iso
 
 instance (X : C) : is_iso (𝟙 X) := 
-{ inv := 𝟙 X, }
+{ inv := 𝟙 X, 
+  map_inv_id := by obviously',
+  inv_map_id := by obviously' }
 
 instance of_iso         (f : X ≅ Y) : is_iso f.map :=
 { inv   := f.inv,
@@ -126,16 +130,16 @@ instance epi_of_iso  (f : X ⟶ Y) [is_iso f] : epi f  :=
 { left_cancellation := begin
                          -- This is an interesting test case for better rewrite automation.
                          intros,
-                         rw [←category.left_identity_lemma C g, ←category.left_identity_lemma C h],
+                         rw [←category.id_comp_lemma C g, ←category.id_comp_lemma C h],
                          rw [← is_iso.inv_map_id_lemma f],
-                         erw [category.associativity_lemma, w, category.associativity_lemma],
+                         erw [category.assoc_lemma, w, category.assoc_lemma],
                        end }
 instance mono_of_iso (f : X ⟶ Y) [is_iso f] : mono f := 
 { right_cancellation := begin
                          intros,
-                         rw [←category.right_identity_lemma C g, ←category.right_identity_lemma C h],
+                         rw [←category.comp_id_lemma C g, ←category.comp_id_lemma C h],
                          rw [← is_iso.map_inv_id_lemma f],
-                         erw [←category.associativity_lemma, w, ←category.associativity_lemma]
+                         erw [←category.assoc_lemma, w, ←category.assoc_lemma]
                        end }
 
 @[simp] lemma cancel_epi  (f : X ⟶ Y) [epi f]  (g h : Y ⟶ Z) : (f ≫ g = f ≫ h) ↔ g = h := 
@@ -143,7 +147,7 @@ instance mono_of_iso (f : X ⟶ Y) [is_iso f] : mono f :=
 @[simp] lemma cancel_mono (f : X ⟶ Y) [mono f] (g h : Z ⟶ X) : (g ≫ f = h ≫ f) ↔ g = h := 
 ⟨ λ p, mono.right_cancellation g h p, begin /- `obviously'` says: -/ intros, cases a, refl end ⟩
 
-namespace Functor
+namespace functor
 
 universes u₁ v₁ u₂ v₂ 
 variables {D : Type u₂}
@@ -151,13 +155,15 @@ variables {D : Type u₂}
 variables [𝒟 : category.{u₂ v₂} D]
 include 𝒟
 
-definition on_isos (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F +> X) ≅ (F +> Y) :=
-{ map := F &> i.map,
-  inv := F &> i.inv }
+definition on_isos (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F X) ≅ (F Y) :=
+{ map := F.map i.map,
+  inv := F.map i.inv,
+  map_inv_id := by obviously',
+  inv_map_id := by obviously' }
 
-@[simp,ematch] lemma on_isos_map (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.on_isos i).map = F &> i.map := rfl
-@[simp,ematch] lemma on_isos_inv (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.on_isos i).inv = F &> i.inv := rfl
+@[simp,ematch] lemma on_isos_map (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.on_isos i).map = F.map i.map := rfl
+@[simp,ematch] lemma on_isos_inv (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.on_isos i).inv = F.map i.inv := rfl
 
-end Functor
+end functor
 
 end category_theory

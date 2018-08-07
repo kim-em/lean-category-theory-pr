@@ -18,7 +18,7 @@ structure InitialObject (C : Type u) [category.{u v} C] :=
 (uniqueness_of_morphisms_from_initial_object : ∀ Y : C, ∀ f g : initial_object ⟶ Y, f = g . obviously)
 
 attribute [applicable] InitialObject.morphism_from_initial_object_to
-make_lemma InitialObject.uniqueness_of_morphisms_from_initial_object
+restate_axiom InitialObject.uniqueness_of_morphisms_from_initial_object
 attribute [applicable,ematch] InitialObject.uniqueness_of_morphisms_from_initial_object_lemma
 
 structure TerminalObject (C : Type u) [category.{u v} C]  :=
@@ -27,7 +27,7 @@ structure TerminalObject (C : Type u) [category.{u v} C]  :=
 (uniqueness_of_morphisms_to_terminal_object : ∀ Y : C, ∀ f g : Y ⟶ terminal_object, f = g . obviously)
 
 attribute [applicable] TerminalObject.morphism_to_terminal_object_from
-make_lemma TerminalObject.uniqueness_of_morphisms_to_terminal_object
+restate_axiom TerminalObject.uniqueness_of_morphisms_to_terminal_object
 attribute [applicable,ematch] TerminalObject.uniqueness_of_morphisms_to_terminal_object_lemma
 
 section

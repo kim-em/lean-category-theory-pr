@@ -4,7 +4,6 @@
 
 import tidy.at_least_one 
 import tidy.applicable
-import tidy.make_lemma
 import tidy.rewrite_all
 import tidy.injections
 import tidy.tidy
