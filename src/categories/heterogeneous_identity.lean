@@ -12,32 +12,24 @@ include 𝒞
 def eq_to_iso {X Y : C} (p : X = Y) : X ≅ Y :=
 begin
   rw p,
-  exact (Isomorphism.refl Y),
+  exact (iso.refl Y),
 end
 
-@[simp,ematch] lemma eq_to_iso.refl (X : C) : eq_to_iso (eq.refl X) = (Isomorphism.refl X) := rfl
+@[simp,ematch] lemma eq_to_iso_refl (X : C) : eq_to_iso (eq.refl X) = (iso.refl X) := rfl
 
-@[simp,ematch] lemma eq_to_iso.trans {X Y Z : C} (p : X = Y) (q : Y = Z) : (eq_to_iso p) ♢ (eq_to_iso q) = eq_to_iso (p.trans q) :=
-begin
-  induction p,
-  induction q,
-  tidy,
-end
+@[simp,ematch] lemma eq_to_iso_trans {X Y Z : C} (p : X = Y) (q : Y = Z) : (eq_to_iso p) ♢ (eq_to_iso q) = eq_to_iso (p.trans q) :=
+begin /- obviously' says: -/ ext, induction q, induction p, dsimp at *, simp at * end
 end
 
 namespace Functor
 
 universes u₁ v₁ u₂ v₂
 
-variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C]
-variables {D : Type u₂} [𝒟 : category.{u₂ v₂} D]
+variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C] {D : Type u₂} [𝒟 : category.{u₂ v₂} D]
 include 𝒞 𝒟
 
-@[simp,ematch] lemma Functor.eq_to_iso (F : C ↝ D) {X Y : C} (p : X = Y) : F.onIsomorphisms (eq_to_iso p) = eq_to_iso (congr_arg F.onObjects p) :=
-begin
-  induction p,
-  tidy,
-end
+@[simp,ematch] lemma eq_to_iso (F : C ↝ D) {X Y : C} (p : X = Y) : F.on_isos (eq_to_iso p) = eq_to_iso (congr_arg F.onObjects p) :=
+begin /- obviously says: -/ ext, induction p, dsimp at *, simp at * end
 end Functor
 end category_theory
 
