@@ -2,8 +2,8 @@
 -- Released under Apache 2.0 license as described in the file LICENSE.
 -- Authors: Stephen Morgan, Scott Morrison
 
+import category_theory.functor
 import .initial
-import ..functor
 
 open category_theory
 open category_theory.initial
