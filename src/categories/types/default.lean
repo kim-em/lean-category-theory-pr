@@ -49,11 +49,7 @@ variables {D : Type (w+1)} [large_category D] (I J : D ↝ C) (ρ : I ⟹ J) {W 
 @[simp] lemma hcomp (x : (I ⋙ F) W) : (ρ ◫ σ) W x = (G.map (ρ W)) (σ (I W) x) := rfl
 end functor_to_types
 
-<<<<<<< HEAD
-def UniverseLift : (Type u) ↝ (Type (max u v)) := 
-=======
 definition universe_lift : (Type u) ↝ (Type (max u v)) := 
->>>>>>> 77b2e1a4481604f222bd4b29d2872f13ad17f1b1
 { obj      := λ X, ulift.{v} X,
   map      := λ X Y f, λ x : ulift.{v} X, ulift.up (f x.down),
   map_id   := begin /- `obviously'` says: -/ intros, apply funext, intros, apply ulift.ext, refl end,
