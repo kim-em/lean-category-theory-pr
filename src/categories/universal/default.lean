@@ -6,7 +6,6 @@ import .cones
 
 open category_theory
 open category_theory.initial
-open category_theory.types
 
 namespace category_theory.universal
 
@@ -27,9 +26,9 @@ structure Equalizer (f g : X ⟶ Y) :=
 (equalizer     : C)
 (inclusion     : equalizer ⟶ X)
 (map           : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = k ≫ g), Z ⟶ equalizer)
-(witness       : inclusion ≫ f = inclusion ≫ g . obviously)
-(factorisation : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = k ≫ g), (map k w) ≫ inclusion = k . obviously)
-(uniqueness    : ∀ {Z : C} (a b : Z ⟶ equalizer) (witness : a ≫ inclusion = b ≫ inclusion), a = b . obviously)
+(witness       : inclusion ≫ f = inclusion ≫ g . obviously')
+(factorisation : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = k ≫ g), (map k w) ≫ inclusion = k . obviously')
+(uniqueness    : ∀ {Z : C} (a b : Z ⟶ equalizer) (witness : a ≫ inclusion = b ≫ inclusion), a = b . obviously')
 
 restate_axiom Equalizer.witness
 restate_axiom Equalizer.factorisation
@@ -43,11 +42,11 @@ structure BinaryProduct (X Y : C) :=
 (left_projection     : product ⟶ X)
 (right_projection    : product ⟶ Y)
 (map                 : ∀ {Z : C} (f : Z ⟶ X) (g : Z ⟶ Y), Z ⟶ product)
-(left_factorisation  : ∀ {Z : C} (f : Z ⟶ X) (g : Z ⟶ Y), (map f g) ≫ left_projection  = f . obviously) 
-(right_factorisation : ∀ {Z : C} (f : Z ⟶ X) (g : Z ⟶ Y), (map f g) ≫ right_projection = g . obviously) 
+(left_factorisation  : ∀ {Z : C} (f : Z ⟶ X) (g : Z ⟶ Y), (map f g) ≫ left_projection  = f . obviously') 
+(right_factorisation : ∀ {Z : C} (f : Z ⟶ X) (g : Z ⟶ Y), (map f g) ≫ right_projection = g . obviously') 
 (uniqueness          : ∀ {Z : C} (f g : Z ⟶ product)
                           (left_witness  : f ≫ left_projection  = g ≫ left_projection )
-                          (right_witness : f ≫ right_projection = g ≫ right_projection), f = g . obviously)
+                          (right_witness : f ≫ right_projection = g ≫ right_projection), f = g . obviously')
 
 restate_axiom BinaryProduct.left_factorisation
 restate_axiom BinaryProduct.right_factorisation
@@ -60,8 +59,8 @@ structure Product {I : Type w} (F : I → C) :=
 (product       : C)
 (projection    : Π i : I, product ⟶ (F i))
 (map           : ∀ {Z : C} (f : Π i : I, Z ⟶ (F i)), Z ⟶ product)
-(factorisation : ∀ {Z : C} (f : Π i : I, Z ⟶ (F i)) (i : I), (map f) ≫ (projection i) = f i . obviously)
-(uniqueness    : ∀ {Z : C} (f g : Z ⟶ product) (witness : ∀ i : I, f ≫ (projection i) = g ≫ (projection i)), f = g . obviously)
+(factorisation : ∀ {Z : C} (f : Π i : I, Z ⟶ (F i)) (i : I), (map f) ≫ (projection i) = f i . obviously')
+(uniqueness    : ∀ {Z : C} (f g : Z ⟶ product) (witness : ∀ i : I, f ≫ (projection i) = g ≫ (projection i)), f = g . obviously')
 
 restate_axiom Product.factorisation
 restate_axiom Product.uniqueness
@@ -73,9 +72,9 @@ structure Coequalizer (f g : X ⟶ Y) :=
 (coequalizer   : C)
 (projection    : Y ⟶ coequalizer)
 (map           : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = g ≫ k), coequalizer ⟶ Z)
-(witness       : f ≫ projection = g ≫ projection . obviously)
-(factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = g ≫ k), projection ≫ (map k w) = k . obviously)
-(uniqueness    : ∀ {Z : C} (a b : coequalizer ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously)
+(witness       : f ≫ projection = g ≫ projection . obviously')
+(factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = g ≫ k), projection ≫ (map k w) = k . obviously')
+(uniqueness    : ∀ {Z : C} (a b : coequalizer ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously')
 
 restate_axiom Coequalizer.witness
 restate_axiom Coequalizer.factorisation
@@ -89,11 +88,11 @@ structure BinaryCoproduct (X Y : C) :=
 (left_inclusion      : X ⟶ coproduct)
 (right_inclusion     : Y ⟶ coproduct)
 (map                 : ∀ {Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), coproduct ⟶ Z)
-(left_factorisation  : ∀ {Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), left_inclusion ≫ (map f g)  = f . obviously) 
-(right_factorisation : ∀ {Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), right_inclusion ≫ (map f g) = g . obviously) 
+(left_factorisation  : ∀ {Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), left_inclusion ≫ (map f g)  = f . obviously') 
+(right_factorisation : ∀ {Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), right_inclusion ≫ (map f g) = g . obviously') 
 (uniqueness          : ∀ {Z : C} (f g : coproduct ⟶ Z)
                           (left_witness  : left_inclusion ≫ f = left_inclusion ≫ g)
-                          (right_witness : right_inclusion ≫ f = right_inclusion ≫ g), f = g . obviously)
+                          (right_witness : right_inclusion ≫ f = right_inclusion ≫ g), f = g . obviously')
 
 restate_axiom BinaryCoproduct.left_factorisation
 restate_axiom BinaryCoproduct.right_factorisation
@@ -106,8 +105,8 @@ structure Coproduct {I : Type w} (X : I → C) :=
 (coproduct     : C)
 (inclusion     : Π i : I, (X i) ⟶ coproduct)
 (map           : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z), coproduct ⟶ Z)
-(factorisation : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z) (i : I), (inclusion i) ≫ (map f) = f i . obviously)
-(uniqueness    : ∀ {Z : C} (f g : coproduct ⟶ Z) (witness : ∀ i : I, (inclusion i) ≫ f = (inclusion i) ≫ g), f = g . obviously)
+(factorisation : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z) (i : I), (inclusion i) ≫ (map f) = f i . obviously')
+(uniqueness    : ∀ {Z : C} (f g : coproduct ⟶ Z) (witness : ∀ i : I, (inclusion i) ≫ f = (inclusion i) ≫ g), f = g . obviously')
 
 -- Coming in later PRs: all these things special cases of (co)limits, and hence are unique up to unique isomorphism.
 
