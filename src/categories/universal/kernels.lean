@@ -6,7 +6,6 @@ import categories.universal.instances
 
 open category_theory
 open category_theory.initial
-open category_theory.types
 
 namespace category_theory.universal
 
@@ -22,9 +21,9 @@ structure Kernel (f : X ⟶ Y) :=
   (kernel        : C)
   (inclusion     : kernel ⟶ X)
   (map           : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = zero_morphism Z Y), Z ⟶ kernel)
-  (witness       : inclusion ≫ f = zero_morphism kernel Y . obviously)
-  (factorisation : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = zero_morphism Z Y), (map k w) ≫ inclusion = k . obviously)
-  (uniqueness    : ∀ {Z : C} (a b : Z ⟶ kernel) (witness : a ≫ inclusion = b ≫ inclusion), a = b . obviously)
+  (witness       : inclusion ≫ f = zero_morphism kernel Y . obviously')
+  (factorisation : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = zero_morphism Z Y), (map k w) ≫ inclusion = k . obviously')
+  (uniqueness    : ∀ {Z : C} (a b : Z ⟶ kernel) (witness : a ≫ inclusion = b ≫ inclusion), a = b . obviously')
 
 definition Kernel_to_Equalizer (f : X ⟶ Y) (kernel : Kernel f) : Equalizer f (zero_morphism X Y) :=
 { equalizer := kernel.kernel,
@@ -38,9 +37,9 @@ structure Cokernel (f : X ⟶ Y) :=
   (cokernel      : C)
   (projection    : Y ⟶ cokernel)
   (map           : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), cokernel ⟶ Z)
-  (witness       : f ≫ projection = zero_morphism X cokernel . obviously)
-  (factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), projection ≫ (map k w) = k . obviously)
-  (uniqueness    : ∀ {Z : C} (a b : cokernel ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously)
+  (witness       : f ≫ projection = zero_morphism X cokernel . obviously')
+  (factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), projection ≫ (map k w) = k . obviously')
+  (uniqueness    : ∀ {Z : C} (a b : cokernel ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously')
 
 definition Cokernel_to_Coequalizer (f : X ⟶ Y) (cokernel : Cokernel f) : Coequalizer f (zero_morphism X Y) :=
 { coequalizer := cokernel.cokernel,
