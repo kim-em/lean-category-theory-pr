@@ -17,8 +17,7 @@ TODO: pullbacks and pushouts should be here too.
 -/
 
 universes u v w
-variables {C : Type u}
-variables [𝒞 : category.{u v} C]
+variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 variables {X Y : C}
 
@@ -107,6 +106,22 @@ structure Coproduct {I : Type w} (X : I → C) :=
 (map           : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z), coproduct ⟶ Z)
 (factorisation : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z) (i : I), (inclusion i) ≫ (map f) = f i . obviously')
 (uniqueness    : ∀ {Z : C} (f g : coproduct ⟶ Z) (witness : ∀ i : I, (inclusion i) ≫ f = (inclusion i) ≫ g), f = g . obviously')
+
+restate_axiom Coproduct.factorisation
+restate_axiom Coproduct.uniqueness
+attribute [simp,ematch] Coproduct.factorisation_lemma
+attribute [applicable] Coproduct.inclusion Coproduct.map
+attribute [applicable] Coproduct.uniqueness_lemma
+
+structure Pullback {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :=
+(pullback : C)
+(h : pullback ⟶ X)
+(k : pullback ⟶ Y)
+(commutativity : h ≫ f = k ≫ g)
+(map : ∀ {P} {h' : P ⟶ X} {k' : P ⟶ Y} (w : h' ≫ f = k' ≫ g), P ⟶ pullback)
+(factorisation : ∀ {P} {h' : P ⟶ X} {k' : P ⟶ Y} (w : h' ≫ f = k' ≫ g), (map w ≫ h) = h' ∧ (map w ≫ k) = k')
+(uniqueness : ∀ {P} {h' : P ⟶ X} {k' : P ⟶ Y} (w : h' ≫ f = k' ≫ g) (m n : P ⟶ pullback) (w' : (m ≫ h) = h' ∧ (m ≫ k) = k' ∧ (n ≫ h) = h' ∧ (n ≫ k) = k'), m = n)
+
 
 -- Coming in later PRs: all these things special cases of (co)limits, and hence are unique up to unique isomorphism.
 
