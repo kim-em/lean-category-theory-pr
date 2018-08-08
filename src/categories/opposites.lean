@@ -43,7 +43,7 @@ variable {D : Type u₂}
 variable [𝒟 : category.{u₂ v₂} D]
 include 𝒟
 
-definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) := 
+def OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) := 
 { onObjects     := λ X, F.onObjects X, -- notation (F +> X) fails here, because C ≠ Cᵒᵖ
   onMorphisms   := λ X Y f, F &> f,
   identities    := begin
@@ -76,7 +76,7 @@ definition OppositeFunctor (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) :=
                    
 end
 
-definition HomPairing (C : Type u₁) [category.{u₁ v₁} C] : Functor (Cᵒᵖ × C) (Type v₁) := 
+def HomPairing (C : Type u₁) [category.{u₁ v₁} C] : Functor (Cᵒᵖ × C) (Type v₁) := 
 { onObjects     := λ p, @category.Hom C _ p.1 p.2,
   onMorphisms   := λ X Y f, λ h, f.1 ≫ h ≫ f.2,
   identities    := begin

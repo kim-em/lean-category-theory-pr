@@ -32,11 +32,11 @@ instance InitialObject_from_FiniteCoproducts [has_FiniteCoproducts.{u+1 u u} C] 
 
 universe w
 
-definition Two.choice {α : Type u} (a b : α) : Two.{v} → α 
+def Two.choice {α : Type u} (a b : α) : Two.{v} → α 
 | Two._0 := a
 | Two._1 := b
 
-definition Two.dependent_choice {α : Type u} {Z : α → Type v} {a b : α} (f : Z a) (g : Z b) : Π i : Two.{w}, Z (Two.choice a b i) 
+def Two.dependent_choice {α : Type u} {Z : α → Type v} {a b : α} (f : Z a) (g : Z b) : Π i : Two.{w}, Z (Two.choice a b i) 
 | Two._0 := f
 | Two._1 := g
 

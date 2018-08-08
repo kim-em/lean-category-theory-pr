@@ -23,7 +23,7 @@ structure NaturalTransformation {C : Category.{u₁ v₁}} {D : Category.{u₂ v
 #print Functor  -- Type (max u₁ u₂ v₁ v₂)
 #print NaturalTransformation -- Type (max u₁ v₂)
 
-definition FunctorCategory (C : Category.{u₁ v₁}) (D : Category.{u₂ v₂}) : Category :=
+def FunctorCategory (C : Category.{u₁ v₁}) (D : Category.{u₂ v₂}) : Category :=
 by refine { Obj := Functor C D,
             Hom := λ F G, NaturalTransformation F G, .. } ; sorry
 

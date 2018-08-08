@@ -39,9 +39,9 @@ class has_Equalizers :=
 class has_Coequalizers :=
   (coequalizer : Π {X Y : C} (f g : X ⟶ Y), Coequalizer f g)
 
-definition zero_object [has_ZeroObject.{u v} C] : C := has_ZeroObject.zero_object.{u v} C
-definition initial_object [has_InitialObject.{u v} C] : C := has_InitialObject.initial_object.{u v} C
-definition terminal_object [has_TerminalObject.{u v} C] : C := has_TerminalObject.terminal_object.{u v} C
+def zero_object [has_ZeroObject.{u v} C] : C := has_ZeroObject.zero_object.{u v} C
+def initial_object [has_InitialObject.{u v} C] : C := has_InitialObject.initial_object.{u v} C
+def terminal_object [has_TerminalObject.{u v} C] : C := has_TerminalObject.terminal_object.{u v} C
 end
 
 section
@@ -50,7 +50,7 @@ include 𝒞
 
 section
 variable [has_ZeroObject.{u v} C]
-definition zero_morphism (X Y : C) := ZeroObject.zero_morphism (has_ZeroObject.zero_object.{u v} C) X Y -- TODO provide a has_zero instance?
+def zero_morphism (X Y : C) := ZeroObject.zero_morphism (has_ZeroObject.zero_object.{u v} C) X Y -- TODO provide a has_zero instance?
 
 @[simp] lemma zero_morphism_left  {X Y Z : C} (f : Y ⟶ Z) : (zero_morphism X Y) ≫ f = zero_morphism X Z :=
 begin
@@ -72,14 +72,14 @@ begin
 end
 end
 
-definition binary_product [has_BinaryProducts.{u v} C] (X Y : C) := has_BinaryProducts.binary_product.{u v} X Y
-definition finite_product [has_FiniteProducts.{u v w} C] {I : Type w} [fin : fintype I] (f : I → C) := @has_FiniteProducts.product.{u v w} C _ _ I fin f
+def binary_product [has_BinaryProducts.{u v} C] (X Y : C) := has_BinaryProducts.binary_product.{u v} X Y
+def finite_product [has_FiniteProducts.{u v w} C] {I : Type w} [fin : fintype I] (f : I → C) := @has_FiniteProducts.product.{u v w} C _ _ I fin f
 
-definition binary_coproduct [has_BinaryCoproducts.{u v} C] (X Y : C) := has_BinaryCoproducts.binary_coproduct.{u v} X Y
-definition finite_coproduct [has_FiniteCoproducts.{u v w} C] {I : Type w} [fin : fintype I] (f : I → C) := @has_FiniteCoproducts.coproduct.{u v w} C _ _ I fin f
+def binary_coproduct [has_BinaryCoproducts.{u v} C] (X Y : C) := has_BinaryCoproducts.binary_coproduct.{u v} X Y
+def finite_coproduct [has_FiniteCoproducts.{u v w} C] {I : Type w} [fin : fintype I] (f : I → C) := @has_FiniteCoproducts.coproduct.{u v w} C _ _ I fin f
 
-definition equalizer [has_Equalizers.{u v} C] {X Y : C} (f g : X ⟶ Y) := has_Equalizers.equalizer.{u v} f g
-definition coequalizer [has_Coequalizers.{u v} C] {X Y : C} (f g : X ⟶ Y) := has_Coequalizers.coequalizer.{u v} f g
+def equalizer [has_Equalizers.{u v} C] {X Y : C} (f g : X ⟶ Y) := has_Equalizers.equalizer.{u v} f g
+def coequalizer [has_Coequalizers.{u v} C] {X Y : C} (f g : X ⟶ Y) := has_Coequalizers.coequalizer.{u v} f g
 end
 
 section
@@ -91,8 +91,8 @@ class has_Coproducts (C : Type (u+1)) [large_category C] :=
 
 variables {C : Type (u+1)} [large_category C]
 
-definition product [has_Products C] {I : Type u} (F : I → C) := has_Products.product F
-definition coproduct [has_Coproducts C] {I : Type u} (F : I → C) := has_Coproducts.coproduct F
+def product [has_Products C] {I : Type u} (F : I → C) := has_Products.product F
+def coproduct [has_Coproducts C] {I : Type u} (F : I → C) := has_Coproducts.coproduct F
 end
 
 end category_theory.universal

@@ -6,7 +6,6 @@ import categories.universal.instances
 
 open category_theory
 open category_theory.initial
-open category_theory.types
 
 namespace category_theory.universal
 
@@ -22,11 +21,11 @@ structure Kernel (f : X ⟶ Y) :=
   (kernel        : C)
   (inclusion     : kernel ⟶ X)
   (map           : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = zero_morphism Z Y), Z ⟶ kernel)
-  (witness       : inclusion ≫ f = zero_morphism kernel Y . obviously)
-  (factorisation : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = zero_morphism Z Y), (map k w) ≫ inclusion = k . obviously)
-  (uniqueness    : ∀ {Z : C} (a b : Z ⟶ kernel) (witness : a ≫ inclusion = b ≫ inclusion), a = b . obviously)
+  (witness       : inclusion ≫ f = zero_morphism kernel Y . obviously')
+  (factorisation : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = zero_morphism Z Y), (map k w) ≫ inclusion = k . obviously')
+  (uniqueness    : ∀ {Z : C} (a b : Z ⟶ kernel) (witness : a ≫ inclusion = b ≫ inclusion), a = b . obviously')
 
-definition Kernel_to_Equalizer (f : X ⟶ Y) (kernel : Kernel f) : Equalizer f (zero_morphism X Y) :=
+def Kernel_to_Equalizer (f : X ⟶ Y) (kernel : Kernel f) : Equalizer f (zero_morphism X Y) :=
 { equalizer := kernel.kernel,
   inclusion := kernel.inclusion,
   map       := λ Z k w, kernel.map k begin simp [zero_morphism_left] at w, exact w, end,  -- TODO why do we need to specify zero_morphism_left explicitly here? Isn't it a simp lemma?
@@ -38,11 +37,11 @@ structure Cokernel (f : X ⟶ Y) :=
   (cokernel      : C)
   (projection    : Y ⟶ cokernel)
   (map           : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), cokernel ⟶ Z)
-  (witness       : f ≫ projection = zero_morphism X cokernel . obviously)
-  (factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), projection ≫ (map k w) = k . obviously)
-  (uniqueness    : ∀ {Z : C} (a b : cokernel ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously)
+  (witness       : f ≫ projection = zero_morphism X cokernel . obviously')
+  (factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), projection ≫ (map k w) = k . obviously')
+  (uniqueness    : ∀ {Z : C} (a b : cokernel ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously')
 
-definition Cokernel_to_Coequalizer (f : X ⟶ Y) (cokernel : Cokernel f) : Coequalizer f (zero_morphism X Y) :=
+def Cokernel_to_Coequalizer (f : X ⟶ Y) (cokernel : Cokernel f) : Coequalizer f (zero_morphism X Y) :=
 { coequalizer := cokernel.cokernel,
   projection  := cokernel.projection,
   map         := λ Z k w, cokernel.map k begin simp at w, exact w, end,
@@ -53,7 +52,7 @@ definition Cokernel_to_Coequalizer (f : X ⟶ Y) (cokernel : Cokernel f) : Coequ
 
 -- TODO Kernels_are_unique, from Equalizers_are_unique
 
-definition Kernels_are_Equalizers (f : X ⟶ Y) (equalizer : Equalizer f (zero_morphism X Y)) (kernel : Kernel f) : equalizer.equalizer ≅ kernel.kernel := sorry -- prove this by uniqueness of equalizers and the above
+def Kernels_are_Equalizers (f : X ⟶ Y) (equalizer : Equalizer f (zero_morphism X Y)) (kernel : Kernel f) : equalizer.equalizer ≅ kernel.kernel := sorry -- prove this by uniqueness of equalizers and the above
 
 variables (C)
 

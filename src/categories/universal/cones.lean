@@ -71,7 +71,7 @@ section
 variables {D : Type u} [𝒟 : category.{u v} D]
 include 𝒟
 
-definition Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone (F ⋙ G)) := 
+def Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone (F ⋙ G)) := 
 { obj      := λ X, { cone_point    := G X.cone_point,
                      cone_maps     := λ j, G.map (X.cone_maps j), 
                      commutativity := begin /- `obviously'` says: -/ intros, simp, erw [←functor.map_comp_lemma, Cone.commutativity_lemma] end },
@@ -132,7 +132,7 @@ section
 variables {D : Type u} [𝒟 : category.{u v} D]
 include 𝒟
 
-definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cocone F) ↝ (Cocone (F ⋙ G)) := 
+def Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cocone F) ↝ (Cocone (F ⋙ G)) := 
 { obj      := λ X,     { cocone_point    := G X.cocone_point,
                          cocone_maps     := λ j, G.map (X.cocone_maps j),
                          commutativity   := begin /- `obviously'` says: -/ intros, simp, erw [←functor.map_comp_lemma, Cocone.commutativity_lemma] end },
@@ -142,8 +142,8 @@ definition Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cocone F) ↝ (C
   map_comp := begin /- `obviously'` says -/ intros, ext, dsimp, simp end }
 end
 
-definition LimitCone     (F : J ↝ C) := terminal_object (Cone F)
-definition ColimitCocone (F : J ↝ C) := initial_object (Cocone F)
+def LimitCone     (F : J ↝ C) := terminal_object (Cone F)
+def ColimitCocone (F : J ↝ C) := initial_object (Cocone F)
 
 end category_theory.universal
 
@@ -156,7 +156,7 @@ variable {F : J ↝ C}
 
 open category_theory.universal
 
-definition on_cone   (G : C ↝ D) (c : Cone F)   : Cone (F ⋙ G)   := (Cones_functoriality F G) c
-definition on_cocone (G : C ↝ D) (c : Cocone F) : Cocone (F ⋙ G) := (Cocones_functoriality F G) c
+def on_cone   (G : C ↝ D) (c : Cone F)   : Cone (F ⋙ G)   := (Cones_functoriality F G) c
+def on_cocone (G : C ↝ D) (c : Cocone F) : Cocone (F ⋙ G) := (Cocones_functoriality F G) c
 
 end category_theory.functor

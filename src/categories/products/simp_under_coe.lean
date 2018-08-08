@@ -43,7 +43,7 @@ instance {F G : C ↝ D} : has_coe_to_fun (F ⟹ G) :=
 { F   := λ α, Π X : C, (F +> X) ⟶ (G +> X),
   coe := λ α, α.components }
 
-definition IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F := 
+def IdentityNaturalTransformation (F : C ↝ D) : F ⟹ F := 
 { components := λ X, 𝟙 (F +> X) }
 
 instance FunctorCategory : category (C ↝ D) := 

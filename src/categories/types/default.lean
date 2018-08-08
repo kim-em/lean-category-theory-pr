@@ -53,7 +53,7 @@ end
 variables {D : Type (w+1)} [large_category D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
 @[simp] lemma Functor_to_Types.horizontal_composition (x : (I ⋙ F) W) : (ρ ◫ σ) W x = (G.map (ρ W)) (σ (I W) x) := rfl
 
-definition UniverseLift : (Type u) ↝ (Type (max u v)) := 
+def UniverseLift : (Type u) ↝ (Type (max u v)) := 
 { obj      := λ X, ulift.{v} X,
   map      := λ X Y f, λ x : ulift.{v} X, ulift.up (f x.down),
   map_id   := begin /- `obviously'` says: -/ intros, apply funext, intros, apply ulift.ext, refl end,

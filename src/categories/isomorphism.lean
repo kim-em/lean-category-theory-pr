@@ -47,7 +47,7 @@ begin
   rw [←category.assoc_lemma, iso.inv_map_id_lemma, category.id_comp_lemma]
 end
 
-definition refl (X : C) : X ≅ X := 
+def refl (X : C) : X ≅ X := 
 { map := 𝟙 X,
   inv := 𝟙 X, 
   map_inv_id := begin /- `obviously'` says: -/ simp end,
@@ -57,7 +57,7 @@ definition refl (X : C) : X ≅ X :=
 @[simp] lemma refl_map (X : C) : (iso.refl X).map = 𝟙 X := rfl
 @[simp] lemma refl_inv  (X : C) : (iso.refl X).inv  = 𝟙 X := rfl
 
-definition trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := 
+def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := 
 { map := α.map ≫ β.map,
   inv := β.inv ≫ α.inv,
   map_inv_id := begin /- `obviously'` says: -/ simp end,
@@ -86,7 +86,7 @@ infixr ` ♢ `:80 := iso.trans -- type as \diamonds
     refl
   end
 
-definition symm (I : X ≅ Y) : Y ≅ X := 
+def symm (I : X ≅ Y) : Y ≅ X := 
 { map := I.inv,
   inv := I.map,
   map_inv_id := begin /- `obviously'` says: -/ simp end,
@@ -155,7 +155,7 @@ variables {D : Type u₂}
 variables [𝒟 : category.{u₂ v₂} D]
 include 𝒟
 
-definition on_isos (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F X) ≅ (F Y) :=
+def on_isos (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F X) ≅ (F Y) :=
 { map := F.map i.map,
   inv := F.map i.inv,
   map_inv_id := by obviously',
