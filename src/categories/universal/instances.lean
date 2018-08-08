@@ -6,7 +6,6 @@ import categories.universal
 
 open category_theory
 open category_theory.initial
-open category_theory.types
 
 namespace category_theory.universal
 
@@ -17,7 +16,7 @@ variables (C : Type u) [𝒞 : category.{u v} C]
 include 𝒞
 
 class has_InitialObject :=
-  (initial_object : InitialObject C)
+  (initial_object : initial_object C)
 
 class has_BinaryProducts :=
   (binary_product : Π X Y : C, BinaryProduct.{u v} X Y)
@@ -25,7 +24,7 @@ class has_FiniteProducts :=
   (product : Π {I : Type w} [fintype I] (f : I → C), Product.{u v w} f)
 
 class has_TerminalObject :=
-  (terminal_object : TerminalObject C)
+  (terminal_object : terminal_object C)
 
 class has_BinaryCoproducts :=
   (binary_coproduct : Π X Y : C, BinaryCoproduct.{u v} X Y)
@@ -33,7 +32,7 @@ class has_FiniteCoproducts :=
   (coproduct : Π {I : Type w} [fintype I] (f : I → C), Coproduct.{u v w} f)
 
 class has_ZeroObject :=
-  (zero_object : ZeroObject C)
+  (zero_object : zero_object C)
 
 class has_Equalizers :=
   (equalizer : Π {X Y : C} (f g : X ⟶ Y), Equalizer f g)
@@ -53,8 +52,24 @@ section
 variable [has_ZeroObject.{u v} C]
 definition zero_morphism (X Y : C) := ZeroObject.zero_morphism (has_ZeroObject.zero_object.{u v} C) X Y -- TODO provide a has_zero instance?
 
-@[simp] lemma zero_morphism_left  {X Y Z : C} (f : Y ⟶ Z) : (zero_morphism X Y) ≫ f = zero_morphism X Z := sorry
-@[simp] lemma zero_morphism_right {X Y Z : C} (f : X ⟶ Y) : f ≫ (zero_morphism Y Z) = zero_morphism X Z := sorry
+@[simp] lemma zero_morphism_left  {X Y Z : C} (f : Y ⟶ Z) : (zero_morphism X Y) ≫ f = zero_morphism X Z :=
+begin
+  -- TODO such a yucky proof
+  unfold zero_morphism,
+  unfold ZeroObject.zero_morphism,
+  rw category.assoc,
+  congr,
+  apply ((has_ZeroObject.zero_object.{u v} C).is_initial).uniqueness,
+end
+@[simp] lemma zero_morphism_right {X Y Z : C} (f : X ⟶ Y) : f ≫ (zero_morphism Y Z) = zero_morphism X Z :=  
+begin
+ -- TODO such a yucky proof
+  unfold zero_morphism,
+  unfold ZeroObject.zero_morphism,
+  rw ← category.assoc,
+  congr,
+  apply ((has_ZeroObject.zero_object.{u v} C).is_terminal).uniqueness,
+end
 end
 
 definition binary_product [has_BinaryProducts.{u v} C] (X Y : C) := has_BinaryProducts.binary_product.{u v} X Y
