@@ -18,7 +18,7 @@ include 𝒞
 structure Cone (F : J ↝ C) : Type (max u v) :=
 (cone_point    : C)
 (cone_maps     : Π j : J, cone_point ⟶ (F j))
-(commutativity : Π {j k : J}, Π f : j ⟶ k, (cone_maps j) ≫ (F.map f) = cone_maps k . obviously')
+(commutativity : Π {j k : J}, Π f : j ⟶ k, (cone_maps j) ≫ (F.map f) = cone_maps k . obviously)
 
 restate_axiom Cone.commutativity
 attribute [simp,ematch] Cone.commutativity_lemma
@@ -27,7 +27,7 @@ variable {F : J ↝ C}
 
 structure ConeMorphism (X Y : Cone F) : Type v :=
 (cone_morphism : X.cone_point ⟶ Y.cone_point)
-(commutativity : Π j : J, cone_morphism ≫ (Y.cone_maps j) = (X.cone_maps j) . obviously')
+(commutativity : Π j : J, cone_morphism ≫ (Y.cone_maps j) = (X.cone_maps j) . obviously)
 
 restate_axiom ConeMorphism.commutativity
 attribute [simp,ematch] ConeMorphism.commutativity_lemma
@@ -84,14 +84,14 @@ end
 structure Cocone (F : J ↝ C) :=
 (cocone_point  : C)
 (cocone_maps   : Π j : J, (F j) ⟶ cocone_point)
-(commutativity : Π {j k : J}, Π f : j ⟶ k, (F.map f) ≫ (cocone_maps k) = cocone_maps j . obviously')
+(commutativity : Π {j k : J}, Π f : j ⟶ k, (F.map f) ≫ (cocone_maps k) = cocone_maps j . obviously)
 
 restate_axiom Cocone.commutativity
 attribute [simp,ematch] Cocone.commutativity_lemma
 
 structure CoconeMorphism (X Y : Cocone F) :=
 (cocone_morphism : X.cocone_point ⟶ Y.cocone_point)
-(commutativity   : Π j : J, (X.cocone_maps j) ≫ cocone_morphism = (Y.cocone_maps j) . obviously')
+(commutativity   : Π j : J, (X.cocone_maps j) ≫ cocone_morphism = (Y.cocone_maps j) . obviously)
 
 restate_axiom CoconeMorphism.commutativity
 attribute [simp,ematch] CoconeMorphism.commutativity_lemma
