@@ -12,10 +12,10 @@ universes u v
 namespace category_theory
 
 structure iso {C : Type u} [category.{u v} C] (X Y : C) :=
-(map : X ⟶ Y)
+(hom : X ⟶ Y)
 (inv : Y ⟶ X)
-(map_inv_id : map ≫ inv = 𝟙 X . obviously)
-(inv_map_id : inv ≫ map = 𝟙 Y . obviously)
+(map_inv_id : hom ≫ inv = 𝟙 X . obviously)
+(inv_map_id : inv ≫ hom = 𝟙 Y . obviously)
 
 restate_axiom iso.map_inv_id
 restate_axiom iso.inv_map_id
@@ -31,17 +31,17 @@ variables {X Y Z : C}
 namespace iso
 
 instance : has_coe (iso.{u v} X Y) (X ⟶ Y) :=
-{ coe := iso.map }
+{ coe := iso.hom }
 
 -- These lemmas are quite common, to help us avoid having to muck around with associativity.
 -- If anyone has a suggestion for automating them away, I would be very appreciative.
-@[simp,ematch] lemma map_inv_id_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.map ≫ I.inv ≫ f = f := 
+@[simp,ematch] lemma map_inv_id_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.hom ≫ I.inv ≫ f = f := 
 begin
   -- `obviously'` says:
   rw [←category.assoc_lemma, iso.map_inv_id_lemma, category.id_comp_lemma]
 end
 
-@[simp,ematch] lemma inv_map_id_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inv ≫ I.map ≫ f = f := 
+@[simp,ematch] lemma inv_map_id_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inv ≫ I.hom ≫ f = f := 
 begin
   -- `obviously'` says:
   rw [←category.assoc_lemma, iso.inv_map_id_lemma, category.id_comp_lemma]
