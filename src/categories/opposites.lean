@@ -36,6 +36,11 @@ definition opposite (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) :=
   map_id    := begin /- `obviously'` says: -/ intros, erw [map_id], refl, end,
   map_comp := begin /- `obviously'` says: -/ intros, erw [map_comp], refl end }
 
+namespace opposite
+@[simp] lemma obj (F : C ↝ D) (X : C) : (F.opposite) X = F X := rfl
+@[simp] lemma map (F : C ↝ D) {X Y : C} (f : X ⟶ Y) : (F.opposite).map f = F.map f := rfl
+end opposite
+
 @[simp,ematch] lemma contravariant_map_comp
   (F : (Cᵒᵖ) ↝ D)
   (X Y Z : (Cᵒᵖ))
@@ -56,5 +61,12 @@ definition hom_pairing : (Cᵒᵖ × C) ↝ (Type v₁) :=
   map      := λ X Y f, λ h, f.1 ≫ h ≫ f.2,
   map_id   := begin /- `obviously'` says: -/ intros, apply funext, intros, cases X, dsimp at *, simp, erw [category.id_comp_lemma] end,
   map_comp := begin /- `obviously'` says: -/ intros, apply funext, intros, cases g, cases f, cases Z, cases Y, cases X, dsimp at *, simp, erw [category.assoc] end }
+
+namespace hom_pairing
+
+@[simp] lemma obj (X : Cᵒᵖ × C) : (hom_pairing C) X = @category.Hom C _ X.1 X.2 := rfl
+@[simp] lemma map {X Y : Cᵒᵖ × C} (f : X ⟶ Y) : (hom_pairing C).map f = λ h, f.1 ≫ h ≫ f.2 := rfl
+
+end hom_pairing
 
 end category_theory
