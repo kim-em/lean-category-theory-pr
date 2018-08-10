@@ -14,12 +14,12 @@ namespace category_theory
 structure iso {C : Type u} [category.{u v} C] (X Y : C) :=
 (hom : X ⟶ Y)
 (inv : Y ⟶ X)
-(map_inv_id : hom ≫ inv = 𝟙 X . obviously)
-(inv_map_id : inv ≫ hom = 𝟙 Y . obviously)
+(hom_inv_id : hom ≫ inv = 𝟙 X . obviously)
+(inv_hom_id : inv ≫ hom = 𝟙 Y . obviously)
 
-restate_axiom iso.map_inv_id
-restate_axiom iso.inv_map_id
-attribute [simp,ematch] iso.map_inv_id_lemma iso.inv_map_id_lemma
+restate_axiom iso.hom_inv_id
+restate_axiom iso.inv_hom_id
+attribute [simp,ematch] iso.hom_inv_id_lemma iso.inv_hom_id_lemma
 
 infixr ` ≅ `:10  := iso             -- type as \cong
 
@@ -35,42 +35,42 @@ instance : has_coe (iso.{u v} X Y) (X ⟶ Y) :=
 
 -- These lemmas are quite common, to help us avoid having to muck around with associativity.
 -- If anyone has a suggestion for automating them away, I would be very appreciative.
-@[simp,ematch] lemma map_inv_id_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.hom ≫ I.inv ≫ f = f := 
+@[simp,ematch] lemma hom_inv_id_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.hom ≫ I.inv ≫ f = f := 
 begin
   -- `obviously'` says:
-  rw [←category.assoc_lemma, iso.map_inv_id_lemma, category.id_comp_lemma]
+  rw [←category.assoc_lemma, iso.hom_inv_id_lemma, category.id_comp_lemma]
 end
 
-@[simp,ematch] lemma inv_map_id_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inv ≫ I.hom ≫ f = f := 
+@[simp,ematch] lemma inv_hom_id_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inv ≫ I.hom ≫ f = f := 
 begin
   -- `obviously'` says:
-  rw [←category.assoc_lemma, iso.inv_map_id_lemma, category.id_comp_lemma]
+  rw [←category.assoc_lemma, iso.inv_hom_id_lemma, category.id_comp_lemma]
 end
 
 def refl (X : C) : X ≅ X := 
-{ map := 𝟙 X,
+{ hom := 𝟙 X,
   inv := 𝟙 X, 
-  map_inv_id := begin /- `obviously'` says: -/ simp end,
-  inv_map_id := begin /- `obviously'` says: -/ simp end }
+  hom_inv_id := begin /- `obviously'` says: -/ simp end,
+  inv_hom_id := begin /- `obviously'` says: -/ simp end }
 
 -- TODO maybe these can have ematch?
-@[simp] lemma refl_map (X : C) : (iso.refl X).map = 𝟙 X := rfl
+@[simp] lemma refl_map (X : C) : (iso.refl X).hom = 𝟙 X := rfl
 @[simp] lemma refl_inv  (X : C) : (iso.refl X).inv  = 𝟙 X := rfl
 
 def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z := 
-{ map := α.map ≫ β.map,
+{ hom := α.hom ≫ β.hom,
   inv := β.inv ≫ α.inv,
-  map_inv_id := begin /- `obviously'` says: -/ simp end,
-  inv_map_id := begin /- `obviously'` says: -/ simp end }
+  hom_inv_id := begin /- `obviously'` says: -/ simp end,
+  inv_hom_id := begin /- `obviously'` says: -/ simp end }
 
 infixr ` ♢ `:80 := iso.trans -- type as \diamonds
 
-@[simp,ematch] lemma trans_morphism (α : X ≅ Y) (β : Y ≅ Z) : (α ♢ β).map = α.map ≫ β.map := rfl
-@[simp,ematch] lemma trans_inverse  (α : X ≅ Y) (β : Y ≅ Z) : (α ♢ β).inv  = β.inv ≫ α.inv   := rfl
+@[simp,ematch] lemma trans_hom (α : X ≅ Y) (β : Y ≅ Z) : (α ♢ β).hom = α.hom ≫ β.hom := rfl
+@[simp,ematch] lemma trans_inv (α : X ≅ Y) (β : Y ≅ Z) : (α ♢ β).inv  = β.inv ≫ α.inv   := rfl
 
 @[extensionality] lemma ext
   (α β : X ≅ Y)
-  (w : α.map = β.map) : α = β :=
+  (w : α.hom = β.hom) : α = β :=
   begin
     induction α with f g wα1 wα2,
     induction β with h k wβ1 wβ2,
@@ -87,37 +87,37 @@ infixr ` ♢ `:80 := iso.trans -- type as \diamonds
   end
 
 def symm (I : X ≅ Y) : Y ≅ X := 
-{ map := I.inv,
-  inv := I.map,
-  map_inv_id := begin /- `obviously'` says: -/ simp end,
-  inv_map_id := begin /- `obviously'` says: -/ simp end }
+{ hom := I.inv,
+  inv := I.hom,
+  hom_inv_id := begin /- `obviously'` says: -/ simp end,
+  inv_hom_id := begin /- `obviously'` says: -/ simp end }
 
 end iso
 
 class is_iso (f : X ⟶ Y) :=
 (inv : Y ⟶ X)
-(map_inv_id : f ≫ inv = 𝟙 X . obviously)
-(inv_map_id : inv ≫ f = 𝟙 Y . obviously)
+(hom_inv_id : f ≫ inv = 𝟙 X . obviously)
+(inv_hom_id : inv ≫ f = 𝟙 Y . obviously)
 
-restate_axiom is_iso.map_inv_id
-restate_axiom is_iso.inv_map_id
-attribute [simp,ematch] is_iso.map_inv_id_lemma is_iso.inv_map_id_lemma
+restate_axiom is_iso.hom_inv_id
+restate_axiom is_iso.inv_hom_id
+attribute [simp,ematch] is_iso.hom_inv_id_lemma is_iso.inv_hom_id_lemma
 
 namespace is_iso
 
 instance (X : C) : is_iso (𝟙 X) := 
 { inv := 𝟙 X, 
-  map_inv_id := by obviously',
-  inv_map_id := by obviously' }
+  hom_inv_id := by obviously',
+  inv_hom_id := by obviously' }
 
-instance of_iso         (f : X ≅ Y) : is_iso f.map :=
+instance of_iso         (f : X ≅ Y) : is_iso f.hom :=
 { inv   := f.inv,
-  map_inv_id := begin /- `obviously'` says: -/ simp end,
-  inv_map_id := begin /- `obviously'` says: -/ simp end }
+  hom_inv_id := begin /- `obviously'` says: -/ simp end,
+  inv_hom_id := begin /- `obviously'` says: -/ simp end }
 instance of_Isomorphism_inverse (f : X ≅ Y) : is_iso f.inv  := 
-{ inv   := f.map,
-  map_inv_id := begin /- `obviously'` says: -/ simp end,
-  inv_map_id := begin /- `obviously'` says: -/ simp end }
+{ inv   := f.hom,
+  hom_inv_id := begin /- `obviously'` says: -/ simp end,
+  inv_hom_id := begin /- `obviously'` says: -/ simp end }
 
 end is_iso
 
@@ -131,14 +131,14 @@ instance epi_of_iso  (f : X ⟶ Y) [is_iso f] : epi f  :=
                          -- This is an interesting test case for better rewrite automation.
                          intros,
                          rw [←category.id_comp_lemma C g, ←category.id_comp_lemma C h],
-                         rw [← is_iso.inv_map_id_lemma f],
+                         rw [← is_iso.inv_hom_id_lemma f],
                          erw [category.assoc_lemma, w, category.assoc_lemma],
                        end }
 instance mono_of_iso (f : X ⟶ Y) [is_iso f] : mono f := 
 { right_cancellation := begin
                          intros,
                          rw [←category.comp_id_lemma C g, ←category.comp_id_lemma C h],
-                         rw [← is_iso.map_inv_id_lemma f],
+                         rw [← is_iso.hom_inv_id_lemma f],
                          erw [←category.assoc_lemma, w, ←category.assoc_lemma]
                        end }
 
@@ -156,12 +156,12 @@ variables [𝒟 : category.{u₂ v₂} D]
 include 𝒟
 
 def on_isos (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F X) ≅ (F Y) :=
-{ map := F.map i.map,
+{ hom := F.map i.hom,
   inv := F.map i.inv,
-  map_inv_id := by obviously',
-  inv_map_id := by obviously' }
+  hom_inv_id := by obviously',
+  inv_hom_id := by obviously' }
 
-@[simp,ematch] lemma on_isos_map (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.on_isos i).map = F.map i.map := rfl
+@[simp,ematch] lemma on_isos_hom (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.on_isos i).hom = F.map i.hom := rfl
 @[simp,ematch] lemma on_isos_inv (F : C ↝ D) {X Y : C} (i : X ≅ Y) : (F.on_isos i).inv = F.map i.inv := rfl
 
 end functor
