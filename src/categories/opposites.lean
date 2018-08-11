@@ -10,9 +10,9 @@ namespace category_theory
 
 universes u₁ v₁ u₂ v₂
 
-def Opposite.op (C : Type u₁) : Type u₁ := C
+def op (C : Type u₁) : Type u₁ := C
 
-notation C `ᵒᵖ` := Opposite.op C
+notation C `ᵒᵖ` := op C
 
 variables {C : Type u₁} [𝒞 : category.{u₁ v₁} C]
 include 𝒞
@@ -31,20 +31,13 @@ variables {D : Type u₂} [𝒟 : category.{u₂ v₂} D]
 include 𝒟
 
 definition opposite (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) := 
-{ obj     := λ X, F X,
-  map   := λ X Y f, F.map f,
-  map_id    := begin /- `obviously'` says: -/ intros, erw [map_id], refl, end,
+{ obj      := λ X, F X,
+  map      := λ X Y f, F.map f,
+  map_id   := begin /- `obviously'` says: -/ intros, erw [map_id], refl, end,
   map_comp := begin /- `obviously'` says: -/ intros, erw [map_comp], refl end }
 
 @[simp] lemma opposite_obj (F : C ↝ D) (X : C) : (F.opposite) X = F X := rfl
 @[simp] lemma opposite_map (F : C ↝ D) {X Y : C} (f : X ⟶ Y) : (F.opposite).map f = F.map f := rfl
-
-variables (F : (Cᵒᵖ) ↝ D) {X Y Z : (Cᵒᵖ)} (f : X ⟶ Y) (g : Y ⟶ Z)
-@[simp,ematch] lemma contravariant_map_comp : F.map ((@category_theory.category.comp C _ _ _ _ g f) : X ⟶ Z) = (F.map f) ≫ (F.map g) := 
-begin /- `obviously'` says: -/ erw [map_comp] end
-
-@[simp,ematch] lemma contravariant_map_id : (F.map (@category_theory.category.id C _ X)) = 𝟙 (F X) :=
-begin /- `obviously'` says: -/ erw [map_id], refl, end
                    
 end functor
 
