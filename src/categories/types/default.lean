@@ -3,11 +3,12 @@
 -- Authors: Stephen Morgan, Scott Morrison
 
 import category_theory.natural_transformation
+import category_theory.functor_category
 import ..isomorphism
 
 namespace category_theory
 
-universes u v w
+universes u v u' v' w
 
 instance types : large_category (Type u) :=
 { Hom     := λ a b, (a → b),
@@ -22,7 +23,9 @@ instance types : large_category (Type u) :=
 @[simp] lemma types_comp {α β γ : Type u} (f : α → β) (g : β → γ) (a : α) : (((f : α ⟶ β) ≫ (g : β ⟶ γ)) : α ⟶ γ) a = g (f a) := rfl
 
 namespace functor_to_types
-variables {C : Type (v+1)} [large_category C] (F G H : C ↝ (Type u)) {X Y Z : C} 
+variables {C : Type u} [𝒞 : category.{u v} C] (F G H : C ↝ (Type w)) {X Y Z : C} 
+include 𝒞
+section
 variables (σ : F ⟹ G) (τ : G ⟹ H) 
 
 @[simp,ematch] lemma map_comp (f : X ⟶ Y) (g : Y ⟶ Z) (a : F X) : (F.map (f ≫ g)) a = (F.map g) ((F.map f) a) :=
@@ -44,9 +47,17 @@ begin
 end.
 
 @[simp] lemma vcomp (x : F X) : (σ ⊟ τ) X x = τ X (σ X x) := rfl
- 
-variables {D : Type (w+1)} [large_category D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
+
+variables {D : Type u'} [𝒟 : category.{u' v'} D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
 @[simp] lemma hcomp (x : (I ⋙ F) W) : (ρ ◫ σ) W x = (G.map (ρ W)) (σ (I W) x) := rfl
+end
+
+-- TODO unneeded?
+-- section
+-- variables (σ' : F ⟶ G) (τ' : G ⟶ H) 
+-- @[simp] lemma vcomp' (x : F X) : (σ' ≫ τ').app X x = τ' X (σ' X x) := rfl 
+-- end
+
 end functor_to_types
 
 definition type_lift : (Type u) ↝ (Type (max u v)) := 
