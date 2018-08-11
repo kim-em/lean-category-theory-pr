@@ -47,6 +47,24 @@ begin
   rw [←category.assoc_lemma, iso.inv_hom_id_lemma, category.id_comp_lemma]
 end
 
+@[extensionality] lemma ext
+  (α β : X ≅ Y)
+  (w : α.hom = β.hom) : α = β :=
+  begin
+    induction α with f g wα1 wα2,
+    induction β with h k wβ1 wβ2,
+    simp at w,    
+    have p : g = k,
+      begin
+        induction w,
+        dsimp at *,
+        rw [← category.id_comp_lemma C k, ←wα2, category.assoc_lemma, wβ1, category.comp_id_lemma]
+      end,
+    -- `obviously'` says:
+    induction p, induction w,
+    refl
+  end
+
 def refl (X : C) : X ≅ X := 
 { hom := 𝟙 X,
   inv := 𝟙 X, 
@@ -67,24 +85,6 @@ infixr ` ♢ `:80 := iso.trans -- type as \diamonds
 
 @[simp,ematch] lemma trans_hom (α : X ≅ Y) (β : Y ≅ Z) : (α ♢ β).hom = α.hom ≫ β.hom := rfl
 @[simp,ematch] lemma trans_inv (α : X ≅ Y) (β : Y ≅ Z) : (α ♢ β).inv  = β.inv ≫ α.inv   := rfl
-
-@[extensionality] lemma ext
-  (α β : X ≅ Y)
-  (w : α.hom = β.hom) : α = β :=
-  begin
-    induction α with f g wα1 wα2,
-    induction β with h k wβ1 wβ2,
-    simp at w,    
-    have p : g = k,
-      begin
-        induction w,
-        dsimp at *,
-        rw [← category.id_comp_lemma C k, ←wα2, category.assoc_lemma, wβ1, category.comp_id_lemma]
-      end,
-    -- `obviously'` says:
-    induction p, induction w,
-    refl
-  end
 
 def symm (I : X ≅ Y) : Y ≅ X := 
 { hom := I.inv,
@@ -114,7 +114,7 @@ instance of_iso         (f : X ≅ Y) : is_iso f.hom :=
 { inv   := f.inv,
   hom_inv_id := begin /- `obviously'` says: -/ simp end,
   inv_hom_id := begin /- `obviously'` says: -/ simp end }
-instance of_Isomorphism_inverse (f : X ≅ Y) : is_iso f.inv  := 
+instance of_iso_inverse (f : X ≅ Y) : is_iso f.inv  := 
 { inv   := f.hom,
   hom_inv_id := begin /- `obviously'` says: -/ simp end,
   inv_hom_id := begin /- `obviously'` says: -/ simp end }

@@ -36,21 +36,15 @@ definition opposite (F : C ↝ D) : (Cᵒᵖ) ↝ (Dᵒᵖ) :=
   map_id    := begin /- `obviously'` says: -/ intros, erw [map_id], refl, end,
   map_comp := begin /- `obviously'` says: -/ intros, erw [map_comp], refl end }
 
-namespace opposite
-@[simp] lemma obj (F : C ↝ D) (X : C) : (F.opposite) X = F X := rfl
-@[simp] lemma map (F : C ↝ D) {X Y : C} (f : X ⟶ Y) : (F.opposite).map f = F.map f := rfl
-end opposite
+@[simp] lemma opposite_obj (F : C ↝ D) (X : C) : (F.opposite) X = F X := rfl
+@[simp] lemma opposite_map (F : C ↝ D) {X Y : C} (f : X ⟶ Y) : (F.opposite).map f = F.map f := rfl
 
-@[simp,ematch] lemma contravariant_map_comp
-  (F : (Cᵒᵖ) ↝ D)
-  (X Y Z : (Cᵒᵖ))
-  (f : X ⟶ Y) (g : Y ⟶ Z) :
-    F.map ((@category_theory.category.comp C _ _ _ _ g f) : X ⟶ Z) = (F.map f) ≫ (F.map g) := 
-    begin /- `obviously'` says: -/ erw [map_comp] end
+variables (F : (Cᵒᵖ) ↝ D) {X Y Z : (Cᵒᵖ)} (f : X ⟶ Y) (g : Y ⟶ Z)
+@[simp,ematch] lemma contravariant_map_comp : F.map ((@category_theory.category.comp C _ _ _ _ g f) : X ⟶ Z) = (F.map f) ≫ (F.map g) := 
+begin /- `obviously'` says: -/ erw [map_comp] end
 
-@[simp,ematch] lemma contravariant_map_id
-  (F : (Cᵒᵖ) ↝ D) (X : (Cᵒᵖ)) : (F.map (@category_theory.category.id C _ X)) = 𝟙 (F X) :=
-  begin /- `obviously'` says: -/ erw [map_id], refl, end
+@[simp,ematch] lemma contravariant_map_id : (F.map (@category_theory.category.id C _ X)) = 𝟙 (F X) :=
+begin /- `obviously'` says: -/ erw [map_id], refl, end
                    
 end functor
 
@@ -62,11 +56,7 @@ definition hom_pairing : (Cᵒᵖ × C) ↝ (Type v₁) :=
   map_id   := begin /- `obviously'` says: -/ intros, apply funext, intros, cases X, dsimp at *, simp, erw [category.id_comp_lemma] end,
   map_comp := begin /- `obviously'` says: -/ intros, apply funext, intros, cases g, cases f, cases Z, cases Y, cases X, dsimp at *, simp, erw [category.assoc] end }
 
-namespace hom_pairing
-
-@[simp] lemma obj (X : Cᵒᵖ × C) : (hom_pairing C) X = @category.Hom C _ X.1 X.2 := rfl
-@[simp] lemma map {X Y : Cᵒᵖ × C} (f : X ⟶ Y) : (hom_pairing C).map f = λ h, f.1 ≫ h ≫ f.2 := rfl
-
-end hom_pairing
+@[simp] lemma hom_pairing_obj (X : Cᵒᵖ × C) : (hom_pairing C) X = @category.Hom C _ X.1 X.2 := rfl
+@[simp] lemma hom_pairing_map {X Y : Cᵒᵖ × C} (f : X ⟶ Y) : (hom_pairing C).map f = λ h, f.1 ≫ h ≫ f.2 := rfl
 
 end category_theory

@@ -25,38 +25,22 @@ instance types : large_category (Type u) :=
 namespace functor_to_types
 variables {C : Type u} [𝒞 : category.{u v} C] (F G H : C ↝ (Type w)) {X Y Z : C} 
 include 𝒞
-section
 variables (σ : F ⟹ G) (τ : G ⟹ H) 
 
 @[simp,ematch] lemma map_comp (f : X ⟶ Y) (g : Y ⟶ Z) (a : F X) : (F.map (f ≫ g)) a = (F.map g) ((F.map f) a) :=
-begin 
-  -- `obviously'` says:
-  simp,
-end
+begin /- `obviously'` says: -/ simp end
 
 @[simp,ematch] lemma map_id (a : F X) : (F.map (𝟙 X)) a = a := 
-begin
-  -- `obviously'` says:
-  simp,
-end
+begin /- `obviously'` says: -/ simp end
 
 @[ematch] lemma naturality (f : X ⟶ Y) (x : F X) : σ Y ((F.map f) x) = (G.map f) (σ X x) := 
-begin 
-  have p := σ.naturality_lemma f,
-  exact congr_fun p x,
-end.
+congr_fun (σ.naturality_lemma f) x
 
 @[simp] lemma vcomp (x : F X) : (σ ⊟ τ) X x = τ X (σ X x) := rfl
 
 variables {D : Type u'} [𝒟 : category.{u' v'} D] (I J : D ↝ C) (ρ : I ⟹ J) {W : D}
-@[simp] lemma hcomp (x : (I ⋙ F) W) : (ρ ◫ σ) W x = (G.map (ρ W)) (σ (I W) x) := rfl
-end
 
--- TODO unneeded?
--- section
--- variables (σ' : F ⟶ G) (τ' : G ⟶ H) 
--- @[simp] lemma vcomp' (x : F X) : (σ' ≫ τ').app X x = τ' X (σ' X x) := rfl 
--- end
+@[simp] lemma hcomp (x : (I ⋙ F) W) : (ρ ◫ σ) W x = (G.map (ρ W)) (σ (I W) x) := rfl
 
 end functor_to_types
 
