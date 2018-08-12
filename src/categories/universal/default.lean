@@ -15,12 +15,12 @@ Finally there are bundled objects
 
 There's just one implementation of the 'shapes', but the three approaches differ in their handling of the `is_X` structures.
 
-0) version_0 is as explicit as possible, writing everything out in terms of fields `lift`, `fac`, and `uniq`,
+0) `explicit` is as explicit as possible, writing everything out in terms of fields `lift`, `fac`, and `uniq`,
    which respectively show how to lift a map, the factorisation property it has, and the uniqueness of that factorisation.   
-1) version_1 uses two fields, `μ` and `u`. `μ` shows how to construct a map from another shape, and `u` expresses
+1) `singleton` uses two fields, `μ` and `u`. `μ` shows how to construct a map from another shape, and `u` expresses
    the uniqueness of this map using the pattern "for all maps from another shape, it factorises correctly if and only if it is the lift".
    (Thanks for Mario for helping with this one.)
-2) version_2, closely following [Reid's work](https://github.com/rwbarton/lean-homotopy-theory/blob/lean-3.4.1/src/categories/colimits.lean)
+2) `bijective`, closely following [Reid's work](https://github.com/rwbarton/lean-homotopy-theory/blob/lean-3.4.1/src/categories/colimits.lean)
    expresses the universal property by stating that a certain map between hom sets (or products and subsets of such)
    is a bijection. As an example, we can say that a span `Y <--p-- X --q--> Z` is a binary product exactly if for
    every object `X'`, the map `(X' ⟶ X) → (X' ⟶ Y) × (X' ⟶ Z)` given by post-composition by `p` and `q` is
@@ -29,9 +29,9 @@ There's just one implementation of the 'shapes', but the three approaches differ
 To try them out, I proved that the category of types has equalizers, pullbacks, and binary products.
 Rather beautifully, usually `obviously` you can write exactly the same proof for all three versions:
 you just specify the shape, and `obviously` deals with the variations in what's required to check the universal
-properties. For what it's worth, `obviously` is slightly (25%) slower on version_1 than on version_0 and version_2.
+properties. For what it's worth, `obviously` is slightly (25%) slower on `singleton` than on `explicit` and `bijective`.
 
-My opinion: version_2 looks good to me. I think it's the most intimidating one first reading, but grows on you
+My opinion: `bijective` looks good to me. I think it's the most intimidating one first reading, but grows on you
 quickly. It also has the potentially very significant advantage that it is easy to generalise to the setting
 of enriched categories, which the algebraic geometers are definitely going to want.
 -/
@@ -48,12 +48,14 @@ universes u v w
 begin obviously, end
 
 section shapes
+structure shape (C : Type u) [𝒞 : category.{u v} C] :=
+(X : C)
+
 /--
 A `span Y Z`:
 `Y <--π₁-- X --π₂--> Z`
 -/
-structure span {C : Type u} [𝒞 : category.{u v} C] (Y Z : C) :=
-(X : C)
+structure span {C : Type u} [𝒞 : category.{u v} C] (Y Z : C) extends shape C :=
 (π₁ : X ⟶ Y)
 (π₂ : X ⟶ Z)
 
@@ -65,8 +67,7 @@ A `fork f g`:
              g
 ```            
 -/
-structure fork {C : Type u} [𝒞 : category.{u v} C] {Y Z : C} (f g : Y ⟶ Z) := 
-(X : C)
+structure fork {C : Type u} [𝒞 : category.{u v} C] {Y Z : C} (f g : Y ⟶ Z) extends shape C := 
 (ι : X ⟶ Y)
 (w : ι ≫ f = ι ≫ g)
 
@@ -82,8 +83,7 @@ b        p
 Q --q--> R
 ```
 -/
-structure square {C : Type u} [𝒞 : category.{u v} C] {P Q R : C} (p : P ⟶ R) (q : Q ⟶ R) :=
-(X : C)
+structure square {C : Type u} [𝒞 : category.{u v} C] {P Q R : C} (p : P ⟶ R) (q : Q ⟶ R) extends shape C :=
 (a : X ⟶ P)
 (b : X ⟶ Q)
 (w : a ≫ p = b ≫ q)
@@ -94,17 +94,17 @@ end shapes
 
 definition is_equiv {α β : Type v} (f : α → β) := @is_iso (Type v) (category_theory.types) _ _ f
 
-namespace version_0
+namespace explicit
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 
 
 section binary_product
 structure is_binary_product {Y Z : C} (t : span Y Z) :=
-(lift : ∀ {X' : C} (f : X' ⟶ Y) (g : X' ⟶ Z), X' ⟶ t.X)
-(fac₁ : ∀ {X' : C} (f : X' ⟶ Y) (g : X' ⟶ Z), (lift f g) ≫ t.π₁ = f) 
-(fac₂ : ∀ {X' : C} (f : X' ⟶ Y) (g : X' ⟶ Z), (lift f g) ≫ t.π₂ = g) 
-(uniq : ∀ {X' : C} (f : X' ⟶ t.X), f = lift (f ≫ t.π₁) (f ≫ t.π₂))
+(lift : ∀ (s : span Y Z), s.X ⟶ t.X)
+(fac₁ : ∀ (s : span Y Z), (lift s) ≫ t.π₁ = s.π₁) 
+(fac₂ : ∀ (s : span Y Z), (lift s) ≫ t.π₂ = s.π₂) 
+(uniq : ∀ {X' : C} (f : X' ⟶ t.X), f = lift { X := X', π₁ := (f ≫ t.π₁), π₂ := (f ≫ t.π₂) })
 
 structure binary_product (Y Z : C) extends t : span Y Z :=
 (h : is_binary_product t)
@@ -113,8 +113,8 @@ end binary_product
 section equalizer
 variables {Y Z : C}
 structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) :=
-(lift : ∀ {X' : C} (k : X' ⟶ Y) (w : k ≫ f = k ≫ g), X' ⟶ t.X)
-(fac  : ∀ {X' : C} (k : X' ⟶ Y) (w : k ≫ f = k ≫ g), (lift k w) ≫ t.ι = k)
+(lift : ∀ (s : fork f g), s.X ⟶ t.X)
+(fac  : ∀ (s : fork f g), (lift s) ≫ t.ι = s.ι)
 (uniq : mono t.ι)
 
 structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
@@ -124,25 +124,25 @@ end equalizer
 section pullback
 variables {P Q R : C}
 structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
-(lift : ∀ {X'} {a' : X' ⟶ P} {b' : X' ⟶ Q} (w : a' ≫ p = b' ≫ q), X' ⟶ t.X)
-(fac  : ∀ {X'} {a' : X' ⟶ P} {b' : X' ⟶ Q} (w : a' ≫ p = b' ≫ q), (lift w ≫ t.a) = a' ∧ (lift w ≫ t.b) = b')
-(uniq : ∀ {X'} {a' : X' ⟶ P} {b' : X' ⟶ Q} (w : a' ≫ p = b' ≫ q) (m : X' ⟶ t.X) (w' : (m ≫ t.a) = a' ∧ (m ≫ t.b) = b'), m = lift w)
+(lift : ∀ (s : square p q), s.X ⟶ t.X)
+(fac  : ∀ (s : square p q), (lift s ≫ t.a) = s.a ∧ (lift s ≫ t.b) = s.b)
+(uniq : ∀ (s : square p q) (m : s.X ⟶ t.X) (w' : (m ≫ t.a) = s.a ∧ (m ≫ t.b) = s.b), m = lift s)
 
 structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
 (h : is_pullback t)
 end pullback
 
-end version_0
+end explicit
 
-namespace version_1
+namespace singleton
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 
 
 section binary_product
 structure is_binary_product {Y Z : C} (t : span Y Z) :=
-(μ : Π (s : span Y Z), s.X ⟶ t.X)
-(u : Π (s : span Y Z), ∀ (φ : s.X ⟶ t.X), (s.π₁ = φ ≫ t.π₁ ∧ s.π₂ = φ ≫ t.π₂) ↔ (φ = μ s))
+(lift : Π (s : span Y Z), s.X ⟶ t.X)
+(univ : Π (s : span Y Z), ∀ (φ : s.X ⟶ t.X), (s.π₁ = φ ≫ t.π₁ ∧ s.π₂ = φ ≫ t.π₂) ↔ (φ = lift s))
 
 structure binary_product (Y Z : C) extends t : span Y Z :=
 (h : is_binary_product t)
@@ -151,8 +151,8 @@ end binary_product
 section equalizer
 variables {Y Z : C}
 structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) := 
-(μ : Π (s : fork f g), s.X ⟶ t.X)
-(u : Π (s : fork f g), ∀ (φ : s.X ⟶ t.X), (s.ι = φ ≫ t.ι) ↔ (φ = μ s)).
+(lift : Π (s : fork f g), s.X ⟶ t.X)
+(univ : Π (s : fork f g), ∀ (φ : s.X ⟶ t.X), (s.ι = φ ≫ t.ι) ↔ (φ = lift s)).
 
 structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
 (h : is_equalizer t)
@@ -161,16 +161,16 @@ end equalizer
 section pullback
 variables {P Q R : C}
 structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
-(μ : Π (s : square p q), s.X ⟶ t.X)
-(u : Π (s : square p q), ∀ (φ : s.X ⟶ t.X), (s.a = φ ≫ t.a ∧ s.b = φ ≫ t.b) ↔ (φ = μ s))
+(lift : Π (s : square p q), s.X ⟶ t.X)
+(univ : Π (s : square p q), ∀ (φ : s.X ⟶ t.X), (s.a = φ ≫ t.a ∧ s.b = φ ≫ t.b) ↔ (φ = lift s))
 
 structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
 (h : is_pullback t)
 end pullback
 
-end version_1
+end singleton
 
-namespace version_2
+namespace bijective
 
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
@@ -211,9 +211,9 @@ structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
 (h : is_pullback t)
 end pullbacks
 
-end version_2
+end bijective
 
-open version_0 -- CHANGE THIS LINE TO TRY OUT DIFFERENT VERSIONS
+open explicit -- CHANGE THIS LINE TO TRY OUT DIFFERENT VERSIONS
 
 class has_binary_products (C : Type u) [𝒞 : category.{u v} C] :=
 (binary_product : Π (Y Z : C), binary_product.{u v} Y Z)
