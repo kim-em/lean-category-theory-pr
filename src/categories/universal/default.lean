@@ -1,129 +1,197 @@
--- Copyright (c) 2017 Scott Morrison. All rights reserved.
+-- Copyright (c) 2018 Scott Morrison. All rights reserved.
 -- Released under Apache 2.0 license as described in the file LICENSE.
--- Authors: Stephen Morgan, Scott Morrison
+-- Authors: Scott Morrison, Reid Barton, Mario Carneiro
 
-import .cones
+/-
+This file demonstrates three different ways to handle 'explicit' limits, e.g. (binary) products, equalizers, and pullbacks.
+There will of course also be a development of these as special cases of limits (as initial objects in a category of cones).
+
+All three versions use the notions
+  `fork`, `square`, and `span`.
+On these, we have predicates
+  `is_equalizer`, `is_pullback`, and `is_binary_product`.
+Finally there are bundled objects
+  `equalizer`, `pullback`, and `binary_product`.
+
+There's just one implementation of the 'shapes', but the three approaches differ in their handling of the `is_X` structures.
+
+0) version_0 is as explicit as possible, writing everything out in terms of fields `lift`, `fac`, and `uniq`,
+   which respectively show how to lift a map, the factorisation property it has, and the uniqueness of that factorisation.   
+1) version_1 uses two fields, `μ` and `u`. `μ` shows how to construct a map from another shape, and `u` expresses
+   the uniqueness of this map using the pattern "for all maps from another shape, it factorises correctly if and only if it is the lift".
+   (Thanks for Mario for helping with this one.)
+2) version_2, closely following [Reid's work](https://github.com/rwbarton/lean-homotopy-theory/blob/lean-3.4.1/src/categories/colimits.lean)
+   expresses the universal property by stating that a certain map between hom sets (or products and subsets of such)
+   is a bijection. As an example, we can say that a span `Y <--p-- X --q--> Z` is a binary product exactly if for
+   every object `X'`, the map `(X' ⟶ X) → (X' ⟶ Y) × (X' ⟶ Z)` given by post-composition by `p` and `q` is
+   a bijection. (We use a constructive version of bijection, of course.)
+-/
+
+import ..types
 
 open category_theory
-open category_theory.initial
+
 
 namespace category_theory.universal
 
-/-
-We give "explicit" definitions of (co)equalizers, and (finite) (co)products. Of course these are special cases of (co)limits,
-but they are used so pervasively that they need a convenient interface.
-
-TODO: pullbacks and pushouts should be here too.
--/
-
 universes u v w
+
+section shapes
+/--
+A `span Y Z`:
+`Y <--π₁-- X --π₂--> Z`
+-/
+structure span {C : Type u} [𝒞 : category.{u v} C] (Y Z : C) :=
+(X : C)
+(π₁ : X ⟶ Y)
+(π₂ : X ⟶ Z)
+
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
-variables {X Y : C}
 
-structure Equalizer (f g : X ⟶ Y) :=
-(equalizer     : C)
-(inclusion     : equalizer ⟶ X)
-(map           : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = k ≫ g), Z ⟶ equalizer)
-(witness       : inclusion ≫ f = inclusion ≫ g . obviously)
-(factorisation : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = k ≫ g), (map k w) ≫ inclusion = k . obviously)
-(uniqueness    : ∀ {Z : C} (a b : Z ⟶ equalizer) (witness : a ≫ inclusion = b ≫ inclusion), a = b . obviously)
+/--
+A `fork f g`:
+```
+             f
+ X --ι--> Y ====> Z
+             g
+```            
+-/
+structure fork {Y Z : C} (f g : Y ⟶ Z) := 
+(X : C)
+(ι : X ⟶ Y)
+(w : ι ≫ f = ι ≫ g)
 
-restate_axiom Equalizer.witness
-restate_axiom Equalizer.factorisation
-restate_axiom Equalizer.uniqueness
-attribute [simp,ematch] Equalizer.factorisation_lemma
-attribute [back] Equalizer.inclusion Equalizer.map
-attribute [back] Equalizer.uniqueness_lemma
+/-- 
+A `square p q`:
+```
+X --a--> P
+|        |
+b        p
+↓        ↓
+Q --q--> R
+```
+-/
+structure square {P Q R : C} (p : P ⟶ R) (q : Q ⟶ R) :=
+(X : C)
+(a : X ⟶ P)
+(b : X ⟶ Q)
+(w : a ≫ p = b ≫ q)
 
-structure BinaryProduct (X Y : C) :=
-(product             : C)
-(left_projection     : product ⟶ X)
-(right_projection    : product ⟶ Y)
-(map                 : ∀ {Z : C} (f : Z ⟶ X) (g : Z ⟶ Y), Z ⟶ product)
-(left_factorisation  : ∀ {Z : C} (f : Z ⟶ X) (g : Z ⟶ Y), (map f g) ≫ left_projection  = f . obviously) 
-(right_factorisation : ∀ {Z : C} (f : Z ⟶ X) (g : Z ⟶ Y), (map f g) ≫ right_projection = g . obviously) 
-(uniqueness          : ∀ {Z : C} (f g : Z ⟶ product)
-                          (left_witness  : f ≫ left_projection  = g ≫ left_projection )
-                          (right_witness : f ≫ right_projection = g ≫ right_projection), f = g . obviously)
+end shapes
 
-restate_axiom BinaryProduct.left_factorisation
-restate_axiom BinaryProduct.right_factorisation
-restate_axiom BinaryProduct.uniqueness
-attribute [simp,ematch] BinaryProduct.left_factorisation_lemma BinaryProduct.right_factorisation_lemma
-attribute [back] BinaryProduct.left_projection BinaryProduct.right_projection BinaryProduct.map
-attribute [back] BinaryProduct.uniqueness_lemma
+definition is_equiv {α β : Type v} (f : α → β) := @is_iso (Type v) (category_theory.types) _ _ f
 
-structure Product {I : Type w} (F : I → C) :=
-(product       : C)
-(projection    : Π i : I, product ⟶ (F i))
-(map           : ∀ {Z : C} (f : Π i : I, Z ⟶ (F i)), Z ⟶ product)
-(factorisation : ∀ {Z : C} (f : Π i : I, Z ⟶ (F i)) (i : I), (map f) ≫ (projection i) = f i . obviously)
-(uniqueness    : ∀ {Z : C} (f g : Z ⟶ product) (witness : ∀ i : I, f ≫ (projection i) = g ≫ (projection i)), f = g . obviously)
+variables {C : Type u} [𝒞 : category.{u v} C]
+include 𝒞
 
-restate_axiom Product.factorisation
-restate_axiom Product.uniqueness
-attribute [simp,ematch] Product.factorisation_lemma
-attribute [back] Product.projection Product.map
-attribute [back] Product.uniqueness_lemma
+namespace version_0
 
-structure Coequalizer (f g : X ⟶ Y) :=
-(coequalizer   : C)
-(projection    : Y ⟶ coequalizer)
-(map           : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = g ≫ k), coequalizer ⟶ Z)
-(witness       : f ≫ projection = g ≫ projection . obviously)
-(factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = g ≫ k), projection ≫ (map k w) = k . obviously)
-(uniqueness    : ∀ {Z : C} (a b : coequalizer ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously)
+section binary_product
+structure is_binary_product {Y Z : C} (t : span Y Z) :=
+(lift : ∀ {X' : C} (f : X' ⟶ Y) (g : X' ⟶ Z), X' ⟶ t.X)
+(fac₁ : ∀ {X' : C} (f : X' ⟶ Y) (g : X' ⟶ Z), (lift f g) ≫ t.π₁ = f) 
+(fac₂ : ∀ {X' : C} (f : X' ⟶ Y) (g : X' ⟶ Z), (lift f g) ≫ t.π₂ = g) 
+(uniq : ∀ {X' : C} (f : X' ⟶ t.X), f = lift (f ≫ t.π₁) (f ≫ t.π₂))
 
-restate_axiom Coequalizer.witness
-restate_axiom Coequalizer.factorisation
-restate_axiom Coequalizer.uniqueness
-attribute [simp,ematch] Coequalizer.factorisation_lemma
-attribute [back] Coequalizer.projection Coequalizer.map
-attribute [back] Coequalizer.uniqueness_lemma
+structure binary_product (Y Z : C) extends t : span Y Z :=
+(h : is_binary_product t)
+end binary_product
 
-structure BinaryCoproduct (X Y : C) :=
-(coproduct           : C)
-(left_inclusion      : X ⟶ coproduct)
-(right_inclusion     : Y ⟶ coproduct)
-(map                 : ∀ {Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), coproduct ⟶ Z)
-(left_factorisation  : ∀ {Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), left_inclusion ≫ (map f g)  = f . obviously) 
-(right_factorisation : ∀ {Z : C} (f : X ⟶ Z) (g : Y ⟶ Z), right_inclusion ≫ (map f g) = g . obviously) 
-(uniqueness          : ∀ {Z : C} (f g : coproduct ⟶ Z)
-                          (left_witness  : left_inclusion ≫ f = left_inclusion ≫ g)
-                          (right_witness : right_inclusion ≫ f = right_inclusion ≫ g), f = g . obviously)
+section equalizer
+variables {Y Z : C}
+structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) :=
+(lift : ∀ {X' : C} (k : X' ⟶ Y) (w : k ≫ f = k ≫ g), X' ⟶ t.X)
+(fac  : ∀ {X' : C} (k : X' ⟶ Y) (w : k ≫ f = k ≫ g), (lift k w) ≫ t.ι = k)
+(uniq : mono t.ι)
 
-restate_axiom BinaryCoproduct.left_factorisation
-restate_axiom BinaryCoproduct.right_factorisation
-restate_axiom BinaryCoproduct.uniqueness
-attribute [simp,ematch] BinaryCoproduct.left_factorisation_lemma BinaryCoproduct.right_factorisation_lemma
-attribute [back] BinaryCoproduct.left_inclusion BinaryCoproduct.right_inclusion BinaryCoproduct.map
-attribute [back] BinaryCoproduct.uniqueness_lemma
+structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
+(h : is_equalizer t)
+end equalizer
 
-structure Coproduct {I : Type w} (X : I → C) :=
-(coproduct     : C)
-(inclusion     : Π i : I, (X i) ⟶ coproduct)
-(map           : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z), coproduct ⟶ Z)
-(factorisation : ∀ {Z : C} (f : Π i : I, (X i) ⟶ Z) (i : I), (inclusion i) ≫ (map f) = f i . obviously)
-(uniqueness    : ∀ {Z : C} (f g : coproduct ⟶ Z) (witness : ∀ i : I, (inclusion i) ≫ f = (inclusion i) ≫ g), f = g . obviously)
+section pullback
+variables {P Q R : C}
+structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
+(lift : ∀ {X'} {a' : X' ⟶ P} {b' : X' ⟶ Q} (w : a' ≫ p = b' ≫ q), X' ⟶ t.X)
+(fac  : ∀ {X'} {a' : X' ⟶ P} {b' : X' ⟶ Q} (w : a' ≫ p = b' ≫ q), (lift w ≫ t.a) = a' ∧ (lift w ≫ t.b) = b')
+(uniq : ∀ {X'} {a' : X' ⟶ P} {b' : X' ⟶ Q} (w : a' ≫ p = b' ≫ q) (m : X' ⟶ t.X) (w' : (m ≫ t.a) = a' ∧ (m ≫ t.b) = b'), m = lift w)
 
-restate_axiom Coproduct.factorisation
-restate_axiom Coproduct.uniqueness
-attribute [simp,ematch] Coproduct.factorisation_lemma
-attribute [back] Coproduct.inclusion Coproduct.map
-attribute [back] Coproduct.uniqueness_lemma
+structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
+(h : is_pullback t)
+end pullback
 
-structure Pullback {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :=
-(pullback : C)
-(h : pullback ⟶ X)
-(k : pullback ⟶ Y)
-(commutativity : h ≫ f = k ≫ g)
-(map : ∀ {P} {h' : P ⟶ X} {k' : P ⟶ Y} (w : h' ≫ f = k' ≫ g), P ⟶ pullback)
-(factorisation : ∀ {P} {h' : P ⟶ X} {k' : P ⟶ Y} (w : h' ≫ f = k' ≫ g), (map w ≫ h) = h' ∧ (map w ≫ k) = k')
-(uniqueness : ∀ {P} {h' : P ⟶ X} {k' : P ⟶ Y} (w : h' ≫ f = k' ≫ g) (m n : P ⟶ pullback) (w' : (m ≫ h) = h' ∧ (m ≫ k) = k' ∧ (n ≫ h) = h' ∧ (n ≫ k) = k'), m = n)
+end version_0
 
+namespace version_1
 
--- Coming in later PRs: all these things special cases of (co)limits, and hence are unique up to unique isomorphism.
+section binary_product
+structure is_binary_product {Y Z : C} (t : span Y Z) :=
+(μ : Π (s : span Y Z), s.X ⟶ t.X)
+(u : Π (s : span Y Z), ∀ (φ : s.X ⟶ t.X), (s.π₁ = φ ≫ t.π₁ ∧ s.π₁ = φ ≫ t.π₁) ↔ (φ = μ s))
+
+structure binary_product (Y Z : C) extends t : span Y Z :=
+(h : is_binary_product t)
+end binary_product
+
+section equalizer
+variables {Y Z : C}
+structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) := 
+(μ : Π (s : fork f g), s.X ⟶ t.X)
+(u : Π (s : fork f g), ∀ (φ : s.X ⟶ t.X), (s.ι = φ ≫ t.ι) ↔ (φ = μ s)).
+
+structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
+(h : is_equalizer t)
+end equalizer
+
+section pullback
+variables {P Q R : C}
+structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
+(μ : Π (s : square p q), s.X ⟶ t.X)
+(u : Π (s : square p q), ∀ (φ : s.X ⟶ t.X), (s.a = φ ≫ t.a ∧ s.b = φ ≫ t.b) ↔ (φ = μ s))
+
+structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
+(h : is_pullback t)
+end pullback
+
+end version_1
+
+namespace version_2
+section binary_product
+
+def binary_product_comparison {Y Z : C} (t : span Y Z) (X' : C) : (X' ⟶ t.X) → (X' ⟶ Y) × (X' ⟶ Z) :=
+λ φ, (φ ≫ t.π₁, φ ≫ t.π₂)
+
+def is_binary_product {Y Z : C} (t : span Y Z) := Π (X' : C), is_equiv (binary_product_comparison t X')
+
+structure binary_product (Y Z : C) extends t : span Y Z :=
+(u : is_binary_product t)
+end binary_product
+
+section equalizers
+variables {Y Z : C} 
+
+def equalizer_comparison {f g : Y ⟶ Z} (t : fork f g) (X' : C) : (X' ⟶ t.X) → { h : X' ⟶ Y // h ≫ f = h ≫ g } :=
+λ φ, ⟨ φ ≫ t.ι, begin repeat { rw category.assoc_lemma }, rw t.w, end ⟩ 
+
+def is_equalizer {f g : Y ⟶ Z} (t : fork f g) := Π (X' : C), is_equiv (equalizer_comparison t X')
+
+structure equalizer (f g : Y ⟶ Z) extends t : fork f g :=
+(u : is_equalizer t)
+end equalizers
+
+section pullbacks
+variables {P Q R : C}
+
+def pullback_comparison {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) (X' : C) : (X' ⟶ t.X) → { c : (X' ⟶ P) × (X' ⟶ Q) // c.1 ≫ p = c.2 ≫ q } :=
+λ φ, ⟨ (φ ≫ t.a, φ ≫ t.b), begin repeat { rw category.assoc_lemma }, rw t.w end ⟩ 
+
+def is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) := Π (X' : C), is_equiv (pullback_comparison t X')
+
+structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
+(u : is_pullback t)
+end pullbacks
+
+end version_2
 
 end category_theory.universal
 
