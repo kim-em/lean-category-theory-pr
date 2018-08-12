@@ -33,8 +33,8 @@ restate_axiom Equalizer.witness
 restate_axiom Equalizer.factorisation
 restate_axiom Equalizer.uniqueness
 attribute [simp,ematch] Equalizer.factorisation_lemma
-attribute [backwards] Equalizer.inclusion Equalizer.map
-attribute [backwards] Equalizer.uniqueness_lemma
+attribute [back] Equalizer.inclusion Equalizer.map
+attribute [back] Equalizer.uniqueness_lemma
 
 structure BinaryProduct (X Y : C) :=
 (product             : C)
@@ -51,8 +51,8 @@ restate_axiom BinaryProduct.left_factorisation
 restate_axiom BinaryProduct.right_factorisation
 restate_axiom BinaryProduct.uniqueness
 attribute [simp,ematch] BinaryProduct.left_factorisation_lemma BinaryProduct.right_factorisation_lemma
-attribute [backwards] BinaryProduct.left_projection BinaryProduct.right_projection BinaryProduct.map
-attribute [backwards] BinaryProduct.uniqueness_lemma
+attribute [back] BinaryProduct.left_projection BinaryProduct.right_projection BinaryProduct.map
+attribute [back] BinaryProduct.uniqueness_lemma
 
 structure Product {I : Type w} (F : I → C) :=
 (product       : C)
@@ -64,8 +64,8 @@ structure Product {I : Type w} (F : I → C) :=
 restate_axiom Product.factorisation
 restate_axiom Product.uniqueness
 attribute [simp,ematch] Product.factorisation_lemma
-attribute [backwards] Product.projection Product.map
-attribute [backwards] Product.uniqueness_lemma
+attribute [back] Product.projection Product.map
+attribute [back] Product.uniqueness_lemma
 
 structure Coequalizer (f g : X ⟶ Y) :=
 (coequalizer   : C)
@@ -79,8 +79,8 @@ restate_axiom Coequalizer.witness
 restate_axiom Coequalizer.factorisation
 restate_axiom Coequalizer.uniqueness
 attribute [simp,ematch] Coequalizer.factorisation_lemma
-attribute [backwards] Coequalizer.projection Coequalizer.map
-attribute [backwards] Coequalizer.uniqueness_lemma
+attribute [back] Coequalizer.projection Coequalizer.map
+attribute [back] Coequalizer.uniqueness_lemma
 
 structure BinaryCoproduct (X Y : C) :=
 (coproduct           : C)
@@ -97,8 +97,8 @@ restate_axiom BinaryCoproduct.left_factorisation
 restate_axiom BinaryCoproduct.right_factorisation
 restate_axiom BinaryCoproduct.uniqueness
 attribute [simp,ematch] BinaryCoproduct.left_factorisation_lemma BinaryCoproduct.right_factorisation_lemma
-attribute [backwards] BinaryCoproduct.left_inclusion BinaryCoproduct.right_inclusion BinaryCoproduct.map
-attribute [backwards] BinaryCoproduct.uniqueness_lemma
+attribute [back] BinaryCoproduct.left_inclusion BinaryCoproduct.right_inclusion BinaryCoproduct.map
+attribute [back] BinaryCoproduct.uniqueness_lemma
 
 structure Coproduct {I : Type w} (X : I → C) :=
 (coproduct     : C)
@@ -110,8 +110,8 @@ structure Coproduct {I : Type w} (X : I → C) :=
 restate_axiom Coproduct.factorisation
 restate_axiom Coproduct.uniqueness
 attribute [simp,ematch] Coproduct.factorisation_lemma
-attribute [backwards] Coproduct.inclusion Coproduct.map
-attribute [backwards] Coproduct.uniqueness_lemma
+attribute [back] Coproduct.inclusion Coproduct.map
+attribute [back] Coproduct.uniqueness_lemma
 
 structure Pullback {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :=
 (pullback : C)

@@ -15,18 +15,18 @@ structure initial_object (C : Type u) [category.{u v} C] :=
 (to         : ∀ Y : C, obj ⟶ Y)
 (uniqueness : ∀ Y : C, ∀ f g : obj ⟶ Y, f = g . obviously)
 
-attribute [backwards] initial_object.to
+attribute [back] initial_object.to
 restate_axiom initial_object.uniqueness
-attribute [backwards,ematch] initial_object.uniqueness_lemma
+attribute [back,ematch] initial_object.uniqueness_lemma
 
 structure terminal_object (C : Type u) [category.{u v} C]  :=
 (obj                            : C)
 («from»            : ∀ Y : C, Y ⟶ obj)
 (uniqueness : ∀ Y : C, ∀ f g : Y ⟶ obj, f = g . obviously)
 
-attribute [backwards] terminal_object.«from»
+attribute [back] terminal_object.«from»
 restate_axiom terminal_object.uniqueness
-attribute [backwards,ematch] terminal_object.uniqueness_lemma
+attribute [back,ematch] terminal_object.uniqueness_lemma
 
 section
 variables {C : Type u} [𝒞 : category.{u v} C]
