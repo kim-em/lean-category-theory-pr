@@ -18,7 +18,7 @@ instance types : large_category (Type u) :=
   comp_id := begin /- `obviously'` says: -/ intros, refl end,
   assoc   := begin /- `obviously'` says: -/ intros, refl end }
 
-@[simp] lemma types_Hom {α β : Type u} : (α ⟶ β) = (α → β) := rfl  
+-- @[simp] lemma types_Hom {α β : Type u} : (α ⟶ β) = (α → β) := rfl  
 @[simp] lemma types_id {α : Type u} (a : α) : (𝟙 α : α → α) a = a := rfl
 @[simp] lemma types_comp {α β γ : Type u} (f : α → β) (g : β → γ) (a : α) : (((f : α ⟶ β) ≫ (g : β ⟶ γ)) : α ⟶ γ) a = g (f a) := rfl
 

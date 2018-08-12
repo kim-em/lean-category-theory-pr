@@ -25,6 +25,15 @@ There's just one implementation of the 'shapes', but the three approaches differ
    is a bijection. As an example, we can say that a span `Y <--p-- X --q--> Z` is a binary product exactly if for
    every object `X'`, the map `(X' ⟶ X) → (X' ⟶ Y) × (X' ⟶ Z)` given by post-composition by `p` and `q` is
    a bijection. (We use a constructive version of bijection, of course.)
+
+To try them out, I proved that the category of types has equalizers, pullbacks, and binary products.
+Rather beautifully, usually `obviously` you can write exactly the same proof for all three versions:
+you just specify the shape, and `obviously` deals with the variations in what's required to check the universal
+properties. For what it's worth, `obviously` is slightly (25%) slower on version_1 than on version_0 and version_2.
+
+My opinion: version_2 looks good to me. I think it's the most intimidating one first reading, but grows on you
+quickly. It also has the potentially very significant advantage that it is easy to generalise to the setting
+of enriched categories, which the algebraic geometers are definitely going to want.
 -/
 
 import ..types
@@ -35,6 +44,8 @@ open category_theory
 namespace category_theory.universal
 
 universes u v w
+@[forward] lemma foo {α : Type u} {P : α → Prop} {x y : {a : α // P a}} (h : x = y) : x.val = y.val := 
+begin obviously, end
 
 section shapes
 /--
@@ -46,9 +57,6 @@ structure span {C : Type u} [𝒞 : category.{u v} C] (Y Z : C) :=
 (π₁ : X ⟶ Y)
 (π₂ : X ⟶ Z)
 
-variables {C : Type u} [𝒞 : category.{u v} C]
-include 𝒞
-
 /--
 A `fork f g`:
 ```
@@ -57,10 +65,12 @@ A `fork f g`:
              g
 ```            
 -/
-structure fork {Y Z : C} (f g : Y ⟶ Z) := 
+structure fork {C : Type u} [𝒞 : category.{u v} C] {Y Z : C} (f g : Y ⟶ Z) := 
 (X : C)
 (ι : X ⟶ Y)
 (w : ι ≫ f = ι ≫ g)
+
+attribute [ematch] fork.w
 
 /-- 
 A `square p q`:
@@ -72,20 +82,22 @@ b        p
 Q --q--> R
 ```
 -/
-structure square {P Q R : C} (p : P ⟶ R) (q : Q ⟶ R) :=
+structure square {C : Type u} [𝒞 : category.{u v} C] {P Q R : C} (p : P ⟶ R) (q : Q ⟶ R) :=
 (X : C)
 (a : X ⟶ P)
 (b : X ⟶ Q)
 (w : a ≫ p = b ≫ q)
 
+attribute [ematch] square.w
+
 end shapes
 
 definition is_equiv {α β : Type v} (f : α → β) := @is_iso (Type v) (category_theory.types) _ _ f
 
+namespace version_0
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 
-namespace version_0
 
 section binary_product
 structure is_binary_product {Y Z : C} (t : span Y Z) :=
@@ -123,11 +135,14 @@ end pullback
 end version_0
 
 namespace version_1
+variables {C : Type u} [𝒞 : category.{u v} C]
+include 𝒞
+
 
 section binary_product
 structure is_binary_product {Y Z : C} (t : span Y Z) :=
 (μ : Π (s : span Y Z), s.X ⟶ t.X)
-(u : Π (s : span Y Z), ∀ (φ : s.X ⟶ t.X), (s.π₁ = φ ≫ t.π₁ ∧ s.π₁ = φ ≫ t.π₁) ↔ (φ = μ s))
+(u : Π (s : span Y Z), ∀ (φ : s.X ⟶ t.X), (s.π₁ = φ ≫ t.π₁ ∧ s.π₂ = φ ≫ t.π₂) ↔ (φ = μ s))
 
 structure binary_product (Y Z : C) extends t : span Y Z :=
 (h : is_binary_product t)
@@ -156,6 +171,11 @@ end pullback
 end version_1
 
 namespace version_2
+
+variables {C : Type u} [𝒞 : category.{u v} C]
+include 𝒞
+
+
 section binary_product
 
 def binary_product_comparison {Y Z : C} (t : span Y Z) (X' : C) : (X' ⟶ t.X) → (X' ⟶ Y) × (X' ⟶ Z) :=
@@ -164,7 +184,7 @@ def binary_product_comparison {Y Z : C} (t : span Y Z) (X' : C) : (X' ⟶ t.X) �
 def is_binary_product {Y Z : C} (t : span Y Z) := Π (X' : C), is_equiv (binary_product_comparison t X')
 
 structure binary_product (Y Z : C) extends t : span Y Z :=
-(u : is_binary_product t)
+(h : is_binary_product t)
 end binary_product
 
 section equalizers
@@ -176,7 +196,7 @@ def equalizer_comparison {f g : Y ⟶ Z} (t : fork f g) (X' : C) : (X' ⟶ t.X) 
 def is_equalizer {f g : Y ⟶ Z} (t : fork f g) := Π (X' : C), is_equiv (equalizer_comparison t X')
 
 structure equalizer (f g : Y ⟶ Z) extends t : fork f g :=
-(u : is_equalizer t)
+(h : is_equalizer t)
 end equalizers
 
 section pullbacks
@@ -188,10 +208,39 @@ def pullback_comparison {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) (X' : C) : 
 def is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) := Π (X' : C), is_equiv (pullback_comparison t X')
 
 structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
-(u : is_pullback t)
+(h : is_pullback t)
 end pullbacks
 
 end version_2
+
+open version_0 -- CHANGE THIS LINE TO TRY OUT DIFFERENT VERSIONS
+
+class has_binary_products (C : Type u) [𝒞 : category.{u v} C] :=
+(binary_product : Π (Y Z : C), binary_product.{u v} Y Z)
+
+class has_equalizers (C : Type u) [𝒞 : category.{u v} C] :=
+(equalizer : Π {Y Z : C} (f g : Y ⟶ Z), equalizer f g)
+
+class has_pullbacks (C : Type u) [𝒞 : category.{u v} C] :=
+(pullback : Π {P Q R : C} (p : P ⟶ R) (q: Q ⟶ R), pullback p q)
+
+def binary_product {C : Type u} [𝒞 : category.{u v} C] [has_binary_products C] (Y Z : C) := has_binary_products.binary_product Y Z
+def equalizer {C : Type u} [𝒞 : category.{u v} C] [has_equalizers C] {Y Z : C} (f g : Y ⟶ Z) := has_equalizers.equalizer f g
+def pullback {C : Type u} [𝒞 : category.{u v} C] [has_pullbacks C] {P Q R : C} (p : P ⟶ R) (q: Q ⟶ R) := has_pullbacks.pullback p q
+
+-- obviously has a bit of trouble with version_1, and benefits from the following help:
+-- local attribute [forward] fork.w square.w
+
+instance : has_binary_products (Type u) := 
+{ binary_product := λ Y Z, { X := Y × Z, π₁ := prod.fst, π₂ := prod.snd, h := by obviously } }
+
+instance : has_equalizers (Type u) := 
+{ equalizer := λ Y Z f g, { X := { y : Y // f y = g y }, ι := subtype.val, w := by obviously, h := by obviously } }
+
+instance : has_pullbacks (Type u) := 
+{ pullback := λ P Q R p q, { X := { z : P × Q // p z.1 = q z.2 }, a := λ z, z.val.1, b := λ z, z.val.2, w := by obviously, h := by obviously } }
+
+
 
 end category_theory.universal
 
