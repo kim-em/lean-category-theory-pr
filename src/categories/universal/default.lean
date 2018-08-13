@@ -71,7 +71,8 @@ structure fork {C : Type u} [𝒞 : category.{u v} C] {Y Z : C} (f g : Y ⟶ Z) 
 (ι : X ⟶ Y)
 (w : ι ≫ f = ι ≫ g . obviously)
 
-attribute [ematch] fork.w
+restate_axiom fork.w
+attribute [ematch] fork.w_lemma
 
 /-- 
 A `square p q`:
@@ -88,7 +89,8 @@ structure square {C : Type u} [𝒞 : category.{u v} C] {P Q R : C} (p : P ⟶ R
 (b : X ⟶ Q)
 (w : a ≫ p = b ≫ q . obviously)
 
-attribute [ematch] square.w
+restate_axiom square.w
+attribute [ematch] square.w_lemma
 
 end shapes
 
@@ -106,6 +108,9 @@ structure is_binary_product {Y Z : C} (t : span Y Z) :=
 (fac₂ : ∀ (s : span Y Z), (lift s) ≫ t.π₂ = s.π₂) 
 (uniq : ∀ (s : span Y Z) (m : s.X ⟶ t.X) (w₁ : m ≫ t.π₁ = s.π₁) (w₂ : m ≫ t.π₂ = s.π₂), m = lift s)
 
+@[extensionality] lemma is_binary_product.ext {Y Z : C} {t : span Y Z} (P Q : is_binary_product t) (w : P.lift = Q.lift) : P = Q :=
+begin cases P, cases Q, obviously end
+
 lemma is_binary_product.uniq' {Y Z : C} {t : span Y Z} (h : is_binary_product t) {X' : C} (m : X' ⟶ t.X) : m = h.lift { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } :=
 h.uniq { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } m (by obviously) (by obviously)
 
@@ -122,12 +127,18 @@ structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) :=
 (fac  : ∀ (s : fork f g), (lift s) ≫ t.ι = s.ι)
 (uniq : ∀ (s : fork f g) (m : s.X ⟶ t.X) (w : m ≫ t.ι = s.ι), m = lift s)
 
+@[extensionality] lemma is_equalizer.ext {f g : Y ⟶ Z} {t : fork f g} (P Q : is_equalizer t) (w : P.lift = Q.lift) : P = Q :=
+begin cases P, cases Q, obviously end
+
 lemma is_equalizer.uniq' {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) : mono (t.ι) :=
-{ right_cancellation := λ X' k l, begin 
-                                    let s : fork f g := { X := X', ι := k ≫ t.ι, w := sorry }, 
+{ right_cancellation := λ X' k l w, begin 
+                                    let s : fork f g := { X := X', ι := k ≫ t.ι }, 
                                     have uniq_k := h.uniq s k (by obviously),
                                     have uniq_l := h.uniq s l (by obviously),
+                                    obviously,
                               end }
+
+-- TODO provide an alternative constructor via uniq'
 
 structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
 (h : is_equalizer t)
@@ -140,6 +151,9 @@ structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
 (fac₁ : ∀ (s : square p q), (lift s ≫ t.a) = s.a)
 (fac₂ : ∀ (s : square p q), (lift s ≫ t.b) = s.b)
 (uniq : ∀ (s : square p q) (m : s.X ⟶ t.X) (w₁ : (m ≫ t.a) = s.a) (w₂ : (m ≫ t.b) = s.b), m = lift s)
+
+@[extensionality] lemma is_pullback.ext {p : P ⟶ R} {q : Q ⟶ R} {t : square p q} (P Q : is_pullback t) (w : P.lift = Q.lift) : P = Q :=
+begin cases P, cases Q, obviously end
 
 structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
 (h : is_pullback t)
@@ -157,6 +171,9 @@ structure is_binary_product {Y Z : C} (t : span Y Z) :=
 (lift : Π (s : span Y Z), s.X ⟶ t.X)
 (univ : Π (s : span Y Z), ∀ (φ : s.X ⟶ t.X), (s.π₁ = φ ≫ t.π₁ ∧ s.π₂ = φ ≫ t.π₂) ↔ (φ = lift s))
 
+@[extensionality] lemma is_binary_product.ext {Y Z : C} {t : span Y Z} (P Q : is_binary_product t) (w : P.lift = Q.lift) : P = Q :=
+begin cases P, cases Q, obviously end
+
 structure binary_product (Y Z : C) extends t : span Y Z :=
 (h : is_binary_product t)
 end binary_product
@@ -167,6 +184,9 @@ structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) :=
 (lift : Π (s : fork f g), s.X ⟶ t.X)
 (univ : Π (s : fork f g), ∀ (φ : s.X ⟶ t.X), (s.ι = φ ≫ t.ι) ↔ (φ = lift s)).
 
+@[extensionality] lemma is_equalizer.ext {f g : Y ⟶ Z} {t : fork f g} (P Q : is_equalizer t) (w : P.lift = Q.lift) : P = Q :=
+begin cases P, cases Q, obviously end
+
 structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
 (h : is_equalizer t)
 end equalizer
@@ -176,6 +196,9 @@ variables {P Q R : C}
 structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
 (lift : Π (s : square p q), s.X ⟶ t.X)
 (univ : Π (s : square p q), ∀ (φ : s.X ⟶ t.X), (s.a = φ ≫ t.a ∧ s.b = φ ≫ t.b) ↔ (φ = lift s))
+
+@[extensionality] lemma is_pullback.ext {p : P ⟶ R} {q : Q ⟶ R} {t : square p q} (P Q : is_pullback t) (w : P.lift = Q.lift) : P = Q :=
+begin cases P, cases Q, obviously end
 
 structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
 (h : is_pullback t)
@@ -204,7 +227,7 @@ section equalizers
 variables {Y Z : C} 
 
 def equalizer_comparison {f g : Y ⟶ Z} (t : fork f g) (X' : C) : (X' ⟶ t.X) → { h : X' ⟶ Y // h ≫ f = h ≫ g } :=
-λ φ, ⟨ φ ≫ t.ι, begin repeat { rw category.assoc_lemma }, rw t.w, end ⟩ 
+λ φ, ⟨ φ ≫ t.ι, by obviously ⟩ 
 
 def is_equalizer {f g : Y ⟶ Z} (t : fork f g) := Π (X' : C), is_equiv (equalizer_comparison t X')
 
@@ -216,7 +239,7 @@ section pullbacks
 variables {P Q R : C}
 
 def pullback_comparison {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) (X' : C) : (X' ⟶ t.X) → { c : (X' ⟶ P) × (X' ⟶ Q) // c.1 ≫ p = c.2 ≫ q } :=
-λ φ, ⟨ (φ ≫ t.a, φ ≫ t.b), begin repeat { rw category.assoc_lemma }, rw t.w end ⟩ 
+λ φ, ⟨ (φ ≫ t.a, φ ≫ t.b), by obviously ⟩ 
 
 def is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) := Π (X' : C), is_equiv (pullback_comparison t X')
 
@@ -226,7 +249,7 @@ end pullbacks
 
 end bijective
 
-open explicit -- CHANGE THIS LINE TO TRY OUT DIFFERENT VERSIONS
+open explicit -- CHANGE THIS LINE TO TRY OUT DIFFERENT VERSIONS explict/singleton/bijective
 
 class has_binary_products (C : Type u) [𝒞 : category.{u v} C] :=
 (binary_product : Π (Y Z : C), binary_product.{u v} Y Z)
@@ -241,8 +264,7 @@ def binary_product {C : Type u} [𝒞 : category.{u v} C] [has_binary_products C
 def equalizer {C : Type u} [𝒞 : category.{u v} C] [has_equalizers C] {Y Z : C} (f g : Y ⟶ Z) := has_equalizers.equalizer f g
 def pullback {C : Type u} [𝒞 : category.{u v} C] [has_pullbacks C] {P Q R : C} (p : P ⟶ R) (q: Q ⟶ R) := has_pullbacks.pullback p q
 
--- obviously has a bit of trouble with version_1, and benefits from the following help:
--- local attribute [forward] fork.w square.w
+local attribute [forward] fork.w square.w
 
 instance : has_binary_products (Type u) := 
 { binary_product := λ Y Z, { X := Y × Z, π₁ := prod.fst, π₂ := prod.snd, h := by obviously } }
