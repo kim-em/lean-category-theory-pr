@@ -69,7 +69,7 @@ A `fork f g`:
 -/
 structure fork {C : Type u} [𝒞 : category.{u v} C] {Y Z : C} (f g : Y ⟶ Z) extends shape C := 
 (ι : X ⟶ Y)
-(w : ι ≫ f = ι ≫ g)
+(w : ι ≫ f = ι ≫ g . obviously)
 
 attribute [ematch] fork.w
 
@@ -86,7 +86,7 @@ Q --q--> R
 structure square {C : Type u} [𝒞 : category.{u v} C] {P Q R : C} (p : P ⟶ R) (q : Q ⟶ R) extends shape C :=
 (a : X ⟶ P)
 (b : X ⟶ Q)
-(w : a ≫ p = b ≫ q)
+(w : a ≫ p = b ≫ q . obviously)
 
 attribute [ematch] square.w
 
@@ -104,7 +104,12 @@ structure is_binary_product {Y Z : C} (t : span Y Z) :=
 (lift : ∀ (s : span Y Z), s.X ⟶ t.X)
 (fac₁ : ∀ (s : span Y Z), (lift s) ≫ t.π₁ = s.π₁) 
 (fac₂ : ∀ (s : span Y Z), (lift s) ≫ t.π₂ = s.π₂) 
-(uniq : ∀ {X' : C} (f : X' ⟶ t.X), f = lift { X := X', π₁ := (f ≫ t.π₁), π₂ := (f ≫ t.π₂) })
+(uniq : ∀ (s : span Y Z) (m : s.X ⟶ t.X) (w₁ : m ≫ t.π₁ = s.π₁) (w₂ : m ≫ t.π₂ = s.π₂), m = lift s)
+
+lemma is_binary_product.uniq' {Y Z : C} {t : span Y Z} (h : is_binary_product t) {X' : C} (m : X' ⟶ t.X) : m = h.lift { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } :=
+h.uniq { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } m (by obviously) (by obviously)
+
+-- TODO provide alternative constructor using uniq' instead of uniq.
 
 structure binary_product (Y Z : C) extends t : span Y Z :=
 (h : is_binary_product t)
@@ -115,7 +120,14 @@ variables {Y Z : C}
 structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) :=
 (lift : ∀ (s : fork f g), s.X ⟶ t.X)
 (fac  : ∀ (s : fork f g), (lift s) ≫ t.ι = s.ι)
-(uniq : mono t.ι)
+(uniq : ∀ (s : fork f g) (m : s.X ⟶ t.X) (w : m ≫ t.ι = s.ι), m = lift s)
+
+lemma is_equalizer.uniq' {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) : mono (t.ι) :=
+{ right_cancellation := λ X' k l, begin 
+                                    let s : fork f g := { X := X', ι := k ≫ t.ι, w := sorry }, 
+                                    have uniq_k := h.uniq s k (by obviously),
+                                    have uniq_l := h.uniq s l (by obviously),
+                              end }
 
 structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
 (h : is_equalizer t)
@@ -125,8 +137,9 @@ section pullback
 variables {P Q R : C}
 structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
 (lift : ∀ (s : square p q), s.X ⟶ t.X)
-(fac  : ∀ (s : square p q), (lift s ≫ t.a) = s.a ∧ (lift s ≫ t.b) = s.b)
-(uniq : ∀ (s : square p q) (m : s.X ⟶ t.X) (w' : (m ≫ t.a) = s.a ∧ (m ≫ t.b) = s.b), m = lift s)
+(fac₁ : ∀ (s : square p q), (lift s ≫ t.a) = s.a)
+(fac₂ : ∀ (s : square p q), (lift s ≫ t.b) = s.b)
+(uniq : ∀ (s : square p q) (m : s.X ⟶ t.X) (w₁ : (m ≫ t.a) = s.a) (w₂ : (m ≫ t.b) = s.b), m = lift s)
 
 structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
 (h : is_pullback t)
