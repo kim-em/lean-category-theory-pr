@@ -130,7 +130,7 @@ structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) :=
 @[extensionality] lemma is_equalizer.ext {f g : Y ⟶ Z} {t : fork f g} (P Q : is_equalizer t) (w : P.lift = Q.lift) : P = Q :=
 begin cases P, cases Q, obviously end
 
-lemma is_equalizer.uniq' {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) : mono (t.ι) :=
+lemma is_equalizer.mono {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) : mono (t.ι) :=
 { right_cancellation := λ X' k l w, begin 
                                     let s : fork f g := { X := X', ι := k ≫ t.ι }, 
                                     have uniq_k := h.uniq s k (by obviously),
