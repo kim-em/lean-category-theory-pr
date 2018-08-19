@@ -36,7 +36,9 @@ quickly. It also has the potentially very significant advantage that it is easy 
 of enriched categories, which the algebraic geometers are definitely going to want.
 -/
 
-import ..types
+import category_theory.types
+import categories.isomorphism
+import categories.tactics
 
 open category_theory
 
@@ -51,13 +53,15 @@ section shapes
 structure shape (C : Type u) [𝒞 : category.{u v} C] :=
 (X : C)
 
+structure point (C : Type u) [𝒞 : category.{u v} C] extends shape C.
+
 /--
 A `span Y Z`:
 `Y <--π₁-- X --π₂--> Z`
 -/
-structure span {C : Type u} [𝒞 : category.{u v} C] (Y Z : C) extends shape C :=
-(π₁ : X ⟶ Y)
-(π₂ : X ⟶ Z)
+structure span {C : Type u} [𝒞 : category.{u v} C] (Y₁ Y₂ : C) extends shape C :=
+(π₁ : X ⟶ Y₁)
+(π₂ : X ⟶ Y₂)
 
 /--
 A `fork f g`:
@@ -84,13 +88,20 @@ b        p
 Q --q--> R
 ```
 -/
-structure square {C : Type u} [𝒞 : category.{u v} C] {P Q R : C} (p : P ⟶ R) (q : Q ⟶ R) extends shape C :=
-(a : X ⟶ P)
-(b : X ⟶ Q)
-(w : a ≫ p = b ≫ q . obviously)
+structure square {C : Type u} [𝒞 : category.{u v} C] {Y₁ Y₂ Z : C} (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z)extends shape C :=
+(π₁ : X ⟶ Y₁)
+(π₂ : X ⟶ Y₂)
+(w : π₁ ≫ r₁ = π₂ ≫ r₂ . obviously)
 
 restate_axiom square.w
 attribute [ematch] square.w_lemma
+
+structure cone {C : Type u} [𝒞 : category.{u v} C] {J : Type v} [small_category J] (F : J ↝ C) extends shape C :=
+(π : ∀ j : J, X ⟶ F j)
+(w : ∀ {j j' : J} (f : j ⟶ j'), π j ≫ (F.map f) = π j')
+
+restate_axiom cone.w
+attribute [ematch] cone.w_lemma
 
 end shapes
 
@@ -100,15 +111,33 @@ namespace explicit
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 
+section initial
+structure is_terminal (t : C) :=
+(lift : ∀ (s : C), s ⟶ t)
+(uniq : ∀ (s : C) (m : s ⟶ t), m = lift s . obviously)
+
+@[extensionality] lemma is_terminal.ext {X : C} (P Q : is_terminal.{u v} X) : P = Q := 
+begin cases P, cases Q, obviously, end
+
+structure terminal_object extends t : point C :=
+(h : is_terminal.{u v} t.X)
+end initial
 
 section binary_product
 structure is_binary_product {Y Z : C} (t : span Y Z) :=
 (lift : ∀ (s : span Y Z), s.X ⟶ t.X)
-(fac₁ : ∀ (s : span Y Z), (lift s) ≫ t.π₁ = s.π₁) 
-(fac₂ : ∀ (s : span Y Z), (lift s) ≫ t.π₂ = s.π₂) 
-(uniq : ∀ (s : span Y Z) (m : s.X ⟶ t.X) (w₁ : m ≫ t.π₁ = s.π₁) (w₂ : m ≫ t.π₂ = s.π₂), m = lift s)
+(fac₁ : ∀ (s : span Y Z), (lift s) ≫ t.π₁ = s.π₁ . obviously) 
+(fac₂ : ∀ (s : span Y Z), (lift s) ≫ t.π₂ = s.π₂ . obviously) 
+(uniq : ∀ (s : span Y Z) (m : s.X ⟶ t.X) (w₁ : m ≫ t.π₁ = s.π₁) (w₂ : m ≫ t.π₂ = s.π₂), m = lift s . obviously)
 
-@[extensionality] lemma is_binary_product.ext {Y Z : C} {t : span Y Z} (P Q : is_binary_product t) (w : P.lift = Q.lift) : P = Q :=
+restate_axiom is_binary_product.fac₁
+attribute [simp,ematch] is_binary_product.fac₁_lemma
+restate_axiom is_binary_product.fac₂
+attribute [simp,ematch] is_binary_product.fac₂_lemma
+restate_axiom is_binary_product.uniq
+attribute [ematch, back'] is_binary_product.uniq_lemma
+
+@[extensionality] lemma is_binary_product.ext {Y Z : C} {t : span Y Z} (P Q : is_binary_product t) : P = Q :=
 begin cases P, cases Q, obviously end
 
 lemma is_binary_product.uniq' {Y Z : C} {t : span Y Z} (h : is_binary_product t) {X' : C} (m : X' ⟶ t.X) : m = h.lift { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } :=
@@ -118,19 +147,46 @@ h.uniq { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } m (by obvious
 
 structure binary_product (Y Z : C) extends t : span Y Z :=
 (h : is_binary_product t)
+
+lemma is_binary_product.univ {Y Z : C} {t : span Y Z} (h : is_binary_product t) (s : span Y Z) (φ : s.X ⟶ t.X) : (φ ≫ t.π₁ = s.π₁ ∧ φ ≫ t.π₂ = s.π₂) ↔ (φ = h.lift s) :=
+begin
+obviously
+end
+
+lemma is_binary_product.of_lift_univ {Y Z : C} {t : span Y Z}
+  (lift : Π (s : span Y Z), s.X ⟶ t.X)
+  (univ : Π (s : span Y Z) (φ : s.X ⟶ t.X), (φ ≫ t.π₁ = s.π₁ ∧ φ ≫ t.π₂ = s.π₂) ↔ (φ = lift s)) : is_binary_product t :=
+{ lift := lift,
+  fac₁ := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))).left, -- PROJECT automation
+  fac₂ := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))).right,
+  uniq := begin tidy, apply univ_s_m.mp, obviously, end } -- TODO should be easy to automate
+
+@[reducible] def binary_product_comparison {Y Z : C} (t : span Y Z) (X' : C) : (X' ⟶ t.X) → (X' ⟶ Y) × (X' ⟶ Z) :=
+λ φ, (φ ≫ t.π₁, φ ≫ t.π₂)
+
+def is_binary_product.comparison {Y Z : C} {t : span Y Z} (h : is_binary_product t) (X' : C) : is_equiv (binary_product_comparison t X') :=
+{ inv := λ p, h.lift ⟨ ⟨ X' ⟩, p.1, p.2 ⟩,
+  hom_inv_id := begin tidy, symmetry, apply h.uniq, end,
+}
+
 end binary_product
 
 section equalizer
 variables {Y Z : C}
 structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) :=
 (lift : ∀ (s : fork f g), s.X ⟶ t.X)
-(fac  : ∀ (s : fork f g), (lift s) ≫ t.ι = s.ι)
-(uniq : ∀ (s : fork f g) (m : s.X ⟶ t.X) (w : m ≫ t.ι = s.ι), m = lift s)
+(fac  : ∀ (s : fork f g), (lift s) ≫ t.ι = s.ι . obviously)
+(uniq : ∀ (s : fork f g) (m : s.X ⟶ t.X) (w : m ≫ t.ι = s.ι), m = lift s . obviously)
 
-@[extensionality] lemma is_equalizer.ext {f g : Y ⟶ Z} {t : fork f g} (P Q : is_equalizer t) (w : P.lift = Q.lift) : P = Q :=
+restate_axiom is_equalizer.fac
+attribute [simp,ematch] is_equalizer.fac_lemma
+restate_axiom is_equalizer.uniq
+attribute [ematch, back'] is_equalizer.uniq_lemma
+
+@[extensionality] lemma is_equalizer.ext {f g : Y ⟶ Z} {t : fork f g} (P Q : is_equalizer t) : P = Q :=
 begin cases P, cases Q, obviously end
 
-lemma is_equalizer.uniq' {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) : mono (t.ι) :=
+lemma is_equalizer.mono {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) : mono (t.ι) :=
 { right_cancellation := λ X' k l w, begin 
                                     let s : fork f g := { X := X', ι := k ≫ t.ι }, 
                                     have uniq_k := h.uniq s k (by obviously),
@@ -138,79 +194,80 @@ lemma is_equalizer.uniq' {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) : m
                                     obviously,
                               end }
 
--- TODO provide an alternative constructor via uniq'
+-- TODO provide an alternative constructor via mono
 
 structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
 (h : is_equalizer t)
+
+lemma is_equalizer.univ {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) (s : fork f g) (φ : s.X ⟶ t.X) : (φ ≫ t.ι = s.ι) ↔ (φ = h.lift s) :=
+begin
+obviously
+end
+
+
 end equalizer
 
 section pullback
-variables {P Q R : C}
-structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
-(lift : ∀ (s : square p q), s.X ⟶ t.X)
-(fac₁ : ∀ (s : square p q), (lift s ≫ t.a) = s.a)
-(fac₂ : ∀ (s : square p q), (lift s ≫ t.b) = s.b)
-(uniq : ∀ (s : square p q) (m : s.X ⟶ t.X) (w₁ : (m ≫ t.a) = s.a) (w₂ : (m ≫ t.b) = s.b), m = lift s)
+variables {Y₁ Y₂ Z : C}
+structure is_pullback {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} (t : square r₁ r₂) :=
+(lift : ∀ (s : square r₁ r₂), s.X ⟶ t.X)
+(fac₁ : ∀ (s : square r₁ r₂), (lift s ≫ t.π₁) = s.π₁ . obviously)
+(fac₂ : ∀ (s : square r₁ r₂), (lift s ≫ t.π₂) = s.π₂ . obviously)
+(uniq : ∀ (s : square r₁ r₂) (m : s.X ⟶ t.X) (w₁ : (m ≫ t.π₁) = s.π₁) (w₂ : (m ≫ t.π₂) = s.π₂), m = lift s . obviously)
 
-@[extensionality] lemma is_pullback.ext {p : P ⟶ R} {q : Q ⟶ R} {t : square p q} (P Q : is_pullback t) (w : P.lift = Q.lift) : P = Q :=
+restate_axiom is_pullback.fac₁
+attribute [simp,ematch] is_pullback.fac₁_lemma
+restate_axiom is_pullback.fac₂
+attribute [simp,ematch] is_pullback.fac₂_lemma
+restate_axiom is_pullback.uniq
+attribute [ematch, back'] is_pullback.uniq_lemma
+
+@[extensionality] lemma is_pullback.ext {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} {t : square r₁ r₂} (P Q : is_pullback t) : P = Q :=
 begin cases P, cases Q, obviously end
 
-structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
+structure pullback (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z) extends t : square r₁ r₂ :=
 (h : is_pullback t)
+
+lemma is_pullback.univ  {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} {t : square r₁ r₂} (h : is_pullback t) (s : square r₁ r₂) (φ : s.X ⟶ t.X) : (φ ≫ t.π₁ = s.π₁ ∧ φ ≫ t.π₂ = s.π₂) ↔ (φ = h.lift s) :=
+begin
+obviously
+end
+
 end pullback
 
+section limit
+variables {J : Type v} [𝒥 : small_category J]
+include 𝒥
+
+structure is_limit {F : J ↝ C} (t : cone F) :=
+(lift : ∀ (s : cone F), s.X ⟶ t.X)
+(fac  : ∀ (s : cone F) (j : J), (lift s ≫ t.π j) = s.π j . obviously)
+(uniq : ∀ (s : cone F) (m : s.X ⟶ t.X) (w : ∀ j : J, (m ≫ t.π j) = s.π j), m = lift s . obviously)
+
+restate_axiom is_limit.fac
+attribute [simp,ematch] is_limit.fac_lemma
+restate_axiom is_limit.uniq
+attribute [ematch, back'] is_limit.uniq_lemma
+
+@[extensionality] lemma is_limit.ext {F : J ↝ C} {t : cone F} (P Q : is_limit t) : P = Q :=
+begin cases P, cases Q, obviously end
+
+structure limit (F : J ↝ C) extends t : cone F :=
+(h : is_limit t)
+
+lemma is_limit.univ {F : J ↝ C} {t : cone F} (h : is_limit t) (s : cone F) (φ : s.X ⟶ t.X) : (∀ j, φ ≫ t.π j = s.π j) ↔ (φ = h.lift s) :=
+begin
+obviously,
+end
+
+end limit
 end explicit
 
-namespace singleton
-variables {C : Type u} [𝒞 : category.{u v} C]
-include 𝒞
-
-
-section binary_product
-structure is_binary_product {Y Z : C} (t : span Y Z) :=
-(lift : Π (s : span Y Z), s.X ⟶ t.X)
-(univ : Π (s : span Y Z), ∀ (φ : s.X ⟶ t.X), (s.π₁ = φ ≫ t.π₁ ∧ s.π₂ = φ ≫ t.π₂) ↔ (φ = lift s))
-
-@[extensionality] lemma is_binary_product.ext {Y Z : C} {t : span Y Z} (P Q : is_binary_product t) (w : P.lift = Q.lift) : P = Q :=
-begin cases P, cases Q, obviously end
-
-structure binary_product (Y Z : C) extends t : span Y Z :=
-(h : is_binary_product t)
-end binary_product
-
-section equalizer
-variables {Y Z : C}
-structure is_equalizer {f g : Y ⟶ Z} (t : fork f g) := 
-(lift : Π (s : fork f g), s.X ⟶ t.X)
-(univ : Π (s : fork f g), ∀ (φ : s.X ⟶ t.X), (s.ι = φ ≫ t.ι) ↔ (φ = lift s)).
-
-@[extensionality] lemma is_equalizer.ext {f g : Y ⟶ Z} {t : fork f g} (P Q : is_equalizer t) (w : P.lift = Q.lift) : P = Q :=
-begin cases P, cases Q, obviously end
-
-structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
-(h : is_equalizer t)
-end equalizer
-
-section pullback
-variables {P Q R : C}
-structure is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) :=
-(lift : Π (s : square p q), s.X ⟶ t.X)
-(univ : Π (s : square p q), ∀ (φ : s.X ⟶ t.X), (s.a = φ ≫ t.a ∧ s.b = φ ≫ t.b) ↔ (φ = lift s))
-
-@[extensionality] lemma is_pullback.ext {p : P ⟶ R} {q : Q ⟶ R} {t : square p q} (P Q : is_pullback t) (w : P.lift = Q.lift) : P = Q :=
-begin cases P, cases Q, obviously end
-
-structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
-(h : is_pullback t)
-end pullback
-
-end singleton
 
 namespace bijective
 
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
-
 
 section binary_product
 
@@ -236,14 +293,14 @@ structure equalizer (f g : Y ⟶ Z) extends t : fork f g :=
 end equalizers
 
 section pullbacks
-variables {P Q R : C}
+variables {Y₁ Y₂ Z : C}
 
-def pullback_comparison {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) (X' : C) : (X' ⟶ t.X) → { c : (X' ⟶ P) × (X' ⟶ Q) // c.1 ≫ p = c.2 ≫ q } :=
-λ φ, ⟨ (φ ≫ t.a, φ ≫ t.b), by obviously ⟩ 
+def pullback_comparison {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} (t : square r₁ r₂) (X' : C) : (X' ⟶ t.X) → { c : (X' ⟶ Y₁) × (X' ⟶ Y₂) // c.1 ≫ r₁ = c.2 ≫ r₂ } :=
+λ φ, ⟨ (φ ≫ t.π₁, φ ≫ t.π₂), by obviously ⟩ 
 
-def is_pullback {p : P ⟶ R} {q : Q ⟶ R} (t : square p q) := Π (X' : C), is_equiv (pullback_comparison t X')
+def is_pullback {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} (t : square r₁ r₂) := Π (X' : C), is_equiv (pullback_comparison t X')
 
-structure pullback (p : P ⟶ R) (q : Q ⟶ R) extends t : square p q :=
+structure pullback (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z) extends t : square r₁ r₂ :=
 (h : is_pullback t)
 end pullbacks
 
@@ -273,7 +330,7 @@ instance : has_equalizers (Type u) :=
 { equalizer := λ Y Z f g, { X := { y : Y // f y = g y }, ι := subtype.val, w := by obviously, h := by obviously } }
 
 instance : has_pullbacks (Type u) := 
-{ pullback := λ P Q R p q, { X := { z : P × Q // p z.1 = q z.2 }, a := λ z, z.val.1, b := λ z, z.val.2, w := by obviously, h := by obviously } }
+{ pullback := λ Y₁ Y₂ Z r₁ r₂, { X := { z : Y₁ × Y₂ // r₁ z.1 = r₂ z.2 }, π₁ := λ z, z.val.1, π₂ := λ z, z.val.2, w := by obviously, h := by obviously } }
 
 
 
