@@ -1,4 +1,4 @@
-import ...types
+import category_theory.types
 import ..instances
 import tidy.its
 import tactic.interactive

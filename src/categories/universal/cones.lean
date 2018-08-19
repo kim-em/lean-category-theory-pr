@@ -54,7 +54,7 @@ end
 end ConeMorphism
 
 instance Cones (F : J ↝ C) : category.{(max u v) v} (Cone F) :=
-{ Hom      := λ X Y, ConeMorphism X Y,
+{ hom      := λ X Y, ConeMorphism X Y,
   comp    := λ X Y Z f g, { cone_morphism := f.cone_morphism ≫ g.cone_morphism,
                             commutativity := begin /- `obviously'` says: -/ intros, simp end },
   id      := λ X, { cone_morphism := 𝟙 X.cone_point, 
@@ -115,7 +115,7 @@ end
 end CoconeMorphism
 
 instance Cocones (F : J ↝ C) : category.{(max u v) v} (Cocone F) := 
-{ Hom     := λ X Y, CoconeMorphism X Y,
+{ hom     := λ X Y, CoconeMorphism X Y,
   comp    := λ X Y Z f g, { cocone_morphism := f.cocone_morphism ≫ g.cocone_morphism,
                             commutativity   := begin /- `obviously'` says: -/ intros, simp end },
   id      := λ X,         { cocone_morphism := 𝟙 X.cocone_point,
