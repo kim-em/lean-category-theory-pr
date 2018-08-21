@@ -103,6 +103,10 @@ restate_axiom is_iso.hom_inv_id
 restate_axiom is_iso.inv_hom_id
 attribute [simp,ematch] is_iso.hom_inv_id_lemma is_iso.inv_hom_id_lemma
 
+def inv' {f : X ⟶ Y} (p : is_iso f) := is_iso.inv f 
+def hom_inv_id' {f : X ⟶ Y} (p : is_iso f) : f ≫ inv' p = 𝟙 X := is_iso.hom_inv_id_lemma f 
+def inv_hom_id' {f : X ⟶ Y} (p : is_iso f) : inv' p ≫ f = 𝟙 Y := is_iso.inv_hom_id_lemma f 
+
 namespace is_iso
 
 instance (X : C) : is_iso (𝟙 X) := 

@@ -2,40 +2,6 @@
 -- Released under Apache 2.0 license as described in the file LICENSE.
 -- Authors: Scott Morrison, Reid Barton, Mario Carneiro
 
-/-
-This file demonstrates three different ways to handle 'explicit' limits, e.g. (binary) products, equalizers, and pullbacks.
-There will of course also be a development of these as special cases of limits (as initial objects in a category of cones).
-
-All three versions use the notions
-  `fork`, `square`, and `span`.
-On these, we have predicates
-  `is_equalizer`, `is_pullback`, and `is_binary_product`.
-Finally there are bundled objects
-  `equalizer`, `pullback`, and `binary_product`.
-
-There's just one implementation of the 'shapes', but the three approaches differ in their handling of the `is_X` structures.
-
-0) `explicit` is as explicit as possible, writing everything out in terms of fields `lift`, `fac`, and `uniq`,
-   which respectively show how to lift a map, the factorisation property it has, and the uniqueness of that factorisation.   
-1) `singleton` uses two fields, `μ` and `u`. `μ` shows how to construct a map from another shape, and `u` expresses
-   the uniqueness of this map using the pattern "for all maps from another shape, it factorises correctly if and only if it is the lift".
-   (Thanks for Mario for helping with this one.)
-2) `bijective`, closely following [Reid's work](https://github.com/rwbarton/lean-homotopy-theory/blob/lean-3.4.1/src/categories/colimits.lean)
-   expresses the universal property by stating that a certain map between hom sets (or products and subsets of such)
-   is a bijection. As an example, we can say that a span `Y <--p-- X --q--> Z` is a binary product exactly if for
-   every object `X'`, the map `(X' ⟶ X) → (X' ⟶ Y) × (X' ⟶ Z)` given by post-composition by `p` and `q` is
-   a bijection. (We use a constructive version of bijection, of course.)
-
-To try them out, I proved that the category of types has equalizers, pullbacks, and binary products.
-Rather beautifully, usually `obviously` you can write exactly the same proof for all three versions:
-you just specify the shape, and `obviously` deals with the variations in what's required to check the universal
-properties. For what it's worth, `obviously` is slightly (25%) slower on `singleton` than on `explicit` and `bijective`.
-
-My opinion: `bijective` looks good to me. I think it's the most intimidating one first reading, but grows on you
-quickly. It also has the potentially very significant advantage that it is easy to generalise to the setting
-of enriched categories, which the algebraic geometers are definitely going to want.
--/
-
 import category_theory.types
 import categories.isomorphism
 import categories.tactics
@@ -46,8 +12,13 @@ open category_theory
 namespace category_theory.universal
 
 universes u v w
-@[forward] lemma foo {α : Type u} {P : α → Prop} {x y : {a : α // P a}} (h : x = y) : x.val = y.val := 
+
+definition is_equiv {α β : Type v} (f : α → β) := @is_iso (Type v) (category_theory.types) _ _ f
+
+@[forward] lemma subtype_val {α : Type u} {P : α → Prop} {x y : {a : α // P a}} (h : x = y) : x.val = y.val := 
 begin obviously, end
+
+section
 
 section shapes
 structure shape (C : Type u) [𝒞 : category.{u v} C] :=
@@ -81,11 +52,11 @@ attribute [ematch] fork.w_lemma
 /-- 
 A `square p q`:
 ```
-X --a--> P
-|        |
-b        p
-↓        ↓
-Q --q--> R
+X  --π₁--> Y₁
+|          |
+π₂         r₁
+↓          ↓
+Y₂ --r₂--> Z
 ```
 -/
 structure square {C : Type u} [𝒞 : category.{u v} C] {Y₁ Y₂ Z : C} (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z)extends shape C :=
@@ -105,13 +76,10 @@ attribute [ematch] cone.w_lemma
 
 end shapes
 
-definition is_equiv {α β : Type v} (f : α → β) := @is_iso (Type v) (category_theory.types) _ _ f
-
-namespace explicit
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 
-section initial
+section terminal
 structure is_terminal (t : C) :=
 (lift : ∀ (s : C), s ⟶ t)
 (uniq : ∀ (s : C) (m : s ⟶ t), m = lift s . obviously)
@@ -121,7 +89,7 @@ begin cases P, cases Q, obviously, end
 
 structure terminal_object extends t : point C :=
 (h : is_terminal.{u v} t.X)
-end initial
+end terminal
 
 section binary_product
 structure is_binary_product {Y Z : C} (t : span Y Z) :=
@@ -153,7 +121,7 @@ begin
 obviously
 end
 
-lemma is_binary_product.of_lift_univ {Y Z : C} {t : span Y Z}
+def is_binary_product.of_lift_univ {Y Z : C} {t : span Y Z}
   (lift : Π (s : span Y Z), s.X ⟶ t.X)
   (univ : Π (s : span Y Z) (φ : s.X ⟶ t.X), (φ ≫ t.π₁ = s.π₁ ∧ φ ≫ t.π₂ = s.π₂) ↔ (φ = lift s)) : is_binary_product t :=
 { lift := lift,
@@ -161,13 +129,6 @@ lemma is_binary_product.of_lift_univ {Y Z : C} {t : span Y Z}
   fac₂ := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))).right,
   uniq := begin tidy, apply univ_s_m.mp, obviously, end } -- TODO should be easy to automate
 
-@[reducible] def binary_product_comparison {Y Z : C} (t : span Y Z) (X' : C) : (X' ⟶ t.X) → (X' ⟶ Y) × (X' ⟶ Z) :=
-λ φ, (φ ≫ t.π₁, φ ≫ t.π₂)
-
-def is_binary_product.comparison {Y Z : C} {t : span Y Z} (h : is_binary_product t) (X' : C) : is_equiv (binary_product_comparison t X') :=
-{ inv := λ p, h.lift ⟨ ⟨ X' ⟩, p.1, p.2 ⟩,
-  hom_inv_id := begin tidy, symmetry, apply h.uniq, end,
-}
 
 end binary_product
 
@@ -194,8 +155,6 @@ lemma is_equalizer.mono {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) : mo
                                     obviously,
                               end }
 
--- TODO provide an alternative constructor via mono
-
 structure equalizer (f g : Y ⟶ Z) extends t : fork f g := 
 (h : is_equalizer t)
 
@@ -203,6 +162,13 @@ lemma is_equalizer.univ {f g : Y ⟶ Z} {t : fork f g} (h : is_equalizer t) (s :
 begin
 obviously
 end
+
+def is_equalizer.of_lift_univ {f g : Y ⟶ Z} {t : fork f g}
+  (lift : Π (s : fork f g), s.X ⟶ t.X)
+  (univ : Π (s : fork f g) (φ : s.X ⟶ t.X), (φ ≫ t.ι = s.ι) ↔ (φ = lift s)) : is_equalizer t :=
+{ lift := lift,
+  fac := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))),
+  uniq := begin tidy, apply univ_s_m.mp, obviously, end }
 
 
 end equalizer
@@ -228,10 +194,19 @@ begin cases P, cases Q, obviously end
 structure pullback (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z) extends t : square r₁ r₂ :=
 (h : is_pullback t)
 
-lemma is_pullback.univ  {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} {t : square r₁ r₂} (h : is_pullback t) (s : square r₁ r₂) (φ : s.X ⟶ t.X) : (φ ≫ t.π₁ = s.π₁ ∧ φ ≫ t.π₂ = s.π₂) ↔ (φ = h.lift s) :=
+lemma is_pullback.univ {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} {t : square r₁ r₂} (h : is_pullback t) (s : square r₁ r₂) (φ : s.X ⟶ t.X) : (φ ≫ t.π₁ = s.π₁ ∧ φ ≫ t.π₂ = s.π₂) ↔ (φ = h.lift s) :=
 begin
 obviously
 end
+
+def is_pullback.of_lift_univ {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} {t : square r₁ r₂}
+  (lift : Π (s : square r₁ r₂), s.X ⟶ t.X)
+  (univ : Π (s : square r₁ r₂) (φ : s.X ⟶ t.X), (φ ≫ t.π₁ = s.π₁ ∧ φ ≫ t.π₂ = s.π₂) ↔ (φ = lift s)) : is_pullback t :=
+{ lift := lift,
+  fac₁ := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))).left,
+  fac₂ := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))).right,
+  uniq := begin tidy, apply univ_s_m.mp, obviously, end }
+
 
 end pullback
 
@@ -260,76 +235,44 @@ begin
 obviously,
 end
 
+def is_limit.of_lift_univ {F : J ↝ C} {t : cone F}
+  (lift : Π (s : cone F), s.X ⟶ t.X)
+  (univ : Π (s : cone F) (φ : s.X ⟶ t.X), (∀ j : J, (φ ≫ t.π j) = s.π j) ↔ (φ = lift s)) : is_limit t :=
+{ lift := lift,
+  fac  := λ s j, ((univ s (lift s)).mpr (eq.refl (lift s))) j,
+  uniq := begin tidy, apply univ_s_m.mp, obviously, end }
+
 end limit
-end explicit
 
+variable (C)
 
-namespace bijective
-
-variables {C : Type u} [𝒞 : category.{u v} C]
-include 𝒞
-
-section binary_product
-
-def binary_product_comparison {Y Z : C} (t : span Y Z) (X' : C) : (X' ⟶ t.X) → (X' ⟶ Y) × (X' ⟶ Z) :=
-λ φ, (φ ≫ t.π₁, φ ≫ t.π₂)
-
-def is_binary_product {Y Z : C} (t : span Y Z) := Π (X' : C), is_equiv (binary_product_comparison t X')
-
-structure binary_product (Y Z : C) extends t : span Y Z :=
-(h : is_binary_product t)
-end binary_product
-
-section equalizers
-variables {Y Z : C} 
-
-def equalizer_comparison {f g : Y ⟶ Z} (t : fork f g) (X' : C) : (X' ⟶ t.X) → { h : X' ⟶ Y // h ≫ f = h ≫ g } :=
-λ φ, ⟨ φ ≫ t.ι, by obviously ⟩ 
-
-def is_equalizer {f g : Y ⟶ Z} (t : fork f g) := Π (X' : C), is_equiv (equalizer_comparison t X')
-
-structure equalizer (f g : Y ⟶ Z) extends t : fork f g :=
-(h : is_equalizer t)
-end equalizers
-
-section pullbacks
-variables {Y₁ Y₂ Z : C}
-
-def pullback_comparison {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} (t : square r₁ r₂) (X' : C) : (X' ⟶ t.X) → { c : (X' ⟶ Y₁) × (X' ⟶ Y₂) // c.1 ≫ r₁ = c.2 ≫ r₂ } :=
-λ φ, ⟨ (φ ≫ t.π₁, φ ≫ t.π₂), by obviously ⟩ 
-
-def is_pullback {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} (t : square r₁ r₂) := Π (X' : C), is_equiv (pullback_comparison t X')
-
-structure pullback (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z) extends t : square r₁ r₂ :=
-(h : is_pullback t)
-end pullbacks
-
-end bijective
-
-open explicit -- CHANGE THIS LINE TO TRY OUT DIFFERENT VERSIONS explict/singleton/bijective
-
-class has_binary_products (C : Type u) [𝒞 : category.{u v} C] :=
+class has_binary_products :=
 (binary_product : Π (Y Z : C), binary_product.{u v} Y Z)
 
-class has_equalizers (C : Type u) [𝒞 : category.{u v} C] :=
+class has_equalizers :=
 (equalizer : Π {Y Z : C} (f g : Y ⟶ Z), equalizer f g)
 
-class has_pullbacks (C : Type u) [𝒞 : category.{u v} C] :=
+class has_pullbacks :=
 (pullback : Π {P Q R : C} (p : P ⟶ R) (q: Q ⟶ R), pullback p q)
 
-def binary_product {C : Type u} [𝒞 : category.{u v} C] [has_binary_products C] (Y Z : C) := has_binary_products.binary_product Y Z
-def equalizer {C : Type u} [𝒞 : category.{u v} C] [has_equalizers C] {Y Z : C} (f g : Y ⟶ Z) := has_equalizers.equalizer f g
-def pullback {C : Type u} [𝒞 : category.{u v} C] [has_pullbacks C] {P Q R : C} (p : P ⟶ R) (q: Q ⟶ R) := has_pullbacks.pullback p q
+variable {C}
+
+-- TODO how to name these?
+def binary_product' [has_binary_products.{u v} C] (Y Z : C) := has_binary_products.binary_product.{u v} Y Z
+def equalizer' [has_equalizers.{u v} C] {Y Z : C} (f g : Y ⟶ Z) := has_equalizers.equalizer.{u v} f g
+def pullback' [has_pullbacks.{u v} C] {Y₁ Y₂ Z : C} (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z) := has_pullbacks.pullback.{u v} r₁ r₂
+
+end
 
 local attribute [forward] fork.w square.w
 
-instance : has_binary_products (Type u) := 
+instance : has_binary_products.{u+1 u} (Type u) := 
 { binary_product := λ Y Z, { X := Y × Z, π₁ := prod.fst, π₂ := prod.snd, h := by obviously } }
 
-instance : has_equalizers (Type u) := 
+instance : has_equalizers.{u+1 u} (Type u) := 
 { equalizer := λ Y Z f g, { X := { y : Y // f y = g y }, ι := subtype.val, w := by obviously, h := by obviously } }
 
-instance : has_pullbacks (Type u) := 
+instance : has_pullbacks.{u+1 u} (Type u) := 
 { pullback := λ Y₁ Y₂ Z r₁ r₂, { X := { z : Y₁ × Y₂ // r₁ z.1 = r₂ z.2 }, π₁ := λ z, z.val.1, π₂ := λ z, z.val.2, w := by obviously, h := by obviously } }
 
 
