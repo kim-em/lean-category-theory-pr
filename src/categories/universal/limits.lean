@@ -69,7 +69,7 @@ attribute [ematch] square.w_lemma
 
 structure cone {C : Type u} [𝒞 : category.{u v} C] {J : Type v} [small_category J] (F : J ↝ C) extends shape C :=
 (π : ∀ j : J, X ⟶ F j)
-(w : ∀ {j j' : J} (f : j ⟶ j'), π j ≫ (F.map f) = π j')
+(w : ∀ {j j' : J} (f : j ⟶ j'), π j ≫ (F.map f) = π j' . obviously)
 
 restate_axiom cone.w
 attribute [ematch] cone.w_lemma
@@ -148,6 +148,12 @@ def is_binary_product.of_lift_univ {Y Z : C} {t : span Y Z}
   fac₂ := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))).right,
   uniq := begin tidy, apply univ_s_m.mp, obviously, end } -- TODO should be easy to automate
 
+lemma homs_to_binary_product_eq {Y Z : C} (B : binary_product.{u v} Y Z) {X : C} (f g : X ⟶ B.X) (w₁ : f ≫ B.t.π₁ = g ≫ B.t.π₁) (w₂ : f ≫ B.t.π₂ = g ≫ B.t.π₂) : f = g :=
+begin
+  rw B.h.uniq' f,
+  rw B.h.uniq' g,
+  congr ; assumption
+end
 
 end binary_product
 
@@ -189,6 +195,14 @@ def is_equalizer.of_lift_univ {f g : Y ⟶ Z} {t : fork f g}
   fac := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))),
   uniq := begin tidy, apply univ_s_m.mp, obviously, end }
 
+lemma homs_to_equalizer_eq {Y Z : C} {f g : Y ⟶ Z} (B : equalizer.{u v} f g) {X : C} (h k : X ⟶ B.X) (w : h ≫ B.t.ι = k ≫ B.t.ι) : h = k :=
+begin
+  let s : fork f g := ⟨ ⟨ X ⟩, h ≫ B.t.ι ⟩,
+  have q := B.h.uniq s h,
+  have p := B.h.uniq s k,
+  rw [q, ←p],
+  solve_by_elim, refl
+end
 
 end equalizer
 
@@ -226,6 +240,14 @@ def is_pullback.of_lift_univ {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} {t : square
   fac₂ := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))).right,
   uniq := begin tidy, apply univ_s_m.mp, obviously, end }
 
+lemma homs_to_pullback_eq {Y₁ Y₂ Z : C} {r₁ : Y₁ ⟶ Z} {r₂ : Y₂ ⟶ Z} (B : pullback.{u v} r₁ r₂) {X : C} (f g : X ⟶ B.X) (w₁ : f ≫ B.t.π₁ = g ≫ B.t.π₁) (w₂ : f ≫ B.t.π₂ = g ≫ B.t.π₂) : f = g :=
+begin
+  let s : square r₁ r₂ := ⟨ ⟨ X ⟩, f ≫ B.t.π₁, f ≫ B.t.π₂ ⟩,
+  have q := B.h.uniq s f,
+  have p := B.h.uniq s g,
+  rw [q, ←p],
+  obviously,
+end
 
 end pullback
 
@@ -260,6 +282,19 @@ def is_limit.of_lift_univ {F : J ↝ C} {t : cone F}
 { lift := lift,
   fac  := λ s j, ((univ s (lift s)).mpr (eq.refl (lift s))) j,
   uniq := begin tidy, apply univ_s_m.mp, obviously, end }
+
+lemma homs_to_limit_eq  {F : J ↝ C} (B : limit.{u v} F) {X : C} (f g : X ⟶ B.X) (w : ∀ j, f ≫ B.t.π j = g ≫ B.t.π j) : f = g :=
+begin
+  let s : cone F := ⟨ ⟨ X ⟩, λ j, f ≫ B.t.π j, by obviously ⟩,
+  have q := B.h.uniq s f,
+  have p := B.h.uniq s g,
+  rw [q, ←p],
+  intros,
+  rw ← w j,
+  intros,
+  refl
+end
+
 
 end limit
 
