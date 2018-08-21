@@ -54,7 +54,7 @@ end
 end ConeMorphism
 
 instance Cones (F : J ↝ C) : category.{(max u v) v} (Cone F) :=
-{ Hom      := λ X Y, ConeMorphism X Y,
+{ hom      := λ X Y, ConeMorphism X Y,
   comp    := λ X Y Z f g, { cone_morphism := f.cone_morphism ≫ g.cone_morphism,
                             commutativity := begin /- `obviously'` says: -/ intros, simp end },
   id      := λ X, { cone_morphism := 𝟙 X.cone_point, 
@@ -75,7 +75,7 @@ def Cones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cone F) ↝ (Cone (F ⋙ 
 { obj      := λ X, { cone_point    := G X.cone_point,
                      cone_maps     := λ j, G.map (X.cone_maps j), 
                      commutativity := begin /- `obviously'` says: -/ intros, simp, erw [←functor.map_comp_lemma, Cone.commutativity_lemma] end },
-  map      := λ X Y f, { cone_morphism := G.map f.cone_morphism,
+  map'     := λ X Y f, { cone_morphism := G.map f.cone_morphism,
                          commutativity := begin /- `obviously'` says: -/ intros, dsimp, erw [←functor.map_comp_lemma, ConeMorphism.commutativity_lemma] end },
   map_id   := begin /- `obviously'` says: -/ intros, ext, dsimp, simp end,
   map_comp := begin /- `obviously'` says: -/ intros, ext, dsimp, simp end }
@@ -115,7 +115,7 @@ end
 end CoconeMorphism
 
 instance Cocones (F : J ↝ C) : category.{(max u v) v} (Cocone F) := 
-{ Hom     := λ X Y, CoconeMorphism X Y,
+{ hom     := λ X Y, CoconeMorphism X Y,
   comp    := λ X Y Z f g, { cocone_morphism := f.cocone_morphism ≫ g.cocone_morphism,
                             commutativity   := begin /- `obviously'` says: -/ intros, simp end },
   id      := λ X,         { cocone_morphism := 𝟙 X.cocone_point,
@@ -136,7 +136,7 @@ def Cocones_functoriality (F : J ↝ C) (G : C ↝ D) : (Cocone F) ↝ (Cocone (
 { obj      := λ X,     { cocone_point    := G X.cocone_point,
                          cocone_maps     := λ j, G.map (X.cocone_maps j),
                          commutativity   := begin /- `obviously'` says: -/ intros, simp, erw [←functor.map_comp_lemma, Cocone.commutativity_lemma] end },
-  map      := λ X Y f, { cocone_morphism := G.map f.cocone_morphism,
+  map'     := λ X Y f, { cocone_morphism := G.map f.cocone_morphism,
                          commutativity   := begin /- `obviously'` says: -/ intros, dsimp, erw [←functor.map_comp_lemma, CoconeMorphism.commutativity_lemma] end },
   map_id   := begin /- `obviously'` says -/ intros, ext, dsimp, simp end,
   map_comp := begin /- `obviously'` says -/ intros, ext, dsimp, simp end }

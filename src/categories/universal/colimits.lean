@@ -2,7 +2,7 @@
 -- Released under Apache 2.0 license as described in the file LICENSE.
 -- Authors: Scott Morrison, Reid Barton, Mario Carneiro
 
-import .limits
+import categories.universal.limits
 
 open category_theory
 
@@ -73,8 +73,13 @@ structure is_initial (t : C) :=
 (desc : ∀ (s : C), t ⟶ s)
 (uniq : ∀ (s : C) (m : t ⟶ s), m = desc s . obviously)
 
+restate_axiom is_initial.uniq
+attribute [ematch, back'] is_initial.uniq_lemma
+
 @[extensionality] lemma is_initial.ext {X : C} (P Q : is_initial.{u v} X) : P = Q := 
 begin cases P, cases Q, obviously, end
+
+variable (C) 
 
 structure initial_object extends t : point C :=
 (h : is_initial.{u v} t.X)
@@ -252,39 +257,6 @@ def pushout' [has_pushouts.{u v} C] {Y₁ Y₂ Z : C} (r₁ : Z ⟶ Y₁) (r₂ 
 
 end
 
-local attribute [forward] fork.w square.w
-
-instance : has_binary_coproducts.{u+1 u} (Type u) := 
-{ binary_coproduct := λ Y Z, { X := Y ⊕ Z, ι₁ := sum.inl, ι₂ := sum.inr, h := by obviously } }
-
--- @[back'] lemma constant_on_quotient {α β : Type u} (f g : α → β) {Z : Type u} (k : β → Z) (x y : β) (h : eqv_gen (λ (x y : β), ∃ (a : α), f a = x ∧ g a = y) x y) (w : k ∘ f = k ∘ g) : k x = k y :=
--- begin
---   induction h,
---   /- obviously says: -/ 
---   cases h_a, 
---   have congr_fun_w_h_a_w := congr_fun w h_a_w, 
---   cases h_a_h, 
---   induction h_a_h_right, 
---   induction h_a_h_left, 
---   solve_by_elim, 
---   refl, 
---   solve_by_elim, 
---   erw [h_ih_a, h_ih_a_1]
--- end
-
-
-instance : has_coequalizers.{u+1 u} (Type u) := 
-{ coequalizer := λ Y Z f g, 
-  begin
-    letI s := eqv_gen.setoid (λ x y, ∃ a : Z, f a = x ∧ g a = y),
-    exact { X := quotient s, 
-            π := quotient.mk, 
-            w := by obviously, 
-            h := begin
-                  --  obviously, -- FIXME how do we dispose of unnecessary `let` statements?
-
-                 end }
-  end }
 
 
 

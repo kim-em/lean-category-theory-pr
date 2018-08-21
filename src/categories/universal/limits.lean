@@ -84,11 +84,24 @@ structure is_terminal (t : C) :=
 (lift : ∀ (s : C), s ⟶ t)
 (uniq : ∀ (s : C) (m : s ⟶ t), m = lift s . obviously)
 
+restate_axiom is_terminal.uniq
+attribute [ematch, back'] is_terminal.uniq_lemma
+
 @[extensionality] lemma is_terminal.ext {X : C} (P Q : is_terminal.{u v} X) : P = Q := 
 begin cases P, cases Q, obviously, end
 
+variable (C) 
+
 structure terminal_object extends t : point C :=
 (h : is_terminal.{u v} t.X)
+
+instance hom_to_terminal_subsingleton (X : C) (B : terminal_object.{u v} C) : subsingleton (X ⟶ B.X) :=
+begin
+  fsplit, intros f g,
+  rw B.h.uniq X f,
+  rw B.h.uniq X g,
+end
+
 end terminal
 
 section binary_product
@@ -107,6 +120,12 @@ attribute [ematch, back'] is_binary_product.uniq_lemma
 
 @[extensionality] lemma is_binary_product.ext {Y Z : C} {t : span Y Z} (P Q : is_binary_product t) : P = Q :=
 begin cases P, cases Q, obviously end
+
+instance {Y Z : C} {t : span Y Z} : subsingleton (is_binary_product t) := 
+begin 
+  fsplit, intros,
+  apply is_binary_product.ext, -- obviously will do this after https://github.com/leanprover/mathlib/pull/269
+end
 
 lemma is_binary_product.uniq' {Y Z : C} {t : span Y Z} (h : is_binary_product t) {X' : C} (m : X' ⟶ t.X) : m = h.lift { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } :=
 h.uniq { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } m (by obviously) (by obviously)
@@ -263,19 +282,6 @@ def equalizer' [has_equalizers.{u v} C] {Y Z : C} (f g : Y ⟶ Z) := has_equaliz
 def pullback' [has_pullbacks.{u v} C] {Y₁ Y₂ Z : C} (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z) := has_pullbacks.pullback.{u v} r₁ r₂
 
 end
-
-local attribute [forward] fork.w square.w
-
-instance : has_binary_products.{u+1 u} (Type u) := 
-{ binary_product := λ Y Z, { X := Y × Z, π₁ := prod.fst, π₂ := prod.snd, h := by obviously } }
-
-instance : has_equalizers.{u+1 u} (Type u) := 
-{ equalizer := λ Y Z f g, { X := { y : Y // f y = g y }, ι := subtype.val, w := by obviously, h := by obviously } }
-
-instance : has_pullbacks.{u+1 u} (Type u) := 
-{ pullback := λ Y₁ Y₂ Z r₁ r₂, { X := { z : Y₁ × Y₂ // r₁ z.1 = r₂ z.2 }, π₁ := λ z, z.val.1, π₂ := λ z, z.val.2, w := by obviously, h := by obviously } }
-
-
 
 end category_theory.universal
 
