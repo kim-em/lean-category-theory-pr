@@ -15,9 +15,9 @@ def terminals_iso (A B : terminal_object.{u v} C) : A.X ≅ B.X :=
 { hom := B.h.lift A.X,
   inv := A.h.lift B.X }
 
-def binary_products_iso {Y Z : C} (A B : binary_product.{u v} Y Z) : A.X ≅ B.X :=
-{ hom := B.h.lift A.t,
-  inv := A.h.lift B.t }
+def binary_products_iso {Y Z : C} (A B : span.{u v} Y Z) (A_w : is_binary_product A) (B_w : is_binary_product B) : A.X ≅ B.X :=
+{ hom := B_w.lift A,
+  inv := A_w.lift B }
 
 def equalizers_iso {Y Z : C} {f g : Y ⟶ Z} (A B : equalizer.{u v} f g) : A.X ≅ B.X :=
 { hom := B.h.lift A.t,

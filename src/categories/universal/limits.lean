@@ -130,8 +130,8 @@ h.uniq { X := X', π₁ := m ≫ t.π₁, π₂ := m ≫ t.π₂ } m (by obvious
 
 -- TODO provide alternative constructor using uniq' instead of uniq.
 
-structure binary_product (Y Z : C) extends t : span Y Z :=
-(h : is_binary_product t)
+-- structure binary_product' (Y Z : C) extends t : span Y Z :=
+-- (h : is_binary_product t)
 
 lemma is_binary_product.univ {Y Z : C} {t : span Y Z} (h : is_binary_product t) (s : span Y Z) (φ : s.X ⟶ t.X) : (φ ≫ t.π₁ = s.π₁ ∧ φ ≫ t.π₂ = s.π₂) ↔ (φ = h.lift s) :=
 begin
@@ -146,10 +146,10 @@ def is_binary_product.of_lift_univ {Y Z : C} {t : span Y Z}
   fac₂ := λ s, ((univ s (lift s)).mpr (eq.refl (lift s))).right,
   uniq := begin tidy, apply univ_s_m.mp, obviously, end } -- TODO should be easy to automate
 
-lemma homs_to_binary_product_eq {Y Z : C} (B : binary_product.{u v} Y Z) {X : C} (f g : X ⟶ B.X) (w₁ : f ≫ B.t.π₁ = g ≫ B.t.π₁) (w₂ : f ≫ B.t.π₂ = g ≫ B.t.π₂) : f = g :=
+lemma homs_to_binary_product_eq {Y Z : C} (t : span.{u v} Y Z) (B : is_binary_product t) {X : C} (f g : X ⟶ t.X) (w₁ : f ≫ t.π₁ = g ≫ t.π₁) (w₂ : f ≫ t.π₂ = g ≫ t.π₂) : f = g :=
 begin
-  rw B.h.uniq' f,
-  rw B.h.uniq' g,
+  rw B.uniq' f,
+  rw B.uniq' g,
   congr ; assumption
 end
 
@@ -352,7 +352,8 @@ end limit
 variable (C)
 
 class has_binary_products :=
-(binary_product : Π (Y Z : C), binary_product.{u v} Y Z)
+(prod : Π (Y Z : C), span Y Z)
+(is : Π (Y Z : C), is_binary_product (prod Y Z))
 
 class has_products :=
 (product : Π {β : Type v} (f : β → C), product.{u v} f)
@@ -366,7 +367,14 @@ class has_pullbacks :=
 variable {C}
 
 -- TODO how to name these?
-def binary_product' [has_binary_products.{u v} C] (Y Z : C) := has_binary_products.binary_product.{u v} Y Z
+def prod.span [has_binary_products.{u v} C] (Y Z : C) := has_binary_products.prod.{u v} Y Z
+def prod [has_binary_products.{u v} C] (Y Z : C) : C := (prod.span Y Z).X
+def prod.π₁ [has_binary_products.{u v} C] (Y Z : C) : prod Y Z ⟶ Y := (prod.span Y Z).π₁
+def prod.π₂ [has_binary_products.{u v} C] (Y Z : C) : prod Y Z ⟶ Z := (prod.span Y Z).π₂
+def prod.universal_property [has_binary_products.{u v} C] (Y Z : C) : is_binary_product (prod.span Y Z) := has_binary_products.is.{u v} Y Z
+
+@[back] def prod.characterisation [has_binary_products.{u v} C] (Y Z : C) (X : C) (f g : X ⟶ prod Y Z) (w₁ : f ≫ prod.π₁ Y Z = g ≫ prod.π₁ Y Z) (w₂ : f ≫ prod.π₂ Y Z = g ≫ prod.π₂ Y Z) : f = g := sorry
+
 def product' [has_products.{u v} C] {β : Type v} (f : β → C) := has_products.product.{u v} f
 def equalizer' [has_equalizers.{u v} C] {Y Z : C} (f g : Y ⟶ Z) := has_equalizers.equalizer.{u v} f g
 def pullback' [has_pullbacks.{u v} C] {Y₁ Y₂ Z : C} (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z) := has_pullbacks.pullback.{u v} r₁ r₂
