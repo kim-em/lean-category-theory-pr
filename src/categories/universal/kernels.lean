@@ -1,73 +1,73 @@
--- Copyright (c) 2018 Scott Morrison. All rights reserved.
--- Released under Apache 2.0 license as described in the file LICENSE.
--- Authors: Scott Morrison
-
-import categories.universal.instances
+import .zero
 
 open category_theory
-open category_theory.initial
+
+universes u v
 
 namespace category_theory.universal
 
-universes u v w
-
-section
-variables {C : Type u} [𝒞 : category.{u v} C] [has_ZeroObject.{u v} C]
+variables {C : Type u} [𝒞 : category.{u v} C] [has_zero_object.{u v} C]
 include 𝒞
+variables {X Y Z : C}
 
-variables {X Y : C}
+structure is_kernel (f : Y ⟶ Z) (ι  : X ⟶ Y) :=
+(w    : ι ≫ f = zero_morphism _ _)
+(lift : Π {X' : C} {ι' : X' ⟶ Y} (w : ι' ≫ f = zero_morphism X' Z), X' ⟶ X)
+(fac  : Π {X' : C} {ι' : X' ⟶ Y} (w : ι' ≫ f = zero_morphism X' Z), (lift w) ≫ ι = ι' . obviously)
+(uniq : Π {X' : C} {ι' : X' ⟶ Y} (w : ι' ≫ f = zero_morphism X' Z) {m : X' ⟶ X} (h : m ≫ ι = ι'), m = lift w . obviously)
 
-structure Kernel (f : X ⟶ Y) :=
-  (kernel        : C)
-  (inclusion     : kernel ⟶ X)
-  (map           : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = zero_morphism Z Y), Z ⟶ kernel)
-  (witness       : inclusion ≫ f = zero_morphism kernel Y . obviously)
-  (factorisation : ∀ {Z : C} (k : Z ⟶ X) (w : k ≫ f = zero_morphism Z Y), (map k w) ≫ inclusion = k . obviously)
-  (uniqueness    : ∀ {Z : C} (a b : Z ⟶ kernel) (witness : a ≫ inclusion = b ≫ inclusion), a = b . obviously)
+restate_axiom is_kernel.fac
+attribute [simp,ematch] is_kernel.fac_lemma
+restate_axiom is_kernel.uniq
+attribute [ematch, back'] is_kernel.uniq_lemma
 
-def Kernel_to_Equalizer (f : X ⟶ Y) (kernel : Kernel f) : Equalizer f (zero_morphism X Y) :=
-{ equalizer := kernel.kernel,
-  inclusion := kernel.inclusion,
-  map       := λ Z k w, kernel.map k begin simp [zero_morphism_left] at w, exact w, end,  -- TODO why do we need to specify zero_morphism_left explicitly here? Isn't it a simp lemma?
-  witness := sorry, -- FIXME
-  factorisation := sorry,
-  uniqueness := sorry }
+@[extensionality] lemma is_kernel.ext {f : Y ⟶ Z} {ι : X ⟶ Y} (P Q : is_kernel f ι) : P = Q :=
+begin cases P, cases Q, obviously end
 
-structure Cokernel (f : X ⟶ Y) :=
-  (cokernel      : C)
-  (projection    : Y ⟶ cokernel)
-  (map           : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), cokernel ⟶ Z)
-  (witness       : f ≫ projection = zero_morphism X cokernel . obviously)
-  (factorisation : ∀ {Z : C} (k : Y ⟶ Z) (w : f ≫ k = zero_morphism X Z), projection ≫ (map k w) = k . obviously)
-  (uniqueness    : ∀ {Z : C} (a b : cokernel ⟶ Z) (witness : projection ≫ a = projection ≫ b), a = b . obviously)
+structure kernel (f : Y ⟶ Z) :=
+(X : C)
+(ι : X ⟶ Y)
+(h : is_kernel f ι)
 
-def Cokernel_to_Coequalizer (f : X ⟶ Y) (cokernel : Cokernel f) : Coequalizer f (zero_morphism X Y) :=
-{ coequalizer := cokernel.cokernel,
-  projection  := cokernel.projection,
-  map         := λ Z k w, cokernel.map k begin simp at w, exact w, end,
-  witness     := sorry, -- FIXME
-  factorisation := sorry,
-  uniqueness  := sorry }
+@[simp,ematch] lemma kernel.w {f : Y ⟶ Z} (k : kernel f) : k.ι ≫ f = zero_morphism _ _ := by rw k.h.w
+
+variable (C)
+
+class has_kernel :=
+(kernel : Π {Y Z : C} (f : Y ⟶ Z), kernel.{u v} f)
+
+variable {C}
+
+variable [has_kernel.{u v} C]
+
+def kernel' (f : Y ⟶ Z) := has_kernel.kernel.{u v} f
 
 
--- TODO Kernels_are_unique, from Equalizers_are_unique
+def kernel_of_equalizer {f : Y ⟶ Z} (e : equalizer f (zero_morphism _ _)) : kernel f :=
+{ X := e.X,
+  ι := e.ι,
+  h := { w := begin have p := e.t.w_lemma, simp at p, exact p end,
+         lift := λ X' ι' w, e.h.lift { X := X', ι := ι' },
+         uniq := λ X' ι' w m h, begin tidy, apply e.h.uniq { X := X', ι := m ≫ (e.t).ι }, tidy end } }
 
-def Kernels_are_Equalizers (f : X ⟶ Y) (equalizer : Equalizer f (zero_morphism X Y)) (kernel : Kernel f) : equalizer.equalizer ≅ kernel.kernel := sorry -- prove this by uniqueness of equalizers and the above
+def equalizer_of_kernel {f : Y ⟶ Z} (k : kernel f) : equalizer f (zero_morphism _ _) :=
+{ X := k.X,
+  ι := k.ι,
+  h := { lift := λ s, begin have e := s.w_lemma, tidy, exact k.h.lift e, end, 
+         uniq := sorry, }
+}
 
-variables (C)
+lemma kernel.ext (f : Y ⟶ Z) (k k' : kernel f) (h_X : k.X = k'.X) (h_ι : k.ι = (eq_to_iso h_X).hom ≫ k'.ι) : k = k' :=
+begin cases k, cases k', obviously, cases k_h, cases k'_h, obviously, end
 
-class has_Kernels :=
-  (kernel : Π {X Y : C} (f : X ⟶ Y), Kernel f)
-class has_Cokernels :=
-  (cokernel : Π {X Y : C} (f : X ⟶ Y), Cokernel f)
+local attribute [extensionality] kernel.ext
 
-variables {C}
+def kernels_are_equalizers {f : Y ⟶ Z} : equiv (kernel f) (equalizer f (zero_morphism _ _)) := 
+{ to_fun  := equalizer_of_kernel,
+  inv_fun := kernel_of_equalizer,
+  left_inv  := by obviously,
+  right_inv := by obviously }
 
-def kernel [has_Kernels.{u v} C] {X Y : C} (f : X ⟶ Y) := has_Kernels.kernel f
-def kernel_object [has_Kernels.{u v} C] {X Y : C} (f : X ⟶ Y) : C := (kernel f).kernel
-def cokernel [has_Cokernels.{u v} C] {X Y : C} (f : X ⟶ Y) := has_Cokernels.cokernel f
-def cokernel_object [has_Cokernels.{u v} C] {X Y : C} (f : X ⟶ Y) : C := (cokernel f).cokernel
 
-end
 end category_theory.universal
 

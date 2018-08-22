@@ -10,6 +10,9 @@ local attribute [forward] fork.w square.w
 instance : has_binary_products.{u+1 u} (Type u) := 
 { binary_product := λ Y Z, { X := Y × Z, π₁ := prod.fst, π₂ := prod.snd, h := by obviously } }
 
+instance : has_products.{u+1 u} (Type u) := 
+{ product := λ β f, { X := Π b, f b, π := λ b x, x b, h := by obviously } }
+
 instance : has_equalizers.{u+1 u} (Type u) := 
 { equalizer := λ Y Z f g, { X := { y : Y // f y = g y }, ι := subtype.val, w := by obviously, h := by obviously } }
 
@@ -18,6 +21,8 @@ instance : has_pullbacks.{u+1 u} (Type u) :=
 
 instance : has_binary_coproducts.{u+1 u} (Type u) := 
 { binary_coproduct := λ Y Z, { X := Y ⊕ Z, ι₁ := sum.inl, ι₂ := sum.inr, h := by obviously } }
+
+-- TODO has_coproducts
 
 local attribute [forward] cofork.w
 

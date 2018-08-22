@@ -2,9 +2,8 @@
 -- Released under Apache 2.0 license as described in the file LICENSE.
 -- Authors: Scott Morrison, Reid Barton, Mario Carneiro
 
-import category_theory.types
-import categories.isomorphism
-import categories.tactics
+import .shape
+import ..heterogeneous_identity
 
 open category_theory
 
@@ -13,19 +12,9 @@ namespace category_theory.universal
 
 universes u v w
 
-definition is_equiv {α β : Type v} (f : α → β) := @is_iso (Type v) (category_theory.types) _ _ f
-
-@[forward] lemma subtype_val {α : Type u} {P : α → Prop} {x y : {a : α // P a}} (h : x = y) : x.val = y.val := 
-begin obviously, end
-
 section
 
 section shapes
-structure shape (C : Type u) [𝒞 : category.{u v} C] :=
-(X : C)
-
-structure point (C : Type u) [𝒞 : category.{u v} C] extends shape C.
-
 /--
 A `span Y Z`:
 `Y <--π₁-- X --π₂--> Z`
@@ -33,6 +22,13 @@ A `span Y Z`:
 structure span {C : Type u} [𝒞 : category.{u v} C] (Y₁ Y₂ : C) extends shape C :=
 (π₁ : X ⟶ Y₁)
 (π₂ : X ⟶ Y₂)
+
+/--
+A `fan f`:
+`X --(π b)--> f b`
+-/
+structure fan {C : Type u} [𝒞 : category.{u v} C] {β : Type v} (f : β → C) extends shape C :=
+(π : ∀ b, X ⟶ f b)
 
 /--
 A `fork f g`:
@@ -90,10 +86,12 @@ attribute [ematch, back'] is_terminal.uniq_lemma
 @[extensionality] lemma is_terminal.ext {X : C} (P Q : is_terminal.{u v} X) : P = Q := 
 begin cases P, cases Q, obviously, end
 
+section
 variable (C) 
 
 structure terminal_object extends t : point C :=
 (h : is_terminal.{u v} t.X)
+end
 
 instance hom_to_terminal_subsingleton (X : C) (B : terminal_object.{u v} C) : subsingleton (X ⟶ B.X) :=
 begin
@@ -156,6 +154,59 @@ begin
 end
 
 end binary_product
+
+section product
+variables {β : Type v} {f : β → C} 
+
+structure is_product (t : fan f) :=
+(lift : ∀ (s : fan f), s.X ⟶ t.X)
+(fac  : ∀ (s : fan f), ∀ b, (lift s) ≫ t.π b = s.π b . obviously) 
+(uniq : ∀ (s : fan f) (m : s.X ⟶ t.X) (w : ∀ b, m ≫ t.π b = s.π b), m = lift s . obviously)
+
+restate_axiom is_product.fac
+attribute [simp,ematch] is_product.fac_lemma
+restate_axiom is_product.uniq
+attribute [ematch, back'] is_product.uniq_lemma
+
+@[extensionality] lemma is_product.ext {t : fan f} (P Q : is_product t) : P = Q :=
+begin cases P, cases Q, obviously end
+
+instance is_product_subsingleton {t : fan f}  : subsingleton (is_product t) := 
+begin 
+  fsplit, intros,
+  apply is_product.ext, -- obviously will do this after https://github.com/leanprover/mathlib/pull/269
+end
+
+lemma is_product.uniq' {t : fan f} (h : is_product t) {X' : C} (m : X' ⟶ t.X) : m = h.lift { X := X', π := λ b, m ≫ t.π b } :=
+h.uniq { X := X', π := λ b, m ≫ t.π b } m (by obviously)
+
+-- TODO provide alternative constructor using uniq' instead of uniq.
+
+structure product (f : β → C) extends t : fan f :=
+(h : is_product t)
+
+lemma is_product.univ {t : fan f} (h : is_product t) (s : fan f) (φ : s.X ⟶ t.X) : (∀ b, φ ≫ t.π b = s.π b) ↔ (φ = h.lift s) :=
+begin
+obviously
+end
+
+def is_product.of_lift_univ {t : fan f}
+  (lift : Π (s : fan f), s.X ⟶ t.X)
+  (univ : Π (s : fan f) (φ : s.X ⟶ t.X), (∀ b, φ ≫ t.π b = s.π b) ↔ (φ = lift s)) : is_product t :=
+{ lift := lift,
+  fac  := λ s b, ((univ s (lift s)).mpr (eq.refl (lift s))) b,
+  uniq := begin tidy, apply univ_s_m.mp, obviously, end } -- TODO should be easy to automate
+
+lemma homs_to_product_eq (B : product.{u v} f) {X : C} (f g : X ⟶ B.X) (w : ∀ b, f ≫ B.t.π b = g ≫ B.t.π b) : f = g :=
+begin
+  rw B.h.uniq' f,
+  rw B.h.uniq' g,
+  congr,
+  ext,
+  exact w x,
+end
+
+end product
 
 section equalizer
 variables {Y Z : C}
@@ -303,6 +354,9 @@ variable (C)
 class has_binary_products :=
 (binary_product : Π (Y Z : C), binary_product.{u v} Y Z)
 
+class has_products :=
+(product : Π {β : Type v} (f : β → C), product.{u v} f)
+
 class has_equalizers :=
 (equalizer : Π {Y Z : C} (f g : Y ⟶ Z), equalizer f g)
 
@@ -313,6 +367,7 @@ variable {C}
 
 -- TODO how to name these?
 def binary_product' [has_binary_products.{u v} C] (Y Z : C) := has_binary_products.binary_product.{u v} Y Z
+def product' [has_products.{u v} C] {β : Type v} (f : β → C) := has_products.product.{u v} f
 def equalizer' [has_equalizers.{u v} C] {Y Z : C} (f g : Y ⟶ Z) := has_equalizers.equalizer.{u v} f g
 def pullback' [has_pullbacks.{u v} C] {Y₁ Y₂ Z : C} (r₁ : Y₁ ⟶ Z) (r₂ : Y₂ ⟶ Z) := has_pullbacks.pullback.{u v} r₁ r₂
 
