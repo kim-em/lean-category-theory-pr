@@ -21,7 +21,7 @@ restate_axiom iso.hom_inv_id
 restate_axiom iso.inv_hom_id
 attribute [simp,ematch] iso.hom_inv_id_lemma iso.inv_hom_id_lemma
 
-infixr ` ≅ `:10  := iso             -- type as \cong
+infixr ` ≅ `:10  := iso             -- type as \cong or \iso
 
 variable {C : Type u}
 variable [𝒞 : category.{u v} C]
@@ -33,19 +33,19 @@ namespace iso
 instance : has_coe (iso.{u v} X Y) (X ⟶ Y) :=
 { coe := iso.hom }
 
--- These lemmas are quite common, to help us avoid having to muck around with associativity.
--- If anyone has a suggestion for automating them away, I would be very appreciative.
-@[simp,ematch] lemma hom_inv_id_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.hom ≫ I.inv ≫ f = f := 
-begin
-  -- `obviously'` says:
-  rw [←category.assoc_lemma, iso.hom_inv_id_lemma, category.id_comp_lemma]
-end
+-- -- These lemmas are quite common, to help us avoid having to muck around with associativity.
+-- -- If anyone has a suggestion for automating them away, I would be very appreciative.
+-- @[simp,ematch] lemma hom_inv_id_assoc_lemma (I : X ≅ Y) (f : X ⟶ Z) : I.hom ≫ I.inv ≫ f = f := 
+-- begin
+--   -- `obviously'` says:
+--   rw [←category.assoc_lemma, iso.hom_inv_id_lemma, category.id_comp_lemma]
+-- end
 
-@[simp,ematch] lemma inv_hom_id_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inv ≫ I.hom ≫ f = f := 
-begin
-  -- `obviously'` says:
-  rw [←category.assoc_lemma, iso.inv_hom_id_lemma, category.id_comp_lemma]
-end
+-- @[simp,ematch] lemma inv_hom_id_assoc_lemma (I : X ≅ Y) (f : Y ⟶ Z) : I.inv ≫ I.hom ≫ f = f := 
+-- begin
+--   -- `obviously'` says:
+--   rw [←category.assoc_lemma, iso.inv_hom_id_lemma, category.id_comp_lemma]
+-- end
 
 @[extensionality] lemma ext
   (α β : X ≅ Y)
@@ -53,14 +53,12 @@ end
   begin
     induction α with f g wα1 wα2,
     induction β with h k wβ1 wβ2,
-    simp at w,    
+    dsimp at *,
     have p : g = k,
       begin
         induction w,
-        dsimp at *,
         rw [← category.id_comp_lemma C k, ←wα2, category.assoc_lemma, wβ1, category.comp_id_lemma]
       end,
-    -- `obviously'` says:
     induction p, induction w,
     refl
   end
@@ -81,10 +79,10 @@ def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z :=
   hom_inv_id := begin /- `obviously'` says: -/ simp end,
   inv_hom_id := begin /- `obviously'` says: -/ simp end }
 
-infixr ` ♢ `:80 := iso.trans -- type as \diamonds
+infixr ` ≪≫ `:80 := iso.trans -- type as `\ll \gg`.
 
-@[simp,ematch] lemma trans_hom (α : X ≅ Y) (β : Y ≅ Z) : (α ♢ β).hom = α.hom ≫ β.hom := rfl
-@[simp,ematch] lemma trans_inv (α : X ≅ Y) (β : Y ≅ Z) : (α ♢ β).inv  = β.inv ≫ α.inv   := rfl
+@[simp,ematch] lemma trans_hom (α : X ≅ Y) (β : Y ≅ Z) : (α ≪≫ β).hom = α.hom ≫ β.hom := rfl
+@[simp,ematch] lemma trans_inv (α : X ≅ Y) (β : Y ≅ Z) : (α ≪≫ β).inv  = β.inv ≫ α.inv   := rfl
 
 def symm (I : X ≅ Y) : Y ≅ X := 
 { hom := I.inv,
