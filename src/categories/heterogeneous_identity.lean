@@ -13,11 +13,7 @@ section
 variables {C : Type u} [𝒞 : category.{u v} C]
 include 𝒞
 
-def eq_to_iso {X Y : C} (p : X = Y) : X ≅ Y :=
-begin
-  rw p,
-  exact (iso.refl Y),
-end
+def eq_to_iso {X Y : C} (p : X = Y) : X ≅ Y := by rw p
 
 @[simp,ematch] lemma eq_to_iso_refl (X : C) (p : X = X) : eq_to_iso p = (iso.refl X) := rfl
 
